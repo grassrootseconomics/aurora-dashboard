@@ -1,0 +1,24 @@
+{
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "semi": true,
+    "endOfLine": "auto",
+    "singleQuote": true,
+    "importOrder": [
+        "next",
+        "react",
+        "^@mui/(.*)$",
+        "<THIRD_PARTY_MODULES>",
+        "^@assets/(.*)$",
+        "^@layouts/(.*)$",
+        "^@components/(.*)$",
+        "^@lib/(.*)$",
+        "^@store/(.*)$",
+        "^@utils/(.*)$",
+        "^@data/(.*)$",
+        "^@models/(.*)$",
+        "^[./]"
+    ],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true
+}
