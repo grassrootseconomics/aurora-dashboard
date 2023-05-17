@@ -1,6 +1,28 @@
 import Head from 'next/head';
 
+import { useCallback } from 'react';
+
+import { Button } from '@mui/material';
+
+import { useAccount, useSignMessage } from 'wagmi';
+
 export default function Home() {
+  const { address } = useAccount();
+  const { signMessageAsync } = useSignMessage();
+
+  const signTransaction = async () => {
+    const text = 'customMessage';
+
+    const response = await signMessageAsync({ message: text });
+
+    console.log(`${address} signed a tranctions and got ${response}`);
+  };
+
+  const issueTransactionSign = useCallback(signTransaction, [
+    address,
+    signMessageAsync,
+  ]);
+
   return (
     <>
       <Head>
@@ -10,6 +32,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>Welcome to the main page!</div>
+      <Button onClick={issueTransactionSign}>Sign a Message!</Button>
     </>
   );
 }
