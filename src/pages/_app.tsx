@@ -8,6 +8,7 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import { chains, wagmiConfig } from '@/config/web3';
 import createEmotionCache from '@/createEmotionCache';
 import DefaultLayout from '@/layouts/DefaultLayout';
+import { UserAuthProvider } from '@/providers/UserAuthProvider';
 import '@/styles/globals.css';
 import theme from '@/theme';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
@@ -31,10 +32,12 @@ const MyApp = (props: MyAppProps) => {
       <ThemeProvider theme={theme}>
         <WagmiConfig config={wagmiConfig}>
           <RainbowKitProvider chains={chains}>
-            <DefaultLayout>
-              <CssBaseline />
-              <Component {...pageProps} />
-            </DefaultLayout>
+            <UserAuthProvider>
+              <DefaultLayout>
+                <CssBaseline />
+                <Component {...pageProps} />
+              </DefaultLayout>
+            </UserAuthProvider>
           </RainbowKitProvider>
         </WagmiConfig>
       </ThemeProvider>

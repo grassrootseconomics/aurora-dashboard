@@ -8,6 +8,9 @@ const nextConfig = {
     NETWORK: process.env.NETWORK,
     APP_NAME: process.env.APP_NAME,
     BACKEND_API_ROUTE: process.env.BACKEND_API_ROUTE,
+
+    ACCESS_TOKEN_STORAGE: process.env.ACCESS_TOKEN_STORAGE,
+    REFRESH_TOKEN_STORAGE: process.env.REFRESH_TOKEN_STORAGE,
   },
 };
 

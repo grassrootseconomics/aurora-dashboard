@@ -3,6 +3,8 @@ import { FC } from 'react';
 import { AppBar } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
+import { useUserAuthContext } from '@/providers/UserAuthProvider';
+
 import ConnectWalletButton from './ConnectWalletButton';
 import LanguageSelector from './language/LanguageSelector';
 
@@ -14,6 +16,9 @@ const useStyles: any = makeStyles(() => ({
 
 const AuroraAppBar: FC = () => {
   const classes = useStyles();
+
+  const { isAuthenticated } = useUserAuthContext();
+
   return (
     <AppBar className={classes.appBar}>
       <div
@@ -25,7 +30,7 @@ const AuroraAppBar: FC = () => {
           alignItems: 'center',
         }}
       >
-        <LanguageSelector />
+        {isAuthenticated ? <LanguageSelector /> : <div></div>}
         <ConnectWalletButton />
       </div>
     </AppBar>
