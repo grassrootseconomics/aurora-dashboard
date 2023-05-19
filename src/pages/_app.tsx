@@ -14,6 +14,8 @@ import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 import { WagmiConfig } from 'wagmi';
 
+import '../i18n';
+
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
@@ -21,7 +23,7 @@ interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
 }
 
-export default function MyApp(props: MyAppProps) {
+const MyApp = (props: MyAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 
   return (
@@ -38,4 +40,6 @@ export default function MyApp(props: MyAppProps) {
       </ThemeProvider>
     </CacheProvider>
   );
-}
+};
+
+export default MyApp;
