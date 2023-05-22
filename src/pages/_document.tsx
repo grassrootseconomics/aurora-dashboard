@@ -18,6 +18,25 @@ export default class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                function calculateBodyScale() {
+                  var windowWidth = window.innerWidth;
+
+                  if (windowWidth >= 1280 && windowWidth <= 1919) {
+                    var percentage = window.innerWidth / 1920;
+                    document.body.style.transform = 'scale(' + percentage + ')';
+                  } else {
+                    document.body.style.transform = 'scale(1)';
+                  }
+                }
+
+                window.addEventListener('resize', calculateBodyScale);
+                calculateBodyScale();
+              `,
+            }}
+          />
         </body>
       </Html>
     );

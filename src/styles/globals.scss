@@ -1,0 +1,199 @@
+body {
+    transform-origin: 0 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+.dashboard {
+    &__container {
+        display: flex;
+        margin-left: 50px;
+    }
+
+    &__logo {
+        display: flex;
+        margin: 35px auto 20px;
+        max-width: 200px;
+    }
+
+    &__cards {
+        display: flex;
+
+        &--main {
+            flex-direction: column;
+        }
+    }
+
+    &__chart {
+        min-width: 600px;
+        height: auto;
+        margin: 20px;
+    }
+
+    &__charts {
+        display: flex;
+    }
+}
+
+.card {
+    &__container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: white;
+        width: 300px;
+        border-radius: 15px;
+        padding: 10px 40px;
+        margin: 20px;
+    }
+
+    &__description {
+        font-size: 20px;
+        line-height: 1.2;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    &__row {
+        display: flex;
+        align-items: center;
+    }
+
+    &__column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    &__align-bottom {
+        align-items: flex-end;
+    }
+    
+    &__number {
+        font-weight: 700;
+        font-size: 60px;
+        line-height: 1.2;
+        margin: auto;
+    }
+
+    &__icon {
+        max-width: 120px;
+        height: fit-content;
+    }
+}
+
+.chart {
+    &__container {
+        margin: 20px;
+        border-radius: 20px;
+    }
+}
+
+.batch-action {
+    background: #f1842d;
+    color: white;
+    border-radius: 50%;
+    font-size: 24px;
+    line-height: 1;
+    padding: 0 8px;
+}
+
+@media (min-width: 1920px) {
+    .dashboard {
+        &__container {
+            justify-content: center;
+        }
+    }
+}
+
+@media (max-width: 1279px) {
+    .dashboard {
+        &__container {
+            flex-direction: column;
+            max-width: 600px;
+            margin: auto;
+            justify-content: center;
+        }
+
+        &__cards {
+            flex-flow: row wrap;
+            justify-content: center;
+
+            &--main {
+                flex-direction: row;
+                justify-content: center;
+            }
+
+            & .card__container {
+                margin: 10px;
+                padding: 10px;
+                max-width: 175px;
+
+                & .card__icon {
+                    max-width: 70px;
+                }
+
+                & .card__number {
+                    font-size: 36px;
+                }
+
+                & .card__description {
+                    font-size: 16px;
+                }
+
+                & .card__description {
+                    font-size: 16px;
+                }
+            }
+        }
+
+        &__charts {
+            flex-direction: column;
+        }
+
+        &__chart {
+            min-width: 100%;
+            margin: 0;
+            padding: 10px;
+        }
+    }
+
+    .card {
+        &__container {
+            width: auto;
+        }
+    }
+
+    .MuiTab-root {
+        font-size: 12px!important;
+        min-height: 30px!important;
+
+        &.Mui-selected {
+            box-shadow: 2px 3px #888888!important
+        }
+    }
+
+    .MuiTableCell-root {
+        padding: 5px!important;
+
+        &:not(:first-child) {
+            min-width: 100px;
+        }
+    }
+
+    .MuiTableRow-root td {
+        padding: 5px;
+    }
+
+    .MuiTableCell-footer{
+        min-width: 365px;
+    }
+
+    .batch-action {
+        font-size: 16px;
+        padding: 0 5px;
+    }
+
+}

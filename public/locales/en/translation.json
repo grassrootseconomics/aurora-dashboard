@@ -1,3 +1,26 @@
 {
-    "welcome_message": "Welcome"
+    "number_producers": "Number of cocoa producers",
+    "number_men_under_30": "Number of young men below 30 years",
+    "number_women": "Number of women",
+    "ha_forest_conservation": "Ha of forest conservation",
+    "dry_cocoa_available": "of dry cocoa available",
+    "sold_international_market": "solt to the internation market",
+    "production_by_association": "Production by association",
+    "production_by_region": "Production by regions",
+    "usd_price_organic_cocoa": "USD price of organic cocoa",
+    "total_sales_usd": "Total sales in USD",
+    "batch": "Batch",
+    "buyer": "Buyer",
+    "destination_country": "Destination Country",
+    "price_per_kg": "Price per Kg in USD",
+    "total_price": "Total price in USD",
+    "negociation_terms": "Negociation Terms",
+    "cocoa_type": "Cocoa type",
+    "total_weight": "Total Weight (Kg)",
+    "processing_date": "Processing date",
+    "humidity": "Humidity %",
+    "grain_index": "Grain Index",
+    "general_sensory_profile": "General sensory profile",
+    "cocoa_pulp_collected": "Cocoa pulp collected",
+    "dry_cocoa_production": "Dry cocoa production"
 }

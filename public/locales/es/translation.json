@@ -1,3 +1,26 @@
 {
-    "welcome_message": "Bienvenido"
+    "number_producers": "Número de productores de cacao",
+    "number_men_under_30": "Número de jóvenes menores de 30 años",
+    "number_women": "Número de mujeres",
+    "ha_forest_conservation": "Hectáreas de conservación de bosque",
+    "dry_cocoa_available": "Kilos de cacao seco disponibles",
+    "sold_international_market": "Vendidos al Mercado Europeo",
+    "production_by_association": "Producción por Asociaciones",
+    "production_by_region": "Producción por Regiones",
+    "usd_price_organic_cocoa": "Precio en USD de cacao orgánico",
+    "total_sales_usd": "Ventas Totales en USD",
+    "batch": "Bache",
+    "buyer": "Comprador",
+    "destination_country": "País de Destino",
+    "price_per_kg": "Precio en USD por Kg",
+    "total_price": "Precio total en USD",
+    "negociation_terms": "Término de Negociación",
+    "cocoa_type": "Tipo de Cacao",
+    "total_weight": "Peso Total (Kg)",
+    "processing_date": "Fecha de Procesamiento",
+    "humidity": "% de Humedad",
+    "grain_index": "Índice del grano",
+    "general_sensory_profile": "Caracterización Sensorial General",
+    "cocoa_pulp_collected": "Cocoa em Baba Recolectado",
+    "dry_cocoa_production": "Producción de Cacao Seco"
 }

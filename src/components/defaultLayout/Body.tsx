@@ -5,7 +5,7 @@ import { makeStyles } from '@mui/styles';
 
 const useStyles: any = makeStyles(() => ({
   mainBox: {
-    marginTop: 50,
+    paddingTop: 75,
   },
 }));
 

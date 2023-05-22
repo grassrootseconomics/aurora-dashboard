@@ -1,3 +1,5 @@
+import { useRouter } from 'next/router';
+
 import { FC, ReactNode } from 'react';
 
 import AuroraAppBar from '@/components/core/AuroraAppBar';
@@ -23,6 +25,7 @@ type DefaultLayoutProps = {
 const DefaultLayout: FC<DefaultLayoutProps> = ({ children }) => {
   const { signMessageAsync } = useSignMessage();
   const { setIsAuthenticated } = useUserAuthContext();
+  const router = useRouter();
 
   const authenticateUser = async (connectedWallet: string | undefined) => {
     if (connectedWallet) {
@@ -62,6 +65,7 @@ const DefaultLayout: FC<DefaultLayoutProps> = ({ children }) => {
     },
     onDisconnect() {
       setIsAuthenticated(false);
+      router.push('/');
       clearSession();
     },
   });
