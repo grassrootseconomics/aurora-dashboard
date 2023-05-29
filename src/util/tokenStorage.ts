@@ -1,30 +1,45 @@
 import { API } from '@/config';
 
+const getLocalStorage = () => {
+  if (typeof window !== 'undefined') {
+    return window.localStorage;
+  }
+  // Return a mock localStorage object for server-side rendering
+  return {
+    getItem: () => null,
+    setItem: () => null,
+    removeItem: () => null,
+  };
+};
+
+const storage = getLocalStorage();
+
 export type AccessTokenStructure = {
   address: string;
-  email: string;
+  key: string;
+  role: 'buyer' | 'association' | 'project';
+  name: string;
+  type: 'ACCESS' | 'REFRESH';
   exp: number;
   iat: number;
   iss: string;
-  type: 'ACCESS';
-  username: string;
 };
 
 export const fetchAccessToken = () => {
-  return localStorage.getItem(API.ACCESS_TOKEN_STORAGE);
+  return storage.getItem(API.ACCESS_TOKEN_STORAGE);
 };
 
 export const fetchRefreshToken = () => {
-  return localStorage.getItem(API.REFRESH_TOKEN_STORAGE);
+  return storage.getItem(API.REFRESH_TOKEN_STORAGE);
 };
 
 export const clearSession = () => {
-  localStorage.removeItem(API.ACCESS_TOKEN_STORAGE);
-  localStorage.removeItem(API.REFRESH_TOKEN_STORAGE);
+  storage.removeItem(API.ACCESS_TOKEN_STORAGE);
+  storage.removeItem(API.REFRESH_TOKEN_STORAGE);
 };
 
 export const setRefreshToken = (rToken: string) => {
-  localStorage.setItem(API.REFRESH_TOKEN_STORAGE, rToken);
+  storage.setItem(API.REFRESH_TOKEN_STORAGE, rToken);
 };
 
 export const setAccessToken = (aToken: string) => {

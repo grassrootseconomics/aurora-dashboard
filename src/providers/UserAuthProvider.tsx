@@ -1,13 +1,10 @@
 import {
-  Dispatch,
   FC,
   PropsWithChildren,
-  SetStateAction,
   createContext,
   useCallback,
   useEffect,
   useMemo,
-  useState,
 } from 'react';
 
 import { useSafeContext } from '@/hooks/useSafeContext';
@@ -23,7 +20,10 @@ import { useAccount, useDisconnect } from 'wagmi';
 interface UserAuthContextValue {
   connectedWallet: string | undefined;
   isAuthenticated: boolean;
-  setIsAuthenticated: Dispatch<SetStateAction<boolean>>;
+  // Role doesn't have to be undefined.
+  // If there is not user authenticated,
+  // we treat it as if a buyer is present.
+  role: 'buyer' | 'association' | 'project';
 }
 
 const UserAuthContext = createContext<UserAuthContextValue | null | undefined>(
@@ -37,20 +37,6 @@ export const useUserAuthContext = () => useSafeContext(UserAuthContext);
 export const UserAuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const { address } = useAccount();
 
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-
-  const { disconnect } = useDisconnect();
-
-  const connectedWallet = useMemo(() => {
-    return address?.toString();
-  }, [address]);
-
-  const clearUserSession = useCallback(() => {
-    setIsAuthenticated(false);
-    disconnect();
-    clearSession();
-  }, [disconnect]);
-
   const isTokenExpired = useCallback((token: string) => {
     const decoded: AccessTokenStructure = jwtDecode(token);
 
@@ -59,26 +45,52 @@ export const UserAuthProvider: FC<PropsWithChildren> = ({ children }) => {
     return decoded.exp < secondsNow;
   }, []);
 
+  const { disconnect } = useDisconnect();
+
+  const clearUserSession = useCallback(() => {
+    disconnect();
+    clearSession();
+  }, [disconnect]);
+
+  const isAuthenticated = useMemo(() => {
+    const token = fetchAccessToken();
+    if (token) {
+      const decoded: AccessTokenStructure = jwtDecode(token);
+      if (decoded.address !== address) {
+        clearSession();
+        return false;
+      } else return !isTokenExpired(token);
+    } else return false;
+  }, [isTokenExpired, address]);
+
+  const role = useMemo(() => {
+    if (isAuthenticated) {
+      const token = fetchAccessToken();
+      if (token) {
+        const decoded: AccessTokenStructure = jwtDecode(token);
+        return decoded.role;
+      } else return 'buyer';
+    } else return 'buyer';
+  }, [isAuthenticated]);
+
+  const connectedWallet = useMemo(() => {
+    return address?.toString();
+  }, [address]);
+
   useEffect(() => {
     const token = fetchAccessToken();
     if (token) {
-      if (isTokenExpired(token)) {
-        clearUserSession();
-      } else {
-        setIsAuthenticated(true);
-      }
-    } else {
-      setIsAuthenticated(false);
+      if (isTokenExpired(token)) clearUserSession();
     }
-  }, [clearUserSession, isTokenExpired, setIsAuthenticated]);
+  }, [clearUserSession, isTokenExpired]);
 
   const value = useMemo<UserAuthContextValue>(() => {
     return {
       connectedWallet,
       isAuthenticated,
-      setIsAuthenticated,
+      role,
     };
-  }, [connectedWallet, isAuthenticated, setIsAuthenticated]);
+  }, [connectedWallet, isAuthenticated, role]);
 
   return (
     <UserAuthContext.Provider value={value}>

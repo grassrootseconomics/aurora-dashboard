@@ -4,14 +4,12 @@ import { FC, ReactNode } from 'react';
 
 import AuroraAppBar from '@/components/core/AuroraAppBar';
 import Body from '@/components/defaultLayout/Body';
-import { useUserAuthContext } from '@/providers/UserAuthProvider';
 import {
   generateAccessToken,
   generateRefreshToken,
   getNonce,
 } from '@/services/auth';
 import {
-  clearSession,
   fetchAccessToken,
   setAccessToken,
   setRefreshToken,
@@ -24,7 +22,6 @@ type DefaultLayoutProps = {
 
 const DefaultLayout: FC<DefaultLayoutProps> = ({ children }) => {
   const { signMessageAsync } = useSignMessage();
-  const { setIsAuthenticated } = useUserAuthContext();
   const router = useRouter();
 
   const authenticateUser = async (connectedWallet: string | undefined) => {
@@ -56,7 +53,7 @@ const DefaultLayout: FC<DefaultLayoutProps> = ({ children }) => {
       if (!token) {
         try {
           authenticateUser(address?.toString()).then(() => {
-            setIsAuthenticated(true);
+            console.log('Welcome User!');
           });
         } catch (err) {
           console.log(err);
@@ -64,9 +61,7 @@ const DefaultLayout: FC<DefaultLayoutProps> = ({ children }) => {
       }
     },
     onDisconnect() {
-      setIsAuthenticated(false);
       router.push('/');
-      clearSession();
     },
   });
 
