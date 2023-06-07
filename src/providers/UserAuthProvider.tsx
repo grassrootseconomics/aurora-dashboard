@@ -23,7 +23,7 @@ interface UserAuthContextValue {
   // Role doesn't have to be undefined.
   // If there is not user authenticated,
   // we treat it as if a buyer is present.
-  role: 'buyer' | 'association' | 'project';
+  userRole: 'buyer' | 'association' | 'project';
 }
 
 const UserAuthContext = createContext<UserAuthContextValue | null | undefined>(
@@ -63,7 +63,7 @@ export const UserAuthProvider: FC<PropsWithChildren> = ({ children }) => {
     } else return false;
   }, [isTokenExpired, address]);
 
-  const role = useMemo(() => {
+  const userRole = useMemo(() => {
     if (isAuthenticated) {
       const token = fetchAccessToken();
       if (token) {
@@ -88,9 +88,9 @@ export const UserAuthProvider: FC<PropsWithChildren> = ({ children }) => {
     return {
       connectedWallet,
       isAuthenticated,
-      role,
+      userRole,
     };
-  }, [connectedWallet, isAuthenticated, role]);
+  }, [connectedWallet, isAuthenticated, userRole]);
 
   return (
     <UserAuthContext.Provider value={value}>

@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 interface CardProps {
   backgroundColor: string;
-  number: number;
+  number: number | undefined;
   text: string;
   icon: any;
   alt: string;

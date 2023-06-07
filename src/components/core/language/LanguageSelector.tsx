@@ -17,7 +17,6 @@ const LanguageSelector = () => {
         style={{
           background: 'transparent',
           border: '0',
-          color: 'white',
           cursor: 'pointer',
           fontWeight: 600,
           textDecoration: i18n.language === 'en' ? 'underline' : 'none',
@@ -31,10 +30,9 @@ const LanguageSelector = () => {
         style={{
           background: 'transparent',
           border: '0',
-          color: 'white',
           cursor: 'pointer',
           fontWeight: 600,
-          textDecoration: i18n.language === 'es' ? 'underline' : 'none',
+          textDecoration: i18n.language != 'en' ? 'underline' : 'none',
         }}
         onClick={() => handleLanguageChange('es')}
       >

@@ -8,7 +8,9 @@ import LanguageSelector from './language/LanguageSelector';
 
 const useStyles: any = makeStyles(() => ({
   appBar: {
+    color: "black!important",
     padding: 5,
+    backgroundColor: "#fcf3dc!important"
   },
 }));
 

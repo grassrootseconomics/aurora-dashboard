@@ -34,10 +34,10 @@ const MyApp = (props: MyAppProps) => {
         <WagmiConfig config={wagmiConfig}>
           <RainbowKitProvider chains={chains}>
             <UserAuthProvider>
-              <DefaultLayout>
-                <CssBaseline />
-                <Component {...pageProps} />
-              </DefaultLayout>
+                <DefaultLayout>
+                  <CssBaseline />
+                  <Component {...pageProps} />
+                </DefaultLayout>
             </UserAuthProvider>
           </RainbowKitProvider>
         </WagmiConfig>
