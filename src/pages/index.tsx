@@ -177,7 +177,7 @@ export default function Home() {
               width={200}
               height={234}
               className="dashboard__logo"
-              src={'/assets/logos/aurora.png'}
+              src={'/assets/logos/Aurora.png'}
               alt="Aurora"
             />
           )}
