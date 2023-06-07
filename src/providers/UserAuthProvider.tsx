@@ -8,6 +8,7 @@ import {
 } from 'react';
 
 import { useSafeContext } from '@/hooks/useSafeContext';
+import { UserRole } from '@/util/constants/users';
 import '@/util/tokenStorage';
 import {
   AccessTokenStructure,
@@ -69,8 +70,8 @@ export const UserAuthProvider: FC<PropsWithChildren> = ({ children }) => {
       if (token) {
         const decoded: AccessTokenStructure = jwtDecode(token);
         return decoded.role;
-      } else return 'buyer';
-    } else return 'buyer';
+      } else return UserRole.buyer;
+    } else return UserRole.buyer;
   }, [isAuthenticated]);
 
   const connectedWallet = useMemo(() => {
