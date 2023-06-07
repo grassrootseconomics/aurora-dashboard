@@ -1,6 +1,13 @@
-import Document, { Head, Html, Main, NextScript } from 'next/document';
+import Document, {
+  DocumentContext,
+  DocumentInitialProps,
+  Head,
+  Html,
+  Main,
+  NextScript,
+} from 'next/document';
 
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import { ServerStyleSheets } from '@mui/styles';
 
@@ -43,7 +50,9 @@ export default class MyDocument extends Document {
   }
 }
 
-MyDocument.getInitialProps = async (ctx) => {
+MyDocument.getInitialProps = async (
+  ctx: DocumentContext
+): Promise<DocumentInitialProps> => {
   const sheets = new ServerStyleSheets();
   const originalRenderPage = ctx.renderPage;
 
@@ -58,7 +67,7 @@ MyDocument.getInitialProps = async (ctx) => {
     ...initialProps,
     styles: [
       ...React.Children.toArray(initialProps.styles),
-      sheets.getStyleElement(),
+      sheets.getStyleElement() as ReactNode,
     ],
   };
 };

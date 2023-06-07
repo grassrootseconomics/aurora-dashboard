@@ -12,9 +12,6 @@ import LineChart from '@/components/core/charts/LineChart';
 import AvailableBatchesTable from '@/components/core/tables.tsx/AvailableBatchesTable';
 import { useUserAuthContext } from '@/providers/UserAuthProvider';
 import { Dataset } from '@/util/models/Dataset';
-import { fetchAccessToken } from '@/util/tokenStorage';
-
-import Kilogram from '../../public/assets/kilogram.png';
 
 export default function AvailableAvailables() {
   const { t } = useTranslation('translation');
@@ -23,14 +20,15 @@ export default function AvailableAvailables() {
   const { isAuthenticated } = useUserAuthContext();
   const router = useRouter();
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
   useEffect(() => {
-    if (!fetchAccessToken()) {
+    if (!isAuthenticated) {
       router.push('/');
     }
+
     setDatasets([
       new Dataset(
         'CocoaAralambis',
@@ -43,7 +41,7 @@ export default function AvailableAvailables() {
         '#a03564'
       ),
     ]);
-  }, [isAuthenticated, router]);
+  }, [router, isAuthenticated]);
 
   return (
     <>
@@ -60,7 +58,7 @@ export default function AvailableAvailables() {
               backgroundColor="#d0741a"
               number={200}
               text={t('dry_cocoa_available')}
-              icon={Kilogram.src}
+              icon={'/assets/kilogram.png'}
               alt={'Kilogram'}
             />
           </div>

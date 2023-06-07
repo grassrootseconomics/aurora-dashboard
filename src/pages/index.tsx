@@ -13,13 +13,6 @@ import BarChart from '@/components/core/charts/BarChart';
 import LineChart from '@/components/core/charts/LineChart';
 import { Dataset } from '@/util/models/Dataset';
 
-import Cocoa from '../../public/assets/cocoa.png';
-import Farmer from '../../public/assets/farmer.png';
-import Kilogram from '../../public/assets/kilogram.png';
-import Aurora from '../../public/assets/logos/aurora.png';
-import Man from '../../public/assets/man.png';
-import Woman from '../../public/assets/woman.png';
-
 export default function Home() {
   const [datasets, setDatasets] = useState<Dataset[]>([]);
 
@@ -51,7 +44,7 @@ export default function Home() {
             width={200}
             height={234}
             className="dashboard__logo"
-            src={Aurora.src}
+            src={`/assets/logos/Aurora.png`}
             alt="Aurora"
           />
           <div className="dashboard__cards dashboard__cards--main">
@@ -60,7 +53,7 @@ export default function Home() {
                 backgroundColor="#f1842d"
                 number={200}
                 text={t('dry_cocoa_available')}
-                icon={Kilogram.src}
+                icon={`/assets/kilogram.png`}
                 alt={''}
               />
             </Link>
@@ -69,7 +62,7 @@ export default function Home() {
                 backgroundColor="#f39a1a"
                 number={200}
                 text={t('sold_international_market')}
-                icon={Kilogram.src}
+                icon={`/assets/kilogram.png`}
                 alt={''}
               />
             </Link>
@@ -81,21 +74,21 @@ export default function Home() {
               backgroundColor="#d0741a"
               number={200}
               text={t('number_producers')}
-              icon={Farmer.src}
+              icon={`/assets/farmer.png`}
               alt={'Producers'}
             />
             <CardTwo
               backgroundColor="#f1842d"
               number={200}
               text={t('number_men_under_30')}
-              icon={Man.src}
+              icon={`/assets/man.png`}
               alt={'Men'}
             />
             <CardThree
               backgroundColor="#964514"
               number={200}
               text={t('number_women')}
-              icon={Woman.src}
+              icon={`/assets/woman.png`}
               alt={'Women'}
               maxIconWidth="145px"
             />
@@ -103,7 +96,7 @@ export default function Home() {
               backgroundColor="#f39a1a"
               number={200}
               text={t('ha_forest_conservation')}
-              icon={Cocoa.src}
+              icon={`/assets/cocoa.png`}
               alt={'Forest'}
             />
           </div>

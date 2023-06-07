@@ -12,9 +12,6 @@ import LineChart from '@/components/core/charts/LineChart';
 import SoldBatchesTable from '@/components/core/tables.tsx/SoldBatchesTable';
 import { useUserAuthContext } from '@/providers/UserAuthProvider';
 import { Dataset } from '@/util/models/Dataset';
-import { fetchAccessToken } from '@/util/tokenStorage';
-
-import Kilogram from '../../public/assets/kilogram.png';
 
 export default function SoldAvailables() {
   const { t } = useTranslation('translation');
@@ -28,7 +25,7 @@ export default function SoldAvailables() {
   };
 
   useEffect(() => {
-    if (!fetchAccessToken()) {
+    if (!isAuthenticated) {
       router.push('/');
     }
     setDatasets([
@@ -60,7 +57,7 @@ export default function SoldAvailables() {
               backgroundColor="#d0741a"
               number={200}
               text={t('sold_international_market')}
-              icon={Kilogram.src}
+              icon={`/assets/kilogram.png`}
               alt={'Kilogram'}
             />
           </div>
