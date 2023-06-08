@@ -38,14 +38,14 @@ const FermentationModel = () => {
           <div className="fermentation-model">
             <BackButton />
             <h1>{t('fermentation_model.title')}</h1>
-            <Grid className="fermentation-model__container" container>
+            { batch && batch.fermentationPhase ? <Grid className="fermentation-model__container" container>
               <Grid item xs={6}>
-                <DailyReportsTable dailyReports={batch?.fermentationPhase.dailyReports} />
+                <DailyReportsTable fermentationPhase={batch.fermentationPhase} />
               </Grid>
               <Grid item xs={6}>
-                <FlipsTable fermentationPhase={batch?.fermentationPhase} />
+                <FlipsTable fermentationPhase={batch.fermentationPhase} />
               </Grid>
-            </Grid>
+            </Grid> : "" }
           </div>
          </>
     );

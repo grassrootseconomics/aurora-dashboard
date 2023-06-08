@@ -19,3 +19,9 @@ export const addPulp = async (pulp: any): Promise<any> => {
     );
     return response;
 };
+
+export const deletePulp = async (pulpId: number): Promise<any> => {
+  const response: AxiosResponseData<any> = await authenticatedApi.delete(
+    `/v1/pulp/${pulpId}`);
+  return response;
+};

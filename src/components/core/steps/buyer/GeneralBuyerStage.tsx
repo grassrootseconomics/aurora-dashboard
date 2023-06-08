@@ -6,7 +6,6 @@ import PulpStage from './PulpBuyerStage';
 import FermentationStage from './FermentationBuyerStage';
 import { UserRole } from '@/util/constants/users';
 import { BuyerBatchInfo } from '@/util/models/Batch/BuyerBatchInfo';
-import Image from 'next/image';
 
 interface GeneralStageProps {
     name: string;
@@ -39,7 +38,7 @@ const GeneralBuyerStage = (props: GeneralStageProps) => {
                     }
                     </div>
                 </div>
-                <Image className="batch__stage-image" src={props.img} alt={props.name}/>
+                <img className="batch__stage-image" src={props.img} alt={props.name}/>
             </div>
         </div>
       </>

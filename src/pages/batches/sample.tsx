@@ -38,7 +38,6 @@ const SampleForm: FC = () => {
     const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         // Perform form submission logic here
-        console.log(formData);
     };
 
     const handleInputChange = (event: ChangeEvent<any>, ) => {

@@ -1,15 +1,16 @@
-import { useRouter } from 'next/router';
-
 import { FC, ReactNode } from 'react';
 
 import AuroraAppBar from '@/components/core/AuroraAppBar';
+import Footer from '@/components/core/Footer';
 import Body from '@/components/defaultLayout/Body';
+import { useUserAuthContext } from '@/providers/UserAuthProvider';
 import {
   generateAccessToken,
   generateRefreshToken,
   getNonce,
 } from '@/services/auth';
 import {
+  clearSession,
   fetchAccessToken,
   setAccessToken,
   setRefreshToken,
@@ -22,7 +23,7 @@ type DefaultLayoutProps = {
 
 const DefaultLayout: FC<DefaultLayoutProps> = ({ children }) => {
   const { signMessageAsync } = useSignMessage();
-  const router = useRouter();
+  const { setIsAuthenticated } = useUserAuthContext();
 
   const authenticateUser = async (connectedWallet: string | undefined) => {
     if (connectedWallet) {
@@ -38,6 +39,7 @@ const DefaultLayout: FC<DefaultLayoutProps> = ({ children }) => {
           if (rToken) {
             setRefreshToken(rToken);
             const { aToken } = await generateAccessToken(rToken);
+            window.location.reload();
             if (aToken) {
               setAccessToken(aToken);
             }
@@ -53,7 +55,7 @@ const DefaultLayout: FC<DefaultLayoutProps> = ({ children }) => {
       if (!token) {
         try {
           authenticateUser(address?.toString()).then(() => {
-            console.log('Welcome User!');
+            setIsAuthenticated(true);
           });
         } catch (err) {
           console.log(err);
@@ -61,7 +63,9 @@ const DefaultLayout: FC<DefaultLayoutProps> = ({ children }) => {
       }
     },
     onDisconnect() {
-      router.push('/');
+      setIsAuthenticated(false);
+      window.location.href = '/';
+      clearSession();
     },
   });
 
@@ -69,6 +73,7 @@ const DefaultLayout: FC<DefaultLayoutProps> = ({ children }) => {
     <>
       <AuroraAppBar />
       <Body>{children}</Body>
+      <Footer />
     </>
   );
 };

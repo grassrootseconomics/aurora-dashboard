@@ -1,22 +1,21 @@
-
-import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
+
+import React, { useEffect, useState } from 'react';
+
 import { Tab, Tabs } from '@mui/material';
-import { useUserAuthContext } from '@/providers/UserAuthProvider';
-import { fetchAccessToken } from '@/util/tokenStorage';
 
+import { BackButton } from '@/components/core/buttons/BackButton';
 import CardOne from '@/components/core/cards/CardOne';
-import CardTwo from '@/components/core/cards/CardTwo';
 import CardThree from '@/components/core/cards/CardThree';
-
+import CardTwo from '@/components/core/cards/CardTwo';
 import PieChart from '@/components/core/charts/PieChart';
 import ProducersTable from '@/components/core/tables/ProducersTable';
-import { BackButton } from '@/components/core/buttons/BackButton';
+import { useUserAuthContext } from '@/providers/UserAuthProvider';
 import { getAssociations } from '@/services/association';
+import { getProducersInfoList } from '@/services/producer';
 import { UserRole } from '@/util/constants/users';
-import { getBasicProducers, getProducersStatistics } from '@/services/producer';
 import { Association } from '@/util/models/BasicAssociation';
 import { BasicProducer } from '@/util/models/Producer/BasicProducer';
 import { ProducersStatistics } from '@/util/models/Producer/ProducersStatistics';
@@ -27,9 +26,11 @@ export default function Producers() {
   const [selectedAssociation, setSelectedAssociation] = useState<number>(0);
   const [producers, setProducers] = useState<BasicProducer[]>();
   const [producersCocoaHa, setProducersCocoaHa] = useState<number>(0);
-  const [producersConservationHa, setProducersConservationHa] = useState<number>(0);
+  const [producersConservationHa, setProducersConservationHa] =
+    useState<number>(0);
   const [producersStats, setProducersStats] = useState<ProducersStatistics>();
   const [menNo, setMenNo] = useState<number>(0);
+  const [loading, setLoading] = useState(true);
   const { userRole } = useUserAuthContext();
   const router = useRouter();
 
@@ -38,54 +39,47 @@ export default function Producers() {
   };
 
   useEffect(() => {
-    if (!fetchAccessToken()) {
-      //router.push('/');
-    }
-
-    switch(userRole) {
+    switch (userRole) {
       case UserRole.project:
-        getAssociations().then(assocs => setAssociations(assocs))
+        getAssociations().then((assocs) => setAssociations(assocs));
         return;
     }
   }, [userRole, router]);
 
   useEffect(() => {
-    switch(userRole) {
+    switch (userRole) {
       case UserRole.project:
-        if(associations && selectedAssociation >= 1) {
-          getBasicProducers(associations[selectedAssociation - 1].name).then(data => {
-            setProducers(data);
-            setProducersCocoaHa(data.reduce((acc, p) => acc + +p.cocoaHa, 0));
-            setProducersConservationHa(data.reduce((acc, p) => acc + +p.conservationHa, 0));
-            getProducersStatistics(associations[selectedAssociation - 1].name).then(stats => {
-              setProducersStats(stats)
-              setMenNo(data.length - stats.nrWomen)
-            })
-          })
-          
+        if (associations && selectedAssociation >= 1) {
+          getProducersInfoList(associations[selectedAssociation - 1].name).then(
+            (data) => {
+              setProducers(data.producers);
+              setProducersCocoaHa(data.statistics.haCocoa);
+              setProducersConservationHa(data.statistics.haForestConservation);
+              setProducersStats(data.statistics);
+              setMenNo(data.statistics.nrMen);
+              setLoading(false);
+            }
+          );
         } else if (associations && selectedAssociation == 0) {
-          getBasicProducers().then(data => {
-            setProducers(data)
-            setProducersCocoaHa(data.reduce((acc, p) => acc + +p.cocoaHa, 0));
-            setProducersConservationHa(data.reduce((acc, p) => acc + +p.conservationHa, 0));
-            getProducersStatistics().then(stats => {
-              setProducersStats(stats)
-              setMenNo(data.length - stats.nrWomen)
-            })
-          })
-          
+          getProducersInfoList().then((data) => {
+            setProducers(data.producers);
+            setProducersCocoaHa(data.statistics.haCocoa);
+            setProducersConservationHa(data.statistics.haForestConservation);
+            setProducersStats(data.statistics);
+            setMenNo(data.statistics.nrMen);
+            setLoading(false);
+          });
         }
         return;
       case UserRole.association:
-        getBasicProducers().then(data => {
-            setProducers(data)
-            setProducersCocoaHa(data.reduce((acc, p) => acc + +p.cocoaHa, 0));
-            setProducersConservationHa(data.reduce((acc, p) => acc + +p.conservationHa, 0));
-            getProducersStatistics().then(stats => {
-              setProducersStats(stats)
-              setMenNo(data.length - stats.nrWomen)
-            })
-          })
+        getProducersInfoList().then((data) => {
+          setProducers(data.producers);
+          setProducersCocoaHa(data.statistics.haCocoa);
+          setProducersConservationHa(data.statistics.haForestConservation);
+          setProducersStats(data.statistics);
+          setMenNo(data.statistics.nrMen);
+          setLoading(false);
+        });
         return;
     }
   }, [userRole, associations, selectedAssociation]);
@@ -100,13 +94,14 @@ export default function Producers() {
       </Head>
       <div className="dashboard__container">
         <div>
-          <BackButton/>
+          <BackButton />
           <div className={`dashboard__cards  dashboard__cards--main`}>
             <CardOne
               backgroundColor="#d0741a"
               number={producers?.length}
               text={t('number_producers')}
               icon={'/assets/farmer.png'}
+              loading={loading}
               alt={'Producers'}
             />
             <CardTwo
@@ -114,6 +109,7 @@ export default function Producers() {
               number={producersStats?.nrYoungMen}
               text={t('number_men_under_30')}
               icon={'/assets/man.png'}
+              loading={loading}
               alt={'Men'}
             />
             <CardThree
@@ -121,56 +117,68 @@ export default function Producers() {
               number={producersStats?.nrWomen}
               text={t('number_women')}
               icon={'/assets/woman.png'}
+              loading={loading}
               alt={'Women'}
               maxIconWidth="145px"
             />
           </div>
         </div>
         <div className="dashboard__container-info">
-        {  associations ? 
-              <Tabs
-                value={selectedAssociation}
-                onChange={handleChange}
-                variant="scrollable"
-                TabIndicatorProps={{
-                  style: { display: 'none' },
-                }}
-                TabScrollButtonProps={{
-                  style: { display: 'flex' },
-                }}
-                scrollButtons="auto"
-                aria-label="scrollable auto tabs example"
-              >
-                <Tab key={-1} label={"All"} style={{ marginBottom: 10 }} />
-                {associations.map((item, index) => (
-                  <Tab key={index} label={item.name} style={{ marginBottom: 10 }} />
-                ))}
-              </Tabs> : "" 
-          }
+          {associations ? (
+            <Tabs
+              value={selectedAssociation}
+              onChange={handleChange}
+              variant="scrollable"
+              TabIndicatorProps={{
+                style: { display: 'none' },
+              }}
+              TabScrollButtonProps={{
+                style: { display: 'flex' },
+              }}
+              scrollButtons="auto"
+              aria-label="scrollable auto tabs example"
+            >
+              <Tab key={-1} label={'All'} style={{ marginBottom: 10 }} />
+              {associations.map((item, index) => (
+                <Tab
+                  key={index}
+                  label={item.name}
+                  style={{ marginBottom: 10 }}
+                />
+              ))}
+            </Tabs>
+          ) : (
+            ''
+          )}
           <div className="dashboard__cards">
-            {
-              producers ? 
-                <div className="dashboard__charts-production">
-                  <ProducersTable producers={producers}/>
-                </div> : ""
-            }  
+            {producers ? (
+              <div className="dashboard__charts-production">
+                <ProducersTable producers={producers} />
+              </div>
+            ) : (
+              ''
+            )}
           </div>
           <div className="dashboard__charts">
             <div className="dashboard__charts-sales">
-            { producers && producersStats ?  <PieChart
-                title={t('producers.men_vs_women')}
-                labels={[t('producers.men'), t('producers.women')]}
-                datas={[menNo, producersStats?.nrWomen ?? 0]}
-                colors={["#f39a1a", "#cb6324"]}
-                backgroundColor="#964514"
-              /> : ""}
+              {producers && producersStats ? (
+                <PieChart
+                  title={t('producers.men_vs_women')}
+                  labels={[t('producers.men'), t('producers.women')]}
+                  datas={[menNo, producersStats?.nrWomen ?? 0]}
+                  colors={['#f39a1a', '#cb6324']}
+                  backgroundColor="#964514"
+                />
+              ) : (
+                ''
+              )}
             </div>
             <div className="dashboard__charts-sales">
               <PieChart
                 title={t('producers.cocoa_vs_conservation')}
                 labels={[t('producers.cocoa'), t('producers.conservation')]}
                 datas={[producersCocoaHa, producersConservationHa]}
-                colors={["#f39a1a", "#a3411b"]}
+                colors={['#f39a1a', '#a3411b']}
                 backgroundColor="#d0741a"
               />
             </div>

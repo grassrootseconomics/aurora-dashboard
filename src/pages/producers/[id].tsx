@@ -81,7 +81,7 @@ export default function Producers() {
                 <Container>
                     <BackButton/>
                     <div className="producer__header">
-                        <h1>Producer</h1>
+                        <h1>{t('producers.title')}</h1>
                         <div className="producer__info">
                             <button className="producer__button" onClick={() => router.push(`/producers/activity/${id}`)}>
                                 {t('producers.button')}
@@ -93,7 +93,7 @@ export default function Producers() {
                     </div>
                     { !isLoading ? <form onSubmit={handleSubmit(onSubmit)}>
                         <Grid container spacing={2}>
-                        <Grid item xs={6}>
+                        <Grid item sm={12} md={6}>
                         <Controller
                             control={control}
                             name="firstName"
@@ -106,7 +106,7 @@ export default function Producers() {
                                             startAdornment: (
                                                 <div className="producer__icon-label">
                                                     <AccountCircle className="producer__icon" />
-                                                    First Name:
+                                                    {t('producers.first_name')}:
                                                 </div>
                                             )
                                         }}
@@ -127,7 +127,7 @@ export default function Producers() {
                                                 startAdornment: (
                                                     <div className="producer__icon-label">
                                                         <AccountCircle className="producer__icon" />
-                                                        Last Name:
+                                                        {t('producers.last_name')}:
                                                     </div>
                                                 )
                                             }}
@@ -148,7 +148,7 @@ export default function Producers() {
                                             startAdornment: (
                                                 <div className="producer__icon-label">
                                                     <Phone className="producer__icon" />
-                                                    Phone Number:
+                                                    {t('producers.phone_number')}:
                                                 </div>
                                             )
                                         }}
@@ -165,15 +165,15 @@ export default function Producers() {
                                     <div className="producer__row">
                                         <div className="producer__icon-label">
                                             <Wc className="producer__icon" />
-                                            Gender:
+                                            {t('producers.gender')}:
                                         </div>
                                         <Select 
                                             {...field}
                                             disabled={!editMode}
                                             >
-                                            <MenuItem value="male">Male</MenuItem>
-                                            <MenuItem value="female">Female</MenuItem>
-                                            <MenuItem value="other">Other</MenuItem>
+                                            <MenuItem value="male">{t('producers.male')}</MenuItem>
+                                            <MenuItem value="female">{t('producers.female')}</MenuItem>
+                                            <MenuItem value="other">{t('producers.other')}</MenuItem>
                                         </Select>
                                     </div>
                                 )}
@@ -190,7 +190,7 @@ export default function Producers() {
                                             startAdornment: (
                                                 <div className="producer__icon-label">
                                                     <Cake className="producer__icon" />
-                                                    Year of Birth:
+                                                    {t('producers.year_birth')}:
                                                 </div>
                                             )
                                         }}
@@ -207,7 +207,7 @@ export default function Producers() {
                                         <div className="producer__row">
                                             <div className="producer__icon-label">
                                                 <Business className="producer__icon" />
-                                                Department:
+                                                {t('producers.department')}:
                                             </div>
                                             <Select 
                                                 {...field}
@@ -233,7 +233,7 @@ export default function Producers() {
                                             startAdornment: (
                                                 <div className="producer__icon-label">
                                                     <LocationOn className="producer__icon" />
-                                                    Municipality:
+                                                    {t('producers.municipality')}:
                                                 </div>
                                             )
                                         }}
@@ -254,7 +254,7 @@ export default function Producers() {
                                             startAdornment: (
                                                 <div className="producer__icon-label">
                                                     <LocationOn className="producer__icon" />
-                                                    Village:
+                                                    {t('producers.village')}:
                                                 </div>
                                             )
                                         }}
@@ -272,7 +272,7 @@ export default function Producers() {
                                         <div className="producer__row">
                                             <div className="producer__icon-label">
                                                 <Domain className="producer__icon" />
-                                                Association:
+                                                {t('producers.association')}:
                                             </div>
                                             <Select 
                                                 {...field}
@@ -288,7 +288,7 @@ export default function Producers() {
                                 /> : ""
                             }
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item sm={12} md={6}>
                             <Controller
                                 control={control}
                                 name="farmName"
@@ -301,7 +301,7 @@ export default function Producers() {
                                             startAdornment: (
                                                 <div className="producer__icon-label">
                                                     <AgricultureIcon className="producer__icon" />
-                                                    Farm Name:
+                                                    {t('producers.farm_name')}:
                                                 </div>
                                             )
                                         }}
@@ -322,7 +322,7 @@ export default function Producers() {
                                             startAdornment: (
                                                 <div className="producer__icon-label">
                                                     <LocationOn className="producer__icon" />
-                                                    Location:
+                                                    {t('producers.location')}:
                                                 </div>
                                             )
                                         }}
@@ -343,7 +343,7 @@ export default function Producers() {
                                             startAdornment: (
                                                 <div className="producer__icon-label">
                                                     <Landscape className="producer__icon" />
-                                                    # of Ha:
+                                                    {t('producers.no_ha')}:
                                                 </div>
                                             )
                                         }}
@@ -364,7 +364,7 @@ export default function Producers() {
                                             startAdornment: (
                                                 <div className="producer__icon-label">
                                                     <Landscape className="producer__icon" />
-                                                    # of Cocoa Ha:
+                                                    {t('producers.no_cocoa_ha')}:
                                                 </div>
                                             )
                                         }}
@@ -385,7 +385,7 @@ export default function Producers() {
                                             startAdornment: (
                                                 <div className="producer__icon-label">
                                                     <ForestIcon className="producer__icon" />
-                                                    # of Forest Ha:
+                                                    {t('producers.no_forest_ha')}:
                                                 </div>
                                             )
                                         }}
@@ -406,7 +406,7 @@ export default function Producers() {
                                             startAdornment: (
                                                 <div className="producer__icon-label">
                                                     <AppsIcon className="producer__icon" />
-                                                    # of Cocoa Lots:
+                                                    {t('producers.no_cocoa_lots')}:
                                                 </div>
                                             )
                                         }}
@@ -427,7 +427,7 @@ export default function Producers() {
                                             startAdornment: (
                                                 <div className="producer__icon-label">
                                                     <LocalDrink className="producer__icon" />
-                                                    Water Sources:
+                                                    {t('producers.water_source')}:
                                                 </div>
                                             )
                                         }}
@@ -448,7 +448,7 @@ export default function Producers() {
                                             startAdornment: (
                                                 <div className="producer__icon-label">
                                                     <Pets className="producer__icon" />
-                                                    Wildlife:
+                                                    {t('producers.wildlife')}:
                                                 </div>
                                             )
                                         }}
@@ -462,14 +462,14 @@ export default function Producers() {
                         { editMode ? 
                             <div className="producer-edit">
                                 <div onClick={() => {setEditMode(false)}}>
-                                    <CancelIcon /> Cancel Edit
+                                    <CancelIcon /> {t('buttons.cancel_edit')}
                                 </div>
-                                <button type="submit"><AddCircleIcon /> Save</button>
+                                <button type="submit"><AddCircleIcon /> {t('buttons.save')}</button>
         
                             </div> :
                             <div className="producer-edit">
                                 <div onClick={() => {setEditMode(!editMode)}}>
-                                    <EditNoteIcon /> Start Edit
+                                    <EditNoteIcon /> {t('buttons.start_edit')}
                                 </div>
                             </div>
                         }

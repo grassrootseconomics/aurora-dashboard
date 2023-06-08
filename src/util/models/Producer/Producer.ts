@@ -1,3 +1,5 @@
+import { Association } from "../BasicAssociation";
+
 export interface Producer {
     id: number;
     code: number;
@@ -18,4 +20,5 @@ export interface Producer {
     nrCocoaLots: number;
     nrWaterSources: number;
     wildlife: string;
+    association: Association
 };

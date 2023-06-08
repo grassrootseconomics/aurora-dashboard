@@ -1,15 +1,16 @@
 import { calculateAverage } from "@/util/format/array";
+import { Association } from "../BasicAssociation";
 import { Batch } from "./Batch";
 
 export interface BuyerBatchInfo {
     id: number;
-    idAssociation: number
     code: string;
     storagePhase: StoragePhase;
     dryingPhase: DryingPhase;
     fermentationPhase: FermentationPhase;
     pulpsPhase: PulpPhase;
     producersPhase: ProducersPhase;
+    association: Association | null;
 }
 
 export interface StoragePhase {
@@ -24,7 +25,6 @@ export interface DryingPhase {
     grainHumidity: number; 
 }
 
-//Initial T and Romm T
 export interface FermentationPhase {
     genetics: string;
     brixDegrees: number;
@@ -50,7 +50,6 @@ export interface ProducersPhase {
 export function mapToBuyerBatchInfo(source: Batch): BuyerBatchInfo {
     const BuyerBatchInfoDto: BuyerBatchInfo = {
         id: source.id,
-        idAssociation: source.idAssociation,
         code: source.code,
         storagePhase: {
             netWeight: source.storage.netWeight,
@@ -65,7 +64,7 @@ export function mapToBuyerBatchInfo(source: Batch): BuyerBatchInfo {
         fermentationPhase: {
             genetics: source.fermentationPhase.genetics,
             brixDegrees: source.fermentationPhase.brixDegrees,
-            initialT: source.fermentationPhase.dailyReports.find(r => r.day == 1)?.temperatureMass ?? 0,
+            initialT: source.fermentationPhase.dailyReports ? source.fermentationPhase.dailyReports[0].temperatureMass ?? 0 : 0,
             roomT: calculateAverage(source.fermentationPhase.dailyReports.map(r => +r.temperatureMass)),
             humidity: source.fermentationPhase.humidity,
             hoursDrained: source.fermentationPhase.hoursDrained,
@@ -80,7 +79,8 @@ export function mapToBuyerBatchInfo(source: Batch): BuyerBatchInfo {
             noProducers: new Set(source.pulpsUsed.map(p => p.pulp.codeProducer)).size,
             cocoaHa: +source.pulpsUsed.reduce((accumulator, item) => accumulator + item.pulp.producer.nrCocoaHa, ""),
             conservationHa: +source.pulpsUsed.reduce((accumulator, item) => accumulator + item.pulp.producer.nrForestHa, "")
-        }
+        },
+        association: source.pulpsUsed ? source.pulpsUsed[0].pulp.producer.association : null
     };
   
     return BuyerBatchInfoDto;

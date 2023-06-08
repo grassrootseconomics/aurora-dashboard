@@ -1,14 +1,16 @@
 import {
+  Dispatch,
   FC,
   PropsWithChildren,
+  SetStateAction,
   createContext,
   useCallback,
   useEffect,
   useMemo,
+  useState,
 } from 'react';
 
 import { useSafeContext } from '@/hooks/useSafeContext';
-import { UserRole } from '@/util/constants/users';
 import '@/util/tokenStorage';
 import {
   AccessTokenStructure,
@@ -17,14 +19,13 @@ import {
 } from '@/util/tokenStorage';
 import jwtDecode from 'jwt-decode';
 import { useAccount, useDisconnect } from 'wagmi';
+import { UserRole } from '@/util/constants/users';
 
 interface UserAuthContextValue {
   connectedWallet: string | undefined;
   isAuthenticated: boolean;
-  // Role doesn't have to be undefined.
-  // If there is not user authenticated,
-  // we treat it as if a buyer is present.
-  userRole: 'buyer' | 'association' | 'project';
+  userRole: UserRole | null;
+  setIsAuthenticated: Dispatch<SetStateAction<boolean>>;
 }
 
 const UserAuthContext = createContext<UserAuthContextValue | null | undefined>(
@@ -35,8 +36,23 @@ UserAuthContext.displayName = 'UserAuthContext';
 
 export const useUserAuthContext = () => useSafeContext(UserAuthContext);
 
-export const UserAuthProvider: FC<PropsWithChildren> = ({ children }) => {
+const UserAuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const { address } = useAccount();
+
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [userRole, setUserRole] = useState<UserRole | null>(null);
+
+  const { disconnect } = useDisconnect();
+
+  const connectedWallet = useMemo(() => {
+    return address?.toString();
+  }, [address]);
+
+  const clearUserSession = useCallback(() => {
+    setIsAuthenticated(false);
+    disconnect();
+    clearSession();
+  }, [disconnect]);
 
   const isTokenExpired = useCallback((token: string) => {
     const decoded: AccessTokenStructure = jwtDecode(token);
@@ -46,52 +62,34 @@ export const UserAuthProvider: FC<PropsWithChildren> = ({ children }) => {
     return decoded.exp < secondsNow;
   }, []);
 
-  const { disconnect } = useDisconnect();
-
-  const clearUserSession = useCallback(() => {
-    disconnect();
-    clearSession();
-  }, [disconnect]);
-
-  const isAuthenticated = useMemo(() => {
-    const token = fetchAccessToken();
-    if (token) {
-      const decoded: AccessTokenStructure = jwtDecode(token);
-      if (decoded.address !== address) {
-        clearSession();
-        return false;
-      } else return !isTokenExpired(token);
-    } else return false;
-  }, [isTokenExpired, address]);
-
-  const userRole = useMemo(() => {
-    if (isAuthenticated) {
-      const token = fetchAccessToken();
-      if (token) {
-        const decoded: AccessTokenStructure = jwtDecode(token);
-        return decoded.role;
-      } else return UserRole.buyer;
-    } else return UserRole.buyer;
-  }, [isAuthenticated]);
-
-  const connectedWallet = useMemo(() => {
-    return address?.toString();
-  }, [address]);
+  const setRole = useCallback((token: string) => {
+    const decoded: AccessTokenStructure = jwtDecode(token);
+    setUserRole(decoded.role)
+  }, []);
 
   useEffect(() => {
     const token = fetchAccessToken();
     if (token) {
-      if (isTokenExpired(token)) clearUserSession();
+      if (isTokenExpired(token)) {
+        clearUserSession();
+      } else {
+        setRole(token);
+        setIsAuthenticated(true);
+      }
+    } else {
+      setUserRole(UserRole.buyer)
+      setIsAuthenticated(false);
     }
-  }, [clearUserSession, isTokenExpired]);
+  }, [clearUserSession, isTokenExpired, setIsAuthenticated]);
 
   const value = useMemo<UserAuthContextValue>(() => {
     return {
       connectedWallet,
-      isAuthenticated,
       userRole,
+      isAuthenticated,
+      setIsAuthenticated,
     };
-  }, [connectedWallet, isAuthenticated, userRole]);
+  }, [connectedWallet, userRole, isAuthenticated, setIsAuthenticated]);
 
   return (
     <UserAuthContext.Provider value={value}>
@@ -99,3 +97,5 @@ export const UserAuthProvider: FC<PropsWithChildren> = ({ children }) => {
     </UserAuthContext.Provider>
   );
 };
+
+export default UserAuthProvider;

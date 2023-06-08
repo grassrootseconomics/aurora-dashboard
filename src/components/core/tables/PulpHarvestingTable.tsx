@@ -3,7 +3,7 @@ import { TableBody, TableCell, TableContainer, TableHead, TableRow, Table, Table
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import AddPulpModal from '../modals/AddPulpModal';
-import PulpModal from '../modals/PulpModal';
+import EditPulpModal from '../modals/EditPulpModal';
 import TablePaginationActions from './TablePaginationActions';
 
 interface PulpHarvestingProps {
@@ -66,7 +66,7 @@ const PulpHarvestingTable = (props: PulpHarvestingProps) => {
                 <TableHead>
                     <TableRow>
                         <TableCell align="center"></TableCell>
-                        {/* <TableCell align="center"><div className="table__cell-container">{t('producer_activity.batch_code')}</div></TableCell> */}
+                        <TableCell align="center"><div className="table__cell-container">{t('producer_activity.batch_code')}</div></TableCell>
                         <TableCell align="center"><div className="table__cell-container">{t('producer_activity.date')}</div></TableCell>
                         <TableCell align="center"><div className="table__cell-container">{t('producer_activity.weight')}</div></TableCell>
                         <TableCell align="center"><div className="table__cell-container">{t('producer_activity.selling_price')}</div></TableCell>
@@ -79,7 +79,7 @@ const PulpHarvestingTable = (props: PulpHarvestingProps) => {
                         key={row.id}
                     >
                         <TableCell align="center"><button className="batch-action" onClick={() => handleOpenEditModal(row.id)}>?</button></TableCell>
-                        {/* <TableCell align="center"><div className="table__cell-container">{row.batchCode}</div></TableCell> */}
+                        <TableCell align="center"><div className="table__cell-container">{row.batchCode}</div></TableCell>
                         <TableCell align="center"><div className="table__cell-container">{row.date}</div></TableCell>
                         <TableCell align="center"><div className="table__cell-container">{row.weight}</div></TableCell>
                         <TableCell align="center"><div className="table__cell-container">{row.sellingPrice}</div></TableCell>
@@ -113,7 +113,7 @@ const PulpHarvestingTable = (props: PulpHarvestingProps) => {
                 </TableFooter>
                 </Table>
             </TableContainer>
-            {pulpId ? <PulpModal open={openEditModal} pulpId={pulpId} codeProducer={props.codeProducer} closeModal={handleCloseEditModal}></PulpModal> : ""}
+            {pulpId ? <EditPulpModal open={openEditModal} pulpId={pulpId} codeProducer={props.codeProducer} closeModal={handleCloseEditModal}/> : ""}
             <AddPulpModal open={openAddModal} codeProducer={props.codeProducer} closeModal={handleCloseAddModal}/>
         </div>
     </>);

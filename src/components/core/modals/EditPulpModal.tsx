@@ -1,48 +1,66 @@
-import { addPulp } from "@/services/pulp";
+import { getPulpByCode } from "@/services/producer";
+import { deletePulp, updatePulp } from "@/services/pulp";
 import { PulpGenetics, PulpQuality, PulpStatus } from "@/util/constants/pulps";
 import { convertToIsoDate, convertToSimpleDate } from "@/util/format/date";
+import { Pulp } from "@/util/models/Batch/PulpsUsed";
 import { Button, MenuItem, Modal, Select, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
 
 interface ModalProps {
     open: boolean;
+    pulpId: number;
     closeModal: any;
     codeProducer: string;
 }
 
-const AddPulpModal = (props: ModalProps) => {
+const EditPulpModal = (props: ModalProps) => {
     const { t } = useTranslation('translation');
-    const { handleSubmit, control, setValue, unregister } = useForm<any>();
+    const { handleSubmit, control, setValue } = useForm<any>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [modalOpen, setModalOpen] = useState(false);
 
     const handleSave = (data: any) => {
         data.collectionDate = convertToIsoDate(data.collectionDate);
-        data.totalPrice = data.pricePerKg * data.totalPulpKg;
-        if(data.codeBatch == "") unregister('codeBatch');
-        addPulp(data).then(() => window.location.reload());
+        updatePulp(props.pulpId, data).then(() => window.location.reload());
     };
 
-    useEffect(() => {
-        setValue("codeProducer", props.codeProducer);
-        setValue("codeBatch", "");
-        setValue("collectionDate", convertToSimpleDate(new Date().toDateString()));
-        setValue("genetics", PulpGenetics.mixed);
-        setValue("pricePerKg", 0);
-        setValue("quality", PulpQuality.healthy);
-        setValue("status", PulpStatus.conventional);
-        setValue("totalPulpKg", 0);
-        setIsLoading(false);
-    }, [props])
+    const handleDelete = () => {
+        deletePulp(props.pulpId).then(() => window.location.reload());
+    }
 
-    return (
+    const handleOpenModal = () => {
+        setModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setModalOpen(false);
+    };
+
+
+    useEffect(() => {
+        getPulpByCode(props.codeProducer, props.pulpId).then((p: Pulp) => {
+            setValue("codeProducer", p.codeProducer);
+            setValue("codeBatch", p.codeBatch);
+            setValue("collectionDate", convertToSimpleDate(p.collectionDate));
+            setValue("genetics", p.genetics);
+            setValue("pricePerKg", p.pricePerKg);
+            setValue("quality", p.quality);
+            setValue("status", p.status);
+            setValue("totalPulpKg", p.totalPulpKg);
+            setIsLoading(false);
+        });
+    }, [])
+
+    return (<>
         <Modal open={props.open}>
             <div className="modal__container"> 
             {!isLoading ? (
                 <div className="modal__content"> 
                 <div className="modal__header"> 
-                    <h2>{t("modals.pulp.add_title")}</h2>
+                    <h2>{t("modals.pulp.edit_title")}</h2>
                 </div>
                 <form className="pulp-form" onSubmit={handleSubmit(handleSave)}>
                     <Controller
@@ -80,7 +98,7 @@ const AddPulpModal = (props: ModalProps) => {
                                     {...field}
                                 />     
                             )}
-                        />   
+                        />
                     <Controller
                         control={control}
                         name="codeBatch"
@@ -98,7 +116,7 @@ const AddPulpModal = (props: ModalProps) => {
                                     {...field}
                                 />     
                             )}
-                        />
+                        />   
                     <Controller
                         control={control}
                         name="genetics"
@@ -194,6 +212,9 @@ const AddPulpModal = (props: ModalProps) => {
                             )}
                         /> 
                 <div className="modal__footer">
+                    <Button className="modal__button modal__button--delete" onClick={handleOpenModal}>
+                        {t("buttons.delete")}
+                    </Button>
                     <Button className="modal__button modal__button--close" onClick={props.closeModal}>
                         {t("buttons.close")}
                     </Button>
@@ -210,7 +231,13 @@ const AddPulpModal = (props: ModalProps) => {
             )}
             </div>
         </Modal>
+        <DeleteConfirmationModal
+            open={modalOpen}
+            onClose={handleCloseModal}
+            onConfirm={handleDelete}
+        />
+        </>
     );
   };
   
-  export default AddPulpModal;
+  export default EditPulpModal;

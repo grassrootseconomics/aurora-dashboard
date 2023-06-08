@@ -15,20 +15,14 @@ export interface Fermentation {
 }
 
 export interface Flip {
-    id: number;
-    index: number;
     type: string;
     time: number;
     temp: number;
     ambient: number;
     humidity: number;
-    idFermentationPhase: number
 }
 
 export interface DailyReport {
-    day: number;
-    id: number;
-    idFermentationPhase: number;
     phCotiledon: number;
     phMass: number;
     temperatureMass: number;

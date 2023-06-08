@@ -1,30 +1,23 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Grid } from '@mui/material';
-import { useEffect, useState } from 'react';
 import { Association } from '@/util/models/BasicAssociation';
-import { getAssociations } from '@/services/association';
 import { calculateYearsUntilPresent } from '@/util/format/date';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 
 interface AssocProps {
-    id: number;
+    association: Association | null;
 }
 
 const AssociationInfo = (props: AssocProps) => {
-    const [association, setAssociation] = useState<Association>();
+    const { t } = useTranslation('translation');
     const router = useRouter();
-
-    useEffect(() => {
-        getAssociations().then(assocs => {
-            setAssociation(assocs.find(a => a.id == props.id))
-        })
-    }, []) 
 
     return ( 
     <> 
         {
-            association ?
+            props.association ?
                 <div
                 className="info__container"
                 >
@@ -34,7 +27,7 @@ const AssociationInfo = (props: AssocProps) => {
                             height={0}
                             style={{ height: 'auto' }}
                             className="info__logo"
-                            src={`/assets/logos/${association.name}.png`}
+                            src={`/assets/logos/${props.association.name}.png`}
                             alt={"Association"}
                         />
                     </div>
@@ -42,38 +35,38 @@ const AssociationInfo = (props: AssocProps) => {
                         <div className="info__card">
                             <Grid container spacing={1}>
                                 <Grid item xs={6}>
-                                    <div className="info__card-label">Years of existence</div>
+                                    <div className="info__card-label">{t("years_existence")}</div>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <div className="info__card-number">{calculateYearsUntilPresent(new Date(association.creationDate))}</div>
+                                    <div className="info__card-number">{calculateYearsUntilPresent(new Date(props.association.creationDate))}</div>
                                 </Grid>
                             </Grid>
                         </div>
                         <div className="info__card">
                             <Grid container spacing={1}>
                                 <Grid item xs={6}>
-                                    <div className="info__card-label">No ASSOCIATES</div>
+                                    <div className="info__card-label">{t("no_associates")}</div>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <div className="info__card-number">{association.nrOfAssociates}</div>
+                                    <div className="info__card-number">{props.association.nrOfAssociates}</div>
                                 </Grid>
                             </Grid>
                         </div>
                     </div>
                     <div className="info__description">
-                        <p>{association.description}</p>
+                        <p>{props.association.description}</p>
                     </div>
                     <div className="info__footer">
-                        <button className="info__button" onClick={() => router.push("/batches/sample")}>Ask for your sample</button>
+                        <button className="info__button" onClick={() => router.push("/batches/sample")}>{t("ask_sample")}</button>
                         <div className="info__social">
-                            <Link target="_blank" href={association.fbSocialLink ?? `/`}>
+                            <Link target="_blank" href={props.association.fbSocialLink ?? `/`}>
                                 <Image 
                                     src={'/assets/social/facebook.png'} 
                                     width={40} 
                                     height={40}
                                     alt="Facebook"/>
                             </Link>
-                            <Link target="_blank" href={association.instSocialLink ?? `/`}>
+                            <Link target="_blank" href={props.association.instSocialLink ?? `/`}>
                                 <Image 
                                     src={'/assets/social/instagram.png'} 
                                     width={40}

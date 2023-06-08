@@ -1,8 +1,11 @@
 import Image from 'next/image';
 
+import LoadingBox from '../spinners/LoadingBox';
+
 interface CardProps {
   backgroundColor: string;
   number: number | undefined;
+  loading: boolean;
   text: string;
   icon: any;
   alt: string;
@@ -22,7 +25,9 @@ const CardOne = (props: CardProps) => {
           src={props.icon}
           alt={props.alt}
         />
-        <div className="card__number">{props.number}</div>
+        <div className="card__number">
+          {props.loading ? <LoadingBox /> : props.number}
+        </div>
       </div>
       <div className="card__description">
         <p>{props.text}</p>

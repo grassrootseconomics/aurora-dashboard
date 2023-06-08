@@ -1,24 +1,27 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
+
 import React, { useEffect, useState } from 'react';
+
 import { Tab, Tabs } from '@mui/material';
 
+import { BackButton } from '@/components/core/buttons/BackButton';
 import CardTwo from '@/components/core/cards/CardTwo';
 import BarChart from '@/components/core/charts/BarChart';
 import LineChart from '@/components/core/charts/LineChart';
 import SoldBatchesTable from '@/components/core/tables/SoldBatchesTable';
 import { useUserAuthContext } from '@/providers/UserAuthProvider';
-import { fetchAccessToken } from '@/util/tokenStorage';
-
-import { BackButton } from '@/components/core/buttons/BackButton';
-import { UserRole } from '@/util/constants/users';
 import { getAssociations } from '@/services/association';
+import { getSoldBatches } from '@/services/batch';
+import {
+  getTotalSalesGeneralGraph,
+  getTotalSalesKgGraph,
+} from '@/services/graphics';
+import { UserRole } from '@/util/constants/users';
 import { Association } from '@/util/models/BasicAssociation';
 import { BasicSoldBatch } from '@/util/models/Batch/BasicSoldBatch';
-import { getSoldBatches } from '@/services/batch';
 import { Dataset } from '@/util/models/Dataset';
-import { getTotalSalesGeneralGraph, getTotalSalesKgGraph } from '@/services/graphics';
 
 export default function SoldBatches() {
   const { t } = useTranslation('translation');
@@ -29,6 +32,7 @@ export default function SoldBatches() {
   const [salesKg, setSalesKg] = useState<Dataset[]>([]);
   const [salesUsd, setSalesUsd] = useState<Dataset[]>([]);
   const { userRole } = useUserAuthContext();
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -36,43 +40,44 @@ export default function SoldBatches() {
   };
 
   useEffect(() => {
-    if (!fetchAccessToken()) {
-      // router.push('/');
-    }
-    
-    switch(userRole) {
+    switch (userRole) {
       case UserRole.project:
-        getAssociations().then(assocs => setAssociations(assocs))
-      return;
+        getAssociations().then((assocs) => setAssociations(assocs));
+        return;
     }
   }, [userRole, router]);
 
   useEffect(() => {
-    switch(userRole) {
+    switch (userRole) {
       case UserRole.project:
-        if(associations && selectedAssociation >= 1) {
-          getSoldBatches(associations[selectedAssociation - 1].name).then(data => {
-            setSoldBatches(data.basicBatches)
-            setSoldWeight(data.kgDryCocoaSold);
-            setSalesUsd(getTotalSalesGeneralGraph(data.monthlySalesInUSD));
-            setSalesKg(getTotalSalesKgGraph(data.salesInKg));
-          })
+        if (associations && selectedAssociation >= 1) {
+          getSoldBatches(associations[selectedAssociation - 1].name).then(
+            (data) => {
+              setSoldBatches(data.basicBatches);
+              setSoldWeight(data.kgDryCocoaSold);
+              setSalesUsd(getTotalSalesGeneralGraph(data.monthlySalesInUSD));
+              setSalesKg(getTotalSalesKgGraph(data.salesInKg));
+              setLoading(false);
+            }
+          );
         } else if (associations && selectedAssociation == 0) {
-          getSoldBatches().then(data => {
-            setSoldBatches(data.basicBatches)
+          getSoldBatches().then((data) => {
+            setSoldBatches(data.basicBatches);
             setSoldWeight(data.kgDryCocoaSold);
             setSalesUsd(getTotalSalesGeneralGraph(data.monthlySalesInUSD));
             setSalesKg(getTotalSalesKgGraph(data.salesInKg));
-          })
+            setLoading(false);
+          });
         }
         return;
       case UserRole.association:
-        getSoldBatches().then(data => {
-          setSoldBatches(data.basicBatches)
+        getSoldBatches().then((data) => {
+          setSoldBatches(data.basicBatches);
           setSoldWeight(data.kgDryCocoaSold);
           setSalesUsd(getTotalSalesGeneralGraph(data.monthlySalesInUSD));
           setSalesKg(getTotalSalesKgGraph(data.salesInKg));
-        })
+          setLoading(false);
+        });
         return;
     }
   }, [userRole, associations, selectedAssociation]);
@@ -87,41 +92,48 @@ export default function SoldBatches() {
       </Head>
       <div className="dashboard__container">
         <div>
-          <BackButton/>
+          <BackButton />
           <div className={`dashboard__cards`}>
             <CardTwo
               backgroundColor="#d0741a"
               number={soldWeight}
               text={t('sold_international_market')}
               icon={'/assets/kilogram.png'}
+              loading={loading}
               alt={'Kilogram'}
             />
           </div>
         </div>
         <div className="dashboard__container-info">
-         {  associations && userRole == UserRole.project ? 
-              <Tabs
-                value={selectedAssociation}
-                onChange={handleChange}
-                variant="scrollable"
-                TabIndicatorProps={{
-                  style: { display: 'none' },
-                }}
-                TabScrollButtonProps={{
-                  style: { display: 'flex' },
-                }}
-                scrollButtons="auto"
-                aria-label="scrollable auto tabs example"
-              >
-                <Tab key={-1} label={"All"} style={{ marginBottom: 10 }} />
-                {associations.map((item, index) => (
-                  <Tab key={index} label={item.name} style={{ marginBottom: 10 }} />
-                ))}
-              </Tabs> : "" 
-          }
+          {associations && userRole == UserRole.project ? (
+            <Tabs
+              value={selectedAssociation}
+              onChange={handleChange}
+              variant="scrollable"
+              TabIndicatorProps={{
+                style: { display: 'none' },
+              }}
+              TabScrollButtonProps={{
+                style: { display: 'flex' },
+              }}
+              scrollButtons="auto"
+              aria-label="scrollable auto tabs example"
+            >
+              <Tab key={-1} label={'All'} style={{ marginBottom: 10 }} />
+              {associations.map((item, index) => (
+                <Tab
+                  key={index}
+                  label={item.name}
+                  style={{ marginBottom: 10 }}
+                />
+              ))}
+            </Tabs>
+          ) : (
+            ''
+          )}
           <div className="dashboard__cards">
             <div className="dashboard__charts-production">
-              <SoldBatchesTable batches={soldBatches}/>
+              <SoldBatchesTable batches={soldBatches} />
             </div>
           </div>
           <div className="dashboard__charts">

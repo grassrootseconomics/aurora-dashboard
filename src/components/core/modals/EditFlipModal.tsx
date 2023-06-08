@@ -1,40 +1,57 @@
-import { addFlip } from "@/services/batch";
+import { deleteFlip, editFlip } from "@/services/batch";
+import { Flip } from "@/util/models/Batch/Fermentation";
 import { Button, Modal, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
 
 interface ModalProps {
     open: boolean;
     closeModal: any;
     fermentationId: number;
+    flip: Flip | undefined;
+    index: number;
 }
 
-const AddFlipModal = (props: ModalProps) => {
+const EditFlipModal = (props: ModalProps) => {
     const { t } = useTranslation('translation');
     const { handleSubmit, control, setValue } = useForm<any>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [modalOpen, setModalOpen] = useState(false);
 
     const handleSave = (data: any) => {
-        addFlip(props.fermentationId, data).then(() => window.location.reload());
+        editFlip(props.fermentationId, data, props.index).then(() => window.location.reload());
+    };
+
+    const handleDelete = () => {
+        deleteFlip(props.fermentationId, props.index).then(() => window.location.reload());
+    }
+
+    const handleOpenModal = () => {
+        setModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setModalOpen(false);
     };
 
     useEffect(() => {
-        setValue("type", "");
-        setValue("time", 0);
-        setValue("temp", 0);
-        setValue("ambient", 0);
-        setValue("humidity", 0);
+        setValue("type", props.flip?.type);
+        setValue("time", props.flip?.time);
+        setValue("temp", props.flip?.temp);
+        setValue("ambient", props.flip?.ambient);
+        setValue("humidity", props.flip?.humidity);
         setIsLoading(false);
     }, [props])
 
-    return (
+    return (<>
         <Modal open={props.open}>
             <div className="modal__container">
             {!isLoading ? (
                 <div className="modal__content">
                 <div className="modal__header"> 
-                    <h2>{t("modals.flip.add_title")}</h2>
+                    <h2>{t("modals.flip.edit_title")}</h2>
                 </div>
                 <form className="pulp-form" onSubmit={handleSubmit(handleSave)}>
                     <Controller
@@ -128,6 +145,9 @@ const AddFlipModal = (props: ModalProps) => {
                             )}
                         />
                 <div className="modal__footer">
+                    <Button className="modal__button modal__button--delete" onClick={handleOpenModal}>
+                        {t("buttons.delete")}
+                    </Button>
                     <Button className="modal__button modal__button--close" onClick={props.closeModal}>
                         {t("buttons.close")}
                     </Button>
@@ -144,7 +164,13 @@ const AddFlipModal = (props: ModalProps) => {
             )}
             </div>
         </Modal>
+        <DeleteConfirmationModal
+            open={modalOpen}
+            onClose={handleCloseModal}
+            onConfirm={handleDelete}
+        />
+        </>
     );
   };
   
-  export default AddFlipModal;
+  export default EditFlipModal;

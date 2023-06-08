@@ -12,7 +12,6 @@ import { UserRole } from '@/util/constants/users';
 import { BatchInfo } from '@/util/models/Batch/BatchInfo';
 import SalesStage from './SalesStage';
 import { updateDryingPhase, updateFermentationPhase, updateSalesPhase, updateStoragePhase } from '@/services/batch';
-import Image from 'next/image';
 
 interface GeneralStageProps {
     name: string;
@@ -62,7 +61,7 @@ const GeneralStage = (props: GeneralStageProps) => {
             case 0: return;
             case 1: return;
             case 2: updateFermentationPhase(batchStats[2]); setEditMode(false); return;
-            case 3: console.log(batchStats[3]); updateDryingPhase(batchStats[3]); setEditMode(false); return;
+            case 3: updateDryingPhase(batchStats[3]); setEditMode(false); return;
             case 4: updateStoragePhase(batchStats[4]); setEditMode(false); return;
             case 5: updateSalesPhase(batchStats[5]); setEditMode(false); return;
         }
@@ -142,7 +141,7 @@ const GeneralStage = (props: GeneralStageProps) => {
                     </div>
                 </div>
                 {
-                    props.img ? <Image className="batch__stage-image" src={props.img} alt={props.name}/> : ""
+                    props.img ? <img className="batch__stage-image" src={props.img} alt={props.name}/> : ""
                 } 
             </div>
         </div>

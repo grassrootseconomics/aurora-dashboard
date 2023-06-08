@@ -8,7 +8,6 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import { chains, wagmiConfig } from '@/config/web3';
 import createEmotionCache from '@/createEmotionCache';
 import DefaultLayout from '@/layouts/DefaultLayout';
-import { UserAuthProvider } from '@/providers/UserAuthProvider';
 import '@/styles/globals.scss';
 import theme from '@/theme';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
@@ -17,6 +16,7 @@ import { WagmiConfig } from 'wagmi';
 
 import '../i18n';
 import '../util/chart';
+import UserAuthProvider from '@/providers/UserAuthProvider';
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();

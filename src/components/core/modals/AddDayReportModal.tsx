@@ -1,4 +1,4 @@
-import { addFlip } from "@/services/batch";
+import { addDayReport } from "@/services/batch";
 import { Button, Modal, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -10,21 +10,19 @@ interface ModalProps {
     fermentationId: number;
 }
 
-const AddFlipModal = (props: ModalProps) => {
+const AddDayReportModal = (props: ModalProps) => {
     const { t } = useTranslation('translation');
     const { handleSubmit, control, setValue } = useForm<any>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const handleSave = (data: any) => {
-        addFlip(props.fermentationId, data).then(() => window.location.reload());
+        addDayReport(props.fermentationId, data).then(() => window.location.reload());
     };
 
     useEffect(() => {
-        setValue("type", "");
-        setValue("time", 0);
-        setValue("temp", 0);
-        setValue("ambient", 0);
-        setValue("humidity", 0);
+        setValue("temperatureMass", 0);
+        setValue("phMass", 0);
+        setValue("phCotiledon", 0);
         setIsLoading(false);
     }, [props])
 
@@ -34,20 +32,20 @@ const AddFlipModal = (props: ModalProps) => {
             {!isLoading ? (
                 <div className="modal__content">
                 <div className="modal__header"> 
-                    <h2>{t("modals.flip.add_title")}</h2>
+                    <h2>{t("modals.report.add_title")}</h2>
                 </div>
                 <form className="pulp-form" onSubmit={handleSubmit(handleSave)}>
                     <Controller
                         control={control}
-                        name="type"
-                        defaultValue={control._defaultValues.type}
+                        name="temperatureMass"
+                        defaultValue={control._defaultValues.temperatureMass}
                         render={({ field }) => (
                                 <TextField
                                     fullWidth
                                     InputProps={{
                                         startAdornment: (
                                             <div className="pulp__icon-label">
-                                                {t("modals.flip.type")}
+                                                {t("modals.report.temp_mass")}
                                             </div>
                                         )
                                     }}
@@ -57,15 +55,15 @@ const AddFlipModal = (props: ModalProps) => {
                         />   
                     <Controller
                         control={control}
-                        name="time"
-                        defaultValue={control._defaultValues.time}
+                        name="phMass"
+                        defaultValue={control._defaultValues.phMass}
                         render={({ field }) => (
                                 <TextField
                                     fullWidth
                                     InputProps={{
                                         startAdornment: (
                                             <div className="pulp__icon-label">
-                                                {t("modals.flip.hours")}
+                                                {t("modals.report.ph_mass")}
                                             </div>
                                         )
                                     }}
@@ -75,15 +73,15 @@ const AddFlipModal = (props: ModalProps) => {
                         />   
                     <Controller
                         control={control}
-                        name="temp"
-                        defaultValue={control._defaultValues.temp}
+                        name="phCotiledon"
+                        defaultValue={control._defaultValues.phCotiledon}
                         render={({ field }) => (
                                 <TextField
                                     fullWidth
                                     InputProps={{
                                         startAdornment: (
                                             <div className="pulp__icon-label">
-                                                {t("modals.flip.temp")}
+                                                {t("modals.report.ph_cotiledon")}
                                             </div>
                                         )
                                     }}
@@ -91,42 +89,7 @@ const AddFlipModal = (props: ModalProps) => {
                                 />     
                             )}
                         />
-                    <Controller
-                        control={control}
-                        name="ambient"
-                        defaultValue={control._defaultValues.ambient}
-                        render={({ field }) => (
-                                <TextField
-                                    fullWidth
-                                    InputProps={{
-                                        startAdornment: (
-                                            <div className="pulp__icon-label">
-                                                {t("modals.flip.roomt_t")}
-                                            </div>
-                                        )
-                                    }}
-                                    {...field}
-                                />     
-                            )}
-                        />
-                    <Controller
-                        control={control}
-                        name="humidity"
-                        defaultValue={control._defaultValues.humidity}
-                        render={({ field }) => (
-                                <TextField
-                                    fullWidth
-                                    InputProps={{
-                                        startAdornment: (
-                                            <div className="pulp__icon-label">
-                                                {t("modals.flip.humidity")}
-                                            </div>
-                                        )
-                                    }}
-                                    {...field}
-                                />     
-                            )}
-                        />
+                    
                 <div className="modal__footer">
                     <Button className="modal__button modal__button--close" onClick={props.closeModal}>
                         {t("buttons.close")}
@@ -139,7 +102,7 @@ const AddFlipModal = (props: ModalProps) => {
                 </div>
             ) : (
                 <div className="modal__loading"> 
-                Loading...
+                    Loading...
                 </div>
             )}
             </div>
@@ -147,4 +110,4 @@ const AddFlipModal = (props: ModalProps) => {
     );
   };
   
-  export default AddFlipModal;
+  export default AddDayReportModal;

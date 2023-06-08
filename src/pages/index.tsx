@@ -17,14 +17,7 @@ import LineChart from '@/components/core/charts/LineChart';
 import AvailableBatchesTable from '@/components/core/tables/AvailableBatchesTable';
 import { useUserAuthContext } from '@/providers/UserAuthProvider';
 import { getUserAssociation } from '@/services/auth';
-import {
-  getAvailableBatches,
-  getAvailableBatchesForBuyer,
-  getAvailableBatchesStatisticsForBuyer,
-  getBatchesWithAuth,
-  getBatchesWithoutAuth,
-  getSoldBatches,
-} from '@/services/batch';
+import { getBatchesWithAuth, getBatchesWithoutAuth } from '@/services/batch';
 import { getDepartments } from '@/services/department';
 import {
   getPriceOfOrganicCocoaGraph,
@@ -39,11 +32,13 @@ import {
 import { UserRole } from '@/util/constants/users';
 import { Association } from '@/util/models/BasicAssociation';
 import { Department } from '@/util/models/BasicDepartment';
+import { BasicAvailableBatch } from '@/util/models/Batch/BasicAvailableBatch';
+import { Batch } from '@/util/models/Batch/Batch';
 import { BatchStatistics } from '@/util/models/Batch/BatchStatistics';
 import { Dataset } from '@/util/models/Dataset';
 import { ProducersStatistics } from '@/util/models/Producer/ProducersStatistics';
 
-export default function Home() {
+const Home = () => {
   const [selectedDepartment, setSelectedDepartment] = useState(0);
   const [departments, setDepartments] = useState<Department[]>([]);
   const { userRole } = useUserAuthContext();
@@ -59,6 +54,7 @@ export default function Home() {
   const [productionPerAssoc, setProductionPerAssoc] = useState<Dataset[]>([]);
   const [productionPerRegion, setProductionPerRegion] = useState<Dataset[]>([]);
   const [currentAssociation, setCurrentAssociation] = useState<Association>();
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -66,7 +62,6 @@ export default function Home() {
   };
 
   useEffect(() => {
-    console.log(userRole);
     switch (userRole) {
       case UserRole.project: {
         getBatchesWithAuth().then((data) => {
@@ -75,52 +70,36 @@ export default function Home() {
           setSalesInUsd(getTotalSalesGraph(data));
           setPriceCocoa(getPriceOfOrganicCocoaGraph(data));
           setProducersStats(data.statistics);
-        });
-
-        getSoldBatches().then((data) => {
-          setSoldBatches(data.kgDryCocoaSold);
-        });
-
-        getAvailableBatches().then((data) => {
-          setAvailableBatches(data.basicBatches);
-          setAvailableWeight(data.kgDryCocoaAvailable);
+          setSoldBatches(data.statistics.kgDryCocoaInternationallySold);
+          setAvailableWeight(data.statistics.kgDryCocoaAvailable);
+          setLoading(false);
         });
         return;
       }
       case UserRole.buyer: {
-        getAvailableBatchesForBuyer(
+        getBatchesWithoutAuth(
           selectedDepartment - 1 >= 0
             ? departments[selectedDepartment - 1].name
-            : undefined
-        ).then((batches) => {
-          setAvailableBatches(batches);
-        });
-
-        getAvailableBatchesStatisticsForBuyer(
-          selectedDepartment - 1 >= 0
-            ? departments[selectedDepartment - 1].name
-            : undefined
-        ).then((stats) => {
-          setBatchStatistics(stats);
-        });
-
-        getBatchesWithoutAuth().then((data) => {
-          setSalesInUsd(
-            getTotalSalesForBuyerGraph(
-              data,
-              selectedDepartment - 1 >= 0
-                ? departments[selectedDepartment - 1]
-                : undefined
+            : ''
+        ).then((data) => {
+          setSalesInUsd(getTotalSalesForBuyerGraph(data));
+          setProductionPerRegion(getProductionByOriginGraph(data));
+          setAvailableBatches(
+            data.searchBatchesResult.data.map(
+              (b: Batch) =>
+                new BasicAvailableBatch(
+                  b.code,
+                  b.storage.netWeight,
+                  b.fermentationPhase.cocoaType,
+                  b.fermentationPhase.startDate,
+                  b.fermentationPhase.humidity,
+                  b.storage.grainIndex,
+                  b.storage.sensoryProfile
+                )
             )
           );
-          setProductionPerRegion(
-            getProductionByOriginGraph(
-              data,
-              selectedDepartment - 1 >= 0
-                ? departments[selectedDepartment - 1]
-                : undefined
-            )
-          );
+          setBatchStatistics(data.statistics);
+          setLoading(false);
         });
 
         getDepartments().then((data) => {
@@ -138,15 +117,9 @@ export default function Home() {
           );
           getUserAssociation().then((a) => setCurrentAssociation(a));
           setProducersStats(data.statistics);
-        });
-
-        getSoldBatches().then((data) => {
-          setSoldBatches(data.kgDryCocoaSold);
-        });
-
-        getAvailableBatches().then((data) => {
-          setAvailableBatches(data.basicBatches);
-          setAvailableWeight(data.kgDryCocoaAvailable);
+          setSoldBatches(data.statistics.kgDryCocoaInternationallySold);
+          setAvailableWeight(data.statistics.kgDryCocoaAvailable);
+          setLoading(false);
         });
         return;
       }
@@ -162,7 +135,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="dashboard__container">
-        <div>
+        <div className="dashboard__container_header">
           {userRole == UserRole.association ? (
             <Image
               width={200}
@@ -189,6 +162,7 @@ export default function Home() {
                   number={availableWeight}
                   text={t('dry_cocoa_available')}
                   icon={'/assets/kilogram.png'}
+                  loading={loading}
                   alt={''}
                 />
               </button>
@@ -198,6 +172,7 @@ export default function Home() {
                   number={soldBatches}
                   text={t('sold_international_market')}
                   icon={'/assets/kilogram.png'}
+                  loading={loading}
                   alt={''}
                 />
               </button>
@@ -208,12 +183,13 @@ export default function Home() {
         </div>
         <div className="dashboard__container-info">
           {userRole == UserRole.buyer ? (
-            <div className="dashboard__cards">
+            <div className="dashboard__cards home_cards">
               <CardOne
                 backgroundColor="#d0741a"
                 number={batchStatistics?.nrCocoaProducers}
                 text={t('number_producers')}
                 icon={'/assets/farmer.png'}
+                loading={loading}
                 alt={'Producers'}
               />
               <CardTwo
@@ -221,6 +197,7 @@ export default function Home() {
                 number={batchStatistics?.kgDryCocoaAvailable}
                 text={t('dry_cocoa_available')}
                 icon={'/assets/kilogram.png'}
+                loading={loading}
                 alt={''}
               />
               <CardFour
@@ -228,6 +205,7 @@ export default function Home() {
                 number={batchStatistics?.haForestConservation}
                 text={t('ha_forest_conservation')}
                 icon={'/assets/forest.png'}
+                loading={loading}
                 alt={'Forest'}
               />
               <CardFive
@@ -241,17 +219,19 @@ export default function Home() {
                     : t('home.next_harvest')
                 }
                 icon={'/assets/cocoa.png'}
+                loading={loading}
                 alt={''}
               />
             </div>
           ) : (
-            <div className="dashboard__cards">
+            <div className="dashboard__cards home_cards">
               <button onClick={() => router.push('/producers')}>
                 <CardOne
                   backgroundColor="#d0741a"
                   number={producersStats?.nrCocoaProducers}
                   text={t('number_producers')}
                   icon={'/assets/farmer.png'}
+                  loading={loading}
                   alt={'Producers'}
                 />
               </button>
@@ -260,6 +240,7 @@ export default function Home() {
                 number={producersStats?.nrYoungMen}
                 text={t('number_men_under_30')}
                 icon={'/assets/man.png'}
+                loading={loading}
                 alt={'Men'}
               />
               <CardThree
@@ -267,6 +248,7 @@ export default function Home() {
                 number={producersStats?.nrWomen}
                 text={t('number_women')}
                 icon={'/assets/woman.png'}
+                loading={loading}
                 alt={'Women'}
                 maxIconWidth="145px"
               />
@@ -275,6 +257,7 @@ export default function Home() {
                 number={producersStats?.haForestConservation}
                 text={t('ha_forest_conservation')}
                 icon={'/assets/cocoa.png'}
+                loading={loading}
                 alt={'Forest'}
               />
             </div>
@@ -399,4 +382,6 @@ export default function Home() {
       )}
     </>
   );
-}
+};
+
+export default Home;

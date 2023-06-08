@@ -10,6 +10,7 @@ export interface PulpsUsed {
 export interface Pulp {
     id: number;
     codeProducer: string; 
+    codeBatch: string;
     collectionDate: string;
     quality: string;
     status: string;

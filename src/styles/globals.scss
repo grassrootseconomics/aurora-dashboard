@@ -30,6 +30,7 @@ button {
 
     &__cards {
         display: flex;
+        overflow-x: auto;
 
         &--main {
             flex-direction: column;
@@ -651,6 +652,7 @@ button {
 .button__back {
     cursor: pointer;
     width: fit-content;
+    margin-left: 15px;
 }
 
 .batch-action {
@@ -689,6 +691,39 @@ button {
     max-height: 400px;
 }
 
+.fit-content {
+    width: fit-content;
+}
+
+.modal__content {
+    min-width: 315px;
+}
+
+.footer {
+    background: #ffffff94;
+    width: 100%;
+    margin-top: 50px;
+
+    &__container {
+        display: flex;
+        justify-content: flex-end;
+        max-width: 1500px;
+        margin: 0 auto;
+
+        &_item {
+            display: flex;
+            align-items: center;
+            font-size: 22px;
+            margin-right: 30px;
+
+            & img {
+                max-height: 70px;
+                margin-left: 10px;
+            }
+        }
+    }
+}
+
 @media (min-width: 1920px) {
     .dashboard {
         &__container {
@@ -697,22 +732,69 @@ button {
     }
 }
 
+@media (min-width: 1280px) {
+    .footer {
+        position: fixed;
+        bottom: 0;
+    }
+}
+
+@media (max-width: 1520px) {
+    .dashboard {
+        &__container {
+            flex-direction: column;
+
+            &_header {
+                display: flex;
+                flex-direction: row;
+            }
+        }
+
+        &__logo {
+            margin: 35px 50px 20px;
+        }
+
+        &__cards--main {
+            flex-direction: row;
+        }
+    }
+
+    .fermentation-model__container {
+        flex-direction: column!important;
+        align-items: center;
+
+        & div {
+            max-width: 100%!important;
+        }
+    }
+}
+
 @media (max-width: 1279px) {
     .dashboard {
         &__container {
             flex-direction: column;
-            max-width: 600px;
+            max-width: 100%;
             margin: auto;
             justify-content: center;
+
+            &_header {
+                justify-content: center;
+                align-items: center;
+            }
+        }
+
+        &__logo {
+            max-width: 150px;
+            height: auto;
         }
 
         &__cards {
-            flex-flow: row wrap;
-            justify-content: center;
 
             &--main {
                 flex-direction: row;
                 justify-content: center;
+                flex-flow: nowrap;
+                display: flex;
             }
 
             & .card__container {
@@ -721,15 +803,11 @@ button {
                 max-width: 175px;
 
                 & .card__icon {
-                    max-width: 70px;
+                    max-width: 70px!important;
                 }
 
                 & .card__number {
                     font-size: 36px;
-                }
-
-                & .card__description {
-                    font-size: 16px;
                 }
 
                 & .card__description {
@@ -782,9 +860,99 @@ button {
 
     .batch-action {
         font-size: 16px;
-        padding: 0 5px;
+        padding: 2px 5px;
     }
 
+    .home_cards {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 1040px) {
+    .footer {
+        &__container {
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+
+            &_item {
+                margin-right: 0;
+                font-size: 18px;
+
+                img {
+                    max-height: 45px;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 900px) {
+    .fermentation-model__container {
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 640px) {
+    .dashboard {
+
+        &__container {
+
+            &_header {
+                flex-direction: column;
+            }
+        }
+
+        &__cards--main {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    .card__container {
+        max-width: 100%!important;
+    }
+
+    .chart__container {
+        margin: 20px 10px;
+    }
+
+    .home_cards {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .batch__stage-image {
+        max-width: 100%;
+    }
+
+    .producer {
+        &__header {
+            flex-direction: column;
+        }
+
+        &__button {
+            max-width: 170px;
+            font-size: 14px;
+        }
+
+        &__code {
+            font-size: 18px;
+        }
+    }
+
+    .footer {
+        &__container {
+            &_item {
+                font-size: 20px;
+                flex-direction: column;
+
+                p {
+                    margin-bottom: 5px;
+                }
+            }
+        }
+    }
 }
 
 .MuiTablePagination-root {
@@ -850,7 +1018,13 @@ button {
             &--close {
                 color: #7d2113!important;
                 border: 2px solid #7d2113;
-                color: white;
+                background: white;
+            }
+
+            &--delete {
+                color: white!important;
+                border: 2px solid #7d2113;
+                background: #7d2113!important;
             }
         }
 

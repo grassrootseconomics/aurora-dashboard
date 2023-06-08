@@ -1,7 +1,7 @@
 import { calculateAverage, calculateWeightedAverage } from "@/util/format/array";
 import { convertToSimpleDate } from "@/util/format/date";
 import { Batch } from "./Batch";
-import { Flip } from "./Fermentation";
+import { DailyReport, Flip } from "./Fermentation";
 
 export interface BatchInfo {
     id: number;
@@ -61,12 +61,6 @@ export interface FermentationPhase {
     flips: Flip[];
     initialT: number;
     roomT: number | null;
-}
-
-export interface DailyReport {
-    phCotiledon: number;
-    phMass: number
-    temperatureMass: number
 }
 
 export interface PulpPhase {

@@ -78,18 +78,39 @@
         "currency": "Tipo de moneda:",
         "price_kg": "Valor por Kg:",
         "total_value": "Valor total:",
-        "negotiation_date": "Fecha de negociación:"
+        "negotiation_date": "Fecha de negociación:",
+        "no_associates": "No ASOCIADOS",
+        "years_existence": "AÑOS DE EXISTENCIA",
+        "ask_sample": "Pide tu muestra"
     },
     "producers": {
+        "title": "Producer",
         "producer_code": "Producer code",
         "code": "Código",
         "button": "Recolecciones y baches del productor",
         "name": "Name",
+        "first_name": "First Name",
         "last_name": "Last Name",
+        "phone_number": "Phone Number",
+        "gender": "Gender",
+        "male": "Male",
+        "female": "Female",
+        "other": "Other",
+        "year_birth": "Year of Birth",
+        "department": "Department",
+        "municipality": "Municipality",
         "village": "Village",
+        "association": "Association",
+        "farm_name": "Farm Name",
         "age": "Age",
         "cocoa_ha": "Cocoa Ha",
         "location": "Location",
+        "no_ha": "# of Ha",
+        "no_cocoa_ha": "# of Cocoa Ha",
+        "no_forest_ha": "# of Forest Ha",
+        "no_cocoa_lots": "# of Cocoa Lots",
+        "water_source": "Water Sources",
+        "wildlife": "Wildlife",
         "men_vs_women": "Men vs Women",
         "men": "Men",
         "women": "Women",
@@ -133,6 +154,62 @@
     },
     "buttons": {
         "save": "Save",
-        "cancel_edit": "Cancel Edit"
+        "cancel_edit": "Cancel Edit",
+        "start_edit": "Start Edit",
+        "close": "Close",
+        "delete": "Delete"
+    },
+    "modals": {
+        "report": {
+            "add_title": "Add Day Report",
+            "edit_title": "Edit Day Report",
+            "temp_mass": "T° masa:",
+            "ph_mass": "Ph masa:",
+            "ph_cotiledon": "Ph cotiledón:"
+        },
+        "flip": {
+            "add_title": "Add Flip",
+            "edit_title": "Edit Flip",
+            "type": "Type:",
+            "hours": "Hours:",
+            "temp": "Temp T°:",
+            "roomt_t": "Room T°:",
+            "humidity": "Relative humidity:"
+        }, 
+        "pulp": {
+            "add_title": "Add Pulp",
+            "edit_title": "Edit Pulp",
+            "code_producer": "Code Producer:",
+            "collection_date": "Collection Date:",
+            "code_batch": "Code Batch:",
+            "genetics": {
+                "title": "Genetics:",
+                "mixed": "Mixed",
+                "hybrid": "Aromatic",
+                "ccn_tsh": "CCN/TSH"
+            },
+            "price_per_kg": "Price Per Kg:",
+            "quality": {
+                "title": "Quality:",
+                "healthy": "Healthy",
+                "partially_germinated": "Partially Germinated",
+                "partially_deceased": "Partially Deceased"
+            },
+            "status": {
+                "title": "Status:",
+                "organic": "organic",
+                "transitional": "transitional",
+                "conventional": "conventional"
+            },
+            "total_pulp_kg": "Total Pulp Kg:"
+        },
+        "delete": {
+            "title": "Delete Confirmation",
+            "message": "Are you sure you want to delete this item? This action cannot be undone."
+        }
+    },
+    "footer": {
+        "operated_by": "Operado por",
+        "funded_by": "Financiado por"
     }
 }

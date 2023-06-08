@@ -19,7 +19,6 @@ const FermentationStage = (props: StageProps) => {
     }, props.stats)
 
     function updateFields(event: any, index: number) {
-      console.log(props.stats)
       props.stats[index] = event.target.value;
       props.update(props.stats, props.index);
     };
