@@ -63,7 +63,7 @@ const AvailableBatchesTable = (props: Props) => {
                     </TableRow> : "" }
             </TableHead>
             <TableBody>
-                {availableBatches.length ? availableBatches.map((row) => (
+                {availableBatches.length ? availableBatches.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                 <TableRow
                     key={row.batch}
                 >
@@ -85,7 +85,7 @@ const AvailableBatchesTable = (props: Props) => {
             <TableFooter>
                 <TableRow>
                     <TablePagination
-                        rowsPerPageOptions={[4, 5, 10]}
+                        rowsPerPageOptions={[2, 4, 5, 10]}
                         colSpan={3}
                         count={props.batches?.length || 0}
                         rowsPerPage={rowsPerPage}

@@ -13,7 +13,7 @@ export interface PulpHarvesting {
 export function mapToPulpHarvesting(source: Pulp): PulpHarvesting {
     const pulpHarvestingDto: PulpHarvesting = {
         id: source.id,
-        batchCode: "",
+        batchCode: source.batchesUsedFor ? source.batchesUsedFor[0]?.codeBatch : "",
         date: convertToSimpleDate(source.collectionDate),
         weight: source.totalPulpKg,
         sellingPrice: source.pricePerKg,

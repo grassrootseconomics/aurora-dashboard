@@ -47,7 +47,7 @@ const BaseBatchesTable  = (props: BaseBatchProps) => {
                     </TableRow> 
                 </TableHead>
                 <TableBody>
-                    {props.batches?.length ? props.batches?.map((row) => (
+                    {props.batches?.length ? props.batches?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                     <TableRow
                         key={row.batchCode}
                     >

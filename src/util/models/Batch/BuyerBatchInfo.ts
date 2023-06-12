@@ -1,4 +1,4 @@
-import { calculateAverage } from "@/util/format/array";
+import { calculateAverage, formatArrayPercentage } from "@/util/format/array";
 import { Association } from "../BasicAssociation";
 import { Batch } from "./Batch";
 
@@ -64,7 +64,7 @@ export function mapToBuyerBatchInfo(source: Batch): BuyerBatchInfo {
         fermentationPhase: {
             genetics: source.fermentationPhase.genetics,
             brixDegrees: source.fermentationPhase.brixDegrees,
-            initialT: source.fermentationPhase.dailyReports ? source.fermentationPhase.dailyReports[0].temperatureMass ?? 0 : 0,
+            initialT: source.fermentationPhase.dailyReports ? source.fermentationPhase.dailyReports[0]?.temperatureMass ?? 0 : 0,
             roomT: calculateAverage(source.fermentationPhase.dailyReports.map(r => +r.temperatureMass)),
             humidity: source.fermentationPhase.humidity,
             hoursDrained: source.fermentationPhase.hoursDrained,
@@ -72,8 +72,8 @@ export function mapToBuyerBatchInfo(source: Batch): BuyerBatchInfo {
             totalDays: source.fermentationPhase.totalDays
         },
         pulpsPhase: {
-            quality: source.pulpsUsed[0].pulp.quality,
-            status: source.pulpsUsed[0].pulp.status
+            quality: formatArrayPercentage(source.pulpsUsed.map(p => p.pulp.quality)),
+            status: formatArrayPercentage(source.pulpsUsed.map(p => p.pulp.status))
         },
         producersPhase: {
             noProducers: new Set(source.pulpsUsed.map(p => p.pulp.codeProducer)).size,

@@ -43,7 +43,7 @@ const EditPulpModal = (props: ModalProps) => {
     useEffect(() => {
         getPulpByCode(props.codeProducer, props.pulpId).then((p: Pulp) => {
             setValue("codeProducer", p.codeProducer);
-            setValue("codeBatch", p.codeBatch);
+            setValue("codeBatch", p.batchesUsedFor ? p.batchesUsedFor[0]?.codeBatch : "");
             setValue("collectionDate", convertToSimpleDate(p.collectionDate));
             setValue("genetics", p.genetics);
             setValue("pricePerKg", p.pricePerKg);

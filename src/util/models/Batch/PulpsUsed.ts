@@ -8,6 +8,7 @@ export interface PulpsUsed {
 }
 
 export interface Pulp {
+    batchesUsedFor: any;
     id: number;
     codeProducer: string; 
     codeBatch: string;

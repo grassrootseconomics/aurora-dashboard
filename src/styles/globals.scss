@@ -54,7 +54,10 @@ button {
 
     &__table {
         margin: auto;
-        width: fit-content;
+
+        @media (min-width: 1280px) {
+            width: fit-content;
+        }
     }
 }
 
@@ -525,6 +528,11 @@ button {
         .MuiSvgIcon-root {
             font-size: 36px;
         }
+
+        @media (max-width: 800px) {
+            font-size: 32px;
+            padding: 30px 10px 30px;
+        }
     }
 
     &__label {
@@ -534,12 +542,20 @@ button {
         font-size: 28px;
         font-weight: 600;
         bottom: 5px;
+
+        @media (max-width: 800px) {
+            font-size: 20px;
+        }
     }
 
     &__row {
         display: flex;
         align-items: flex-start;
         min-width: 100%;
+
+        @media (max-width: 800px) {
+            display: block;
+        }
     }
 
     &__button {
@@ -559,14 +575,25 @@ button {
         padding: 50px 50px 100px; 
 
         .MuiInputBase-input {
-            font-size: 28px;
             line-height: 1.5;
             margin-bottom: 10px;
+
+            @media (max-width: 800px) {
+                font-size: 20px;
+            }
+
+            @media (min-width: 801px) {
+                font-size: 28px;
+            }
         }
 
         .MuiFormControl-root {
             margin: 20px!important;
             width: 100%;
+
+            @media (max-width: 800px) {
+                margin: 20px 0!important;
+            }
         }
 
         .MuiFormControl-root>.MuiFormControl-root {
@@ -599,6 +626,10 @@ button {
             margin-bottom: 10px;
             font-weight: 600;
             line-height: 1.2;
+
+            @media (max-width: 800px) {
+                font-size: 20px;
+            }
         }
 
         .MuiSelect-select.MuiSelect-select {
@@ -635,6 +666,12 @@ button {
             border: 0;
             border-bottom: 4px solid #f18630;
             min-width: 100%;
+
+            @media (max-width: 800px) {
+                font-size: 20px!important;
+                padding: 0 0 1px 60px;
+                min-width: -webkit-fill-available;
+            }
         }
 
         .react-tel-input .form-control:focus,
@@ -702,7 +739,7 @@ button {
 .footer {
     background: #ffffff94;
     width: 100%;
-    margin-top: 50px;
+    margin-top: 20px;
 
     &__container {
         display: flex;
@@ -734,7 +771,6 @@ button {
 
 @media (min-width: 1280px) {
     .footer {
-        position: fixed;
         bottom: 0;
     }
 }

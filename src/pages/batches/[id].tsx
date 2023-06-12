@@ -50,7 +50,7 @@ const BatchDetailsPage = () => {
             buyerBatch && userRole == UserRole.buyer ? 
               <>
                 <div className="batch__details-association">
-                  <AssociationInfo association={buyerBatch.association}/>
+                  <AssociationInfo batchCode={id as string} association={buyerBatch.association}/>
                 </div>
                 <div className="batch__details">
                     <GeneralBuyerStage batch={buyerBatch} name="Storage" index={5} img={'/assets/batch/Storage.jpg'} background="#f6aa62" userRole={userRole}/>

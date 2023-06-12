@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 interface AssocProps {
     association: Association | null;
+    batchCode: string;
 }
 
 const AssociationInfo = (props: AssocProps) => {
@@ -35,7 +36,7 @@ const AssociationInfo = (props: AssocProps) => {
                         <div className="info__card">
                             <Grid container spacing={1}>
                                 <Grid item xs={6}>
-                                    <div className="info__card-label">{t("years_existence")}</div>
+                                    <div className="info__card-label">{t("single_batch.years_existence")}</div>
                                 </Grid>
                                 <Grid item xs={6}>
                                     <div className="info__card-number">{calculateYearsUntilPresent(new Date(props.association.creationDate))}</div>
@@ -45,7 +46,7 @@ const AssociationInfo = (props: AssocProps) => {
                         <div className="info__card">
                             <Grid container spacing={1}>
                                 <Grid item xs={6}>
-                                    <div className="info__card-label">{t("no_associates")}</div>
+                                    <div className="info__card-label">{t("single_batch.no_associates")}</div>
                                 </Grid>
                                 <Grid item xs={6}>
                                     <div className="info__card-number">{props.association.nrOfAssociates}</div>
@@ -57,7 +58,7 @@ const AssociationInfo = (props: AssocProps) => {
                         <p>{props.association.description}</p>
                     </div>
                     <div className="info__footer">
-                        <button className="info__button" onClick={() => router.push("/batches/sample")}>{t("ask_sample")}</button>
+                        <button className="info__button" onClick={() => router.push(`/batches/sample/${props.batchCode}`)}>{t("single_batch.ask_sample")}</button>
                         <div className="info__social">
                             <Link target="_blank" href={props.association.fbSocialLink ?? `/`}>
                                 <Image 

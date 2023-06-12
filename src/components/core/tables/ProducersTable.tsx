@@ -5,6 +5,8 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import TablePaginationActions from './TablePaginationActions';
 import { useRouter } from 'next/router';
+import { UserRole } from '@/util/constants/users';
+import { useUserAuthContext } from '@/providers/UserAuthProvider';
 
 interface ProducerProps {
     producers?: BasicProducer[]
@@ -17,6 +19,7 @@ const ProducersTable = (props: ProducerProps) => {
     const [rowsPerPage, setRowsPerPage] = useState(4);
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const producersNo: number = props.producers?.length ?? 0;
+    const { userRole } = useUserAuthContext();
     const router = useRouter();
 
     // Avoid a layout jump when reaching the last page with empty rows.
@@ -43,7 +46,9 @@ const ProducersTable = (props: ProducerProps) => {
             <TableHead>
                 { theme ? 
                     <TableRow>
-                        <TableCell align="center"></TableCell>
+                        {
+                            userRole == UserRole.association ? <TableCell align="center"></TableCell> : ""
+                        }
                         <TableCell align="center"><div className="table__cell-container">{t('producers.producer_code')}</div></TableCell>
                         <TableCell align="center"><div className="table__cell-container">{t('producers.name')}</div></TableCell>
                         <TableCell align="center"><div className="table__cell-container">{t('producers.last_name')}</div></TableCell>
@@ -54,12 +59,17 @@ const ProducersTable = (props: ProducerProps) => {
                     </TableRow> : "" }
             </TableHead>
             <TableBody>
-                {props.producers?.length ? props.producers?.map((row) => (
+                {props.producers?.length ? props.producers?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                 <TableRow
                     key={row.producerCode}
                     sx={{ '& td, & th': { backgroundColor: '#' }}}
                 >
-                    <TableCell align="center"><button className="batch-action" onClick={() => router.push(`/producers/${row.producerCode}`)}>+</button></TableCell>
+                    {
+                        userRole == UserRole.association ? 
+                            <TableCell align="center">
+                                <button className="batch-action" onClick={() => router.push(`/producers/${row.producerCode}`)}>+</button>
+                            </TableCell> : ""
+                    }
                     <TableCell align="center"><div className="table__cell-container">{row.producerCode}</div></TableCell>
                     <TableCell align="center"><div className="table__cell-container">{row.name}</div></TableCell>
                     <TableCell align="center"><div className="table__cell-container">{row.lastName}</div></TableCell>

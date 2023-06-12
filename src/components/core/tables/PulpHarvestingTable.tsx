@@ -74,7 +74,7 @@ const PulpHarvestingTable = (props: PulpHarvestingProps) => {
                     </TableRow> 
                 </TableHead>
                 <TableBody>
-                    {props.pulps?.length ? props.pulps?.map((row) => (
+                    {props.pulps?.length ? props.pulps?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                     <TableRow
                         key={row.id}
                     >

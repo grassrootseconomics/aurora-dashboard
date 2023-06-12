@@ -185,7 +185,8 @@
             "genetics": {
                 "title": "Genetics:",
                 "mixed": "Mixed",
-                "hybrid": "Aromatic",
+                "aromatic": "Aromatic",
+                "hybrid": "Hybrid",
                 "ccn_tsh": "CCN/TSH"
             },
             "price_per_kg": "Price Per Kg:",
@@ -197,9 +198,9 @@
             },
             "status": {
                 "title": "Status:",
-                "organic": "organic",
-                "transitional": "transitional",
-                "conventional": "conventional"
+                "organic": "Organic",
+                "transitional": "Transitional",
+                "conventional": "Conventional"
             },
             "total_pulp_kg": "Total Pulp Kg:"
         },

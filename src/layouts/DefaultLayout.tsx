@@ -1,7 +1,6 @@
 import { FC, ReactNode } from 'react';
 
 import AuroraAppBar from '@/components/core/AuroraAppBar';
-import Footer from '@/components/core/Footer';
 import Body from '@/components/defaultLayout/Body';
 import { useUserAuthContext } from '@/providers/UserAuthProvider';
 import {
@@ -16,6 +15,7 @@ import {
   setRefreshToken,
 } from '@/util/tokenStorage';
 import { useAccount, useSignMessage } from 'wagmi';
+import Footer from '@/components/core/Footer';
 
 type DefaultLayoutProps = {
   children: ReactNode;
@@ -64,7 +64,7 @@ const DefaultLayout: FC<DefaultLayoutProps> = ({ children }) => {
     },
     onDisconnect() {
       setIsAuthenticated(false);
-      window.location.href = '/';
+      window.location.href = "/"
       clearSession();
     },
   });
@@ -73,7 +73,7 @@ const DefaultLayout: FC<DefaultLayoutProps> = ({ children }) => {
     <>
       <AuroraAppBar />
       <Body>{children}</Body>
-      <Footer />
+      <Footer/>
     </>
   );
 };

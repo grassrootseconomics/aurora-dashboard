@@ -16,11 +16,7 @@ type BodyProps = {
 const Body: FC<BodyProps> = ({ children }) => {
   const classes = useStyles();
 
-  return (
-    <Grid className={classes.mainBox} style={{ marginBottom: '70px' }}>
-      {children}
-    </Grid>
-  );
+  return <Grid className={classes.mainBox}>{children}</Grid>;
 };
 
 export default Body;

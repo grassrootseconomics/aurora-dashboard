@@ -1,4 +1,4 @@
-import { calculateAverage, calculateWeightedAverage } from "@/util/format/array";
+import { calculateAverage, calculateWeightedAverage, formatArrayPercentage } from "@/util/format/array";
 import { convertToSimpleDate } from "@/util/format/date";
 import { Batch } from "./Batch";
 import { DailyReport, Flip } from "./Fermentation";
@@ -129,9 +129,9 @@ export function mapToBatchInfo(source: Batch): BatchInfo {
         },
         pulpsPhase: {
             harvestingDate: convertToSimpleDate(source.pulpsUsed[0].pulp.collectionDate),
-            quality: source.pulpsUsed[0].pulp.quality,
-            status: source.pulpsUsed[0].pulp.status,
-            collectionGenetics: source.pulpsUsed[0].pulp.genetics,
+            quality: formatArrayPercentage(source.pulpsUsed.map(p => p.pulp.quality)),
+            status: formatArrayPercentage(source.pulpsUsed.map(p => p.pulp.status)),
+            collectionGenetics: formatArrayPercentage(source.pulpsUsed.map(p => p.pulp.genetics)),
             pulpKg: +source.pulpsUsed.reduce((acc, num) => acc + num.pulp.totalPulpKg, ""),
             priceKg: calculateWeightedAverage(source.pulpsUsed.map(p => ({value: p.pulp.pricePerKg, weight: p.pulp.totalPulpKg})))
         },

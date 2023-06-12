@@ -60,7 +60,7 @@ const SoldBatchesTable = (props: Props) => {
                     </TableRow> : "" }
             </TableHead>
             <TableBody>
-                {soldBatches.length ? soldBatches.map((row) => (
+                {soldBatches.length ? soldBatches.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                 <TableRow
                     key={row.batch}
                     sx={{ '& td, & th': { backgroundColor: '#' }}}
