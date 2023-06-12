@@ -1,12 +1,13 @@
 import { useEffect, useRef } from 'react';
-import { geoMercator, geoPath } from 'd3-geo/src/index';
-import { select } from 'd3-selection/src/select';
+
+import { geoMercator, geoPath } from 'd3-geo';
+import { select } from 'd3-selection';
 
 function Map() {
   const mapRef = useRef();
 
   useEffect(() => {
-    const svg = select(mapRef.current);
+    const svg = select(mapRef!.current);
     const width = 800;
     const height = 600;
 
@@ -25,7 +26,8 @@ function Map() {
       .then((response) => response.json())
       .then((data) => {
         // Draw the map
-        svg.selectAll('path')
+        svg
+          .selectAll('path')
           .data(data.features)
           .enter()
           .append('path')
