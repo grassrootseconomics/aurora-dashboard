@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 
 const LanguageSelector = () => {
   const router = useRouter();
-
   const { i18n } = useTranslation('translation');
 
   const handleLanguageChange = (lang: string) => {

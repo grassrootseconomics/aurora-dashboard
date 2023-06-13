@@ -209,6 +209,17 @@
             "message": "Está seguro de que desea eliminar este elemento? Esta acción no se puede deshacer."
         }
     },
+    "regions_colombia": "Regiones en Colombia",
+    "about": {
+        "title": "¿Qué es el proyecto Aurora?",
+        "subtitle_main": "Estrategia de empalme generacional para el incremento del mercado de cacao sostenible para cinco asociaciones en los departamentos de",
+        "and": "y",
+        "in_colombia": "en Colombia.",
+        "objective_title": "Objetivos específicos",
+        "sentence_1": "Mejorar la infraestructura comunitaria en aseguramiento de calidad y adaptación a impactos ambientales.",
+        "sentence_2": "Vincular a jóvenes y mujeres en procesos de capacitación continua, cooperación horizontal entre organizaciones y construcción de nuevos conocimientos.",
+        "sentence_3": "Implementar una estrategia para la ampliación de canales de comercio diferencia de cacao."
+    },
     "footer": {
         "operated_by": "Operado por",
         "funded_by": "Financiado por"

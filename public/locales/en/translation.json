@@ -209,6 +209,17 @@
             "message": "Are you sure you want to delete this item? This action cannot be undone."
         }
     },
+    "regions_colombia": "Regions in Colombia",
+    "about": {
+        "title": "¿What is the Aurora project?",
+        "subtitle_main": "Generational joint strategy to increase the sustainable cocoa market for five associations in the departments of",
+        "and": "and",
+        "in_colombia": "in Colombia.",
+        "objective_title": "Specific objectives",
+        "sentence_1": "Improve community infrastructure in quality assurance and adaptation to environmental impacts.",
+        "sentence_2": "Link young men and women in continuous training processes, horizontal cooperation between organizations and construction of new knowledge.",
+        "sentence_3": "Implement a strategy to expand cocoa differential trade channels."
+    },
     "footer": {
         "operated_by": "Operated by",
         "funded_by": "Funded by"

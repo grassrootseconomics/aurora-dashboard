@@ -6,6 +6,7 @@ import { makeStyles } from '@mui/styles';
 const useStyles: any = makeStyles(() => ({
   mainBox: {
     paddingTop: 30,
+    minHeight: "calc(100vh - 97px)"
   },
 }));
 
