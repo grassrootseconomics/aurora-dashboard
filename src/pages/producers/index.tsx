@@ -34,7 +34,7 @@ export default function Producers() {
   const { userRole } = useUserAuthContext();
   const router = useRouter();
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setSelectedAssociation(newValue);
   };
 

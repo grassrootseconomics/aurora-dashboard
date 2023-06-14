@@ -1,8 +1,6 @@
 import {
-  Dispatch,
   FC,
   PropsWithChildren,
-  SetStateAction,
   createContext,
   useCallback,
   useEffect,
@@ -10,22 +8,21 @@ import {
   useState,
 } from 'react';
 
+import { API } from '@/config';
 import { useSafeContext } from '@/hooks/useSafeContext';
-import '@/util/tokenStorage';
-import {
-  AccessTokenStructure,
-  clearSession,
-  fetchAccessToken,
-} from '@/util/tokenStorage';
-import jwtDecode from 'jwt-decode';
-import { useAccount, useDisconnect } from 'wagmi';
 import { UserRole } from '@/util/constants/users';
+import '@/util/tokenStorage';
+import { AccessTokenStructure, clearSession } from '@/util/tokenStorage';
+import jwtDecode from 'jwt-decode';
+import useLocalStorage from 'use-local-storage';
+import { useAccount, useDisconnect } from 'wagmi';
 
 interface UserAuthContextValue {
   connectedWallet: string | undefined;
   isAuthenticated: boolean;
   userRole: UserRole | null;
-  setIsAuthenticated: Dispatch<SetStateAction<boolean>>;
+  // eslint-disable-next-line no-unused-vars
+  setAccessToken: (value: string) => void;
 }
 
 const UserAuthContext = createContext<UserAuthContextValue | null | undefined>(
@@ -40,6 +37,17 @@ const UserAuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const { address } = useAccount();
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+  const [accessToken, setAccessToken] = useLocalStorage<string>(
+    API.ACCESS_TOKEN_STORAGE,
+    '',
+    {
+      serializer: (obj) => {
+        return obj ? obj : '';
+      },
+    }
+  );
+
   const [userRole, setUserRole] = useState<UserRole | null>(null);
 
   const { disconnect } = useDisconnect();
@@ -49,7 +57,6 @@ const UserAuthProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [address]);
 
   const clearUserSession = useCallback(() => {
-    setIsAuthenticated(false);
     disconnect();
     clearSession();
   }, [disconnect]);
@@ -64,32 +71,38 @@ const UserAuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const setRole = useCallback((token: string) => {
     const decoded: AccessTokenStructure = jwtDecode(token);
-    setUserRole(decoded.role)
+    setUserRole(decoded.role);
   }, []);
 
   useEffect(() => {
-    const token = fetchAccessToken();
-    if (token) {
-      if (isTokenExpired(token)) {
+    if (accessToken && accessToken !== 'null') {
+      if (isTokenExpired(accessToken)) {
         clearUserSession();
+        setIsAuthenticated(false);
       } else {
-        setRole(token);
+        setRole(accessToken);
         setIsAuthenticated(true);
       }
     } else {
-      setUserRole(UserRole.buyer)
+      setUserRole(UserRole.buyer);
       setIsAuthenticated(false);
     }
-  }, [clearUserSession, isTokenExpired, setIsAuthenticated]);
+  }, [
+    clearUserSession,
+    isTokenExpired,
+    setIsAuthenticated,
+    setRole,
+    accessToken,
+  ]);
 
   const value = useMemo<UserAuthContextValue>(() => {
     return {
       connectedWallet,
       userRole,
       isAuthenticated,
-      setIsAuthenticated,
+      setAccessToken,
     };
-  }, [connectedWallet, userRole, isAuthenticated, setIsAuthenticated]);
+  }, [connectedWallet, userRole, isAuthenticated, setAccessToken]);
 
   return (
     <UserAuthContext.Provider value={value}>

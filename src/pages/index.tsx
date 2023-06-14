@@ -62,68 +62,71 @@ const Home = () => {
   };
 
   useEffect(() => {
-    switch (userRole) {
-      case UserRole.project: {
-        getBatchesWithAuth().then((data) => {
-          setProductionPerAssoc(getProductionPerAssociationsGraph(data));
-          setProductionPerRegion(getProductionPerRegionsGraph(data));
-          setSalesInUsd(getTotalSalesGraph(data));
-          setPriceCocoa(getPriceOfOrganicCocoaGraph(data));
-          setProducersStats(data.statistics);
-          setSoldBatches(data.statistics.kgDryCocoaInternationallySold);
-          setAvailableWeight(data.statistics.kgDryCocoaAvailable);
-          setLoading(false);
-        });
-        return;
-      }
-      case UserRole.buyer: {
-        getBatchesWithoutAuth(
-          selectedDepartment - 1 >= 0
-            ? departments[selectedDepartment - 1].name
-            : ''
-        ).then((data) => {
-          setSalesInUsd(getTotalSalesForBuyerGraph(data));
-          setProductionPerRegion(getProductionByOriginGraph(data));
-          setAvailableBatches(
-            data.searchBatchesResult.data.map(
-              (b: Batch) =>
-                new BasicAvailableBatch(
-                  b.code,
-                  b.storage.netWeight,
-                  b.fermentationPhase.cocoaType,
-                  b.fermentationPhase.startDate,
-                  b.fermentationPhase.humidity,
-                  b.storage.grainIndex,
-                  b.storage.sensoryProfile
-                )
-            )
-          );
-          setBatchStatistics(data.statistics);
-          setLoading(false);
-        });
+    if (userRole) {
+      switch (userRole) {
+        case UserRole.project: {
+          getBatchesWithAuth().then((data) => {
+            setProductionPerAssoc(getProductionPerAssociationsGraph(data));
+            setProductionPerRegion(getProductionPerRegionsGraph(data));
+            setSalesInUsd(getTotalSalesGraph(data));
+            setPriceCocoa(getPriceOfOrganicCocoaGraph(data));
+            setProducersStats(data.statistics);
+            setSoldBatches(data.statistics.kgDryCocoaInternationallySold);
+            setAvailableWeight(data.statistics.kgDryCocoaAvailable);
+            setLoading(false);
+          });
+          return;
+        }
+        case UserRole.buyer: {
+          getBatchesWithoutAuth(
+            selectedDepartment - 1 >= 0
+              ? departments[selectedDepartment - 1].name
+              : ''
+          ).then((data) => {
+            setSalesInUsd(getTotalSalesForBuyerGraph(data));
+            setProductionPerRegion(getProductionByOriginGraph(data));
+            setAvailableBatches(
+              data.searchBatchesResult.data.map(
+                (b: Batch) =>
+                  new BasicAvailableBatch(
+                    b.code,
+                    b.storage.netWeight,
+                    b.fermentationPhase.cocoaType,
+                    b.fermentationPhase.startDate,
+                    b.fermentationPhase.humidity,
+                    b.storage.grainIndex,
+                    b.storage.sensoryProfile
+                  )
+              )
+            );
+            setBatchStatistics(data.statistics);
+            setLoading(false);
+          });
 
-        getDepartments().then((data) => {
-          setDepartments(data);
-        });
-        return;
-      }
-      case UserRole.association: {
-        getBatchesWithAuth().then((data) => {
-          setProductionPerAssoc(getProductionPerAssociationsGraph(data));
-          setSalesInKg(getTotalSalesKgGraph(data.report.salesInKg));
-          setSalesInUsd(getTotalSalesGraph(data));
-          setPulpCocoaCollected(
-            getTotalPulpGraph(data.report.monthlyCocoaPulp)
-          );
-          getUserAssociation().then((a) => setCurrentAssociation(a));
-          setProducersStats(data.statistics);
-          setSoldBatches(data.statistics.kgDryCocoaInternationallySold);
-          setAvailableWeight(data.statistics.kgDryCocoaAvailable);
-          setLoading(false);
-        });
-        return;
+          getDepartments().then((data) => {
+            setDepartments(data);
+          });
+          return;
+        }
+        case UserRole.association: {
+          getBatchesWithAuth().then((data) => {
+            setProductionPerAssoc(getProductionPerAssociationsGraph(data));
+            setSalesInKg(getTotalSalesKgGraph(data.report.salesInKg));
+            setSalesInUsd(getTotalSalesGraph(data));
+            setPulpCocoaCollected(
+              getTotalPulpGraph(data.report.monthlyCocoaPulp)
+            );
+            getUserAssociation().then((a) => setCurrentAssociation(a));
+            setProducersStats(data.statistics);
+            setSoldBatches(data.statistics.kgDryCocoaInternationallySold);
+            setAvailableWeight(data.statistics.kgDryCocoaAvailable);
+            setLoading(false);
+          });
+          return;
+        }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userRole, selectedDepartment]);
 
   return (

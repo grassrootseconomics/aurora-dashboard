@@ -34,7 +34,6 @@ const SampleForm: FC = () => {
 
   const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(formData);
     // Perform form submission logic here
     sendSampleEmail(id as string, formData);
   };

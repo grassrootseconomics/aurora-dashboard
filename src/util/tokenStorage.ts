@@ -1,16 +1,21 @@
 import { API } from '@/config';
+
 import { UserRole } from './constants/users';
 
-export type AccessTokenStructure = {
+export type DefaultTokenStructure<TToken = 'ACCESS' | 'REFRESH'> = {
   address: string;
   email: string;
   exp: number;
   iat: number;
   iss: string;
-  type: 'ACCESS';
+  type: TToken;
   role: UserRole;
   username: string;
 };
+
+export type AccessTokenStructure = DefaultTokenStructure<'ACCESS'>;
+
+export type RefreshTokenStructure = DefaultTokenStructure<'REFRESH'>;
 
 export const fetchAccessToken = () => {
   return localStorage.getItem(API.ACCESS_TOKEN_STORAGE);
@@ -32,3 +37,5 @@ export const setRefreshToken = (rToken: string) => {
 export const setAccessToken = (aToken: string) => {
   localStorage.setItem(API.ACCESS_TOKEN_STORAGE, aToken);
 };
+
+// export const serializeToken =
