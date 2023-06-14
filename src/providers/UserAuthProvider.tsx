@@ -11,6 +11,7 @@ import {
 } from 'react';
 
 import { useSafeContext } from '@/hooks/useSafeContext';
+import { UserRole } from '@/util/constants/users';
 import '@/util/tokenStorage';
 import {
   AccessTokenStructure,
@@ -19,7 +20,6 @@ import {
 } from '@/util/tokenStorage';
 import jwtDecode from 'jwt-decode';
 import { useAccount, useDisconnect } from 'wagmi';
-import { UserRole } from '@/util/constants/users';
 
 interface UserAuthContextValue {
   connectedWallet: string | undefined;
@@ -64,7 +64,7 @@ const UserAuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const setRole = useCallback((token: string) => {
     const decoded: AccessTokenStructure = jwtDecode(token);
-    setUserRole(decoded.role)
+    setUserRole(decoded.role);
   }, []);
 
   useEffect(() => {
@@ -77,10 +77,10 @@ const UserAuthProvider: FC<PropsWithChildren> = ({ children }) => {
         setIsAuthenticated(true);
       }
     } else {
-      setUserRole(UserRole.buyer)
+      setUserRole(UserRole.buyer);
       setIsAuthenticated(false);
     }
-  }, [clearUserSession, isTokenExpired, setIsAuthenticated]);
+  }, [clearUserSession, isTokenExpired, setIsAuthenticated, setRole]);
 
   const value = useMemo<UserAuthContextValue>(() => {
     return {
