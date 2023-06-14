@@ -76,7 +76,7 @@ export const getProducersInfoList = async (
   };
 };
 
-export const getProducerByCode = async (code: number): Promise<Producer> => {
+export const getProducerByCode = async (code: string): Promise<Producer> => {
   const response: AxiosResponseData<any> = await authenticatedApi.get(
     `/v1/producer/${code}`
   );

@@ -39,11 +39,14 @@ export default function Producers() {
   };
 
   useEffect(() => {
-    switch (userRole) {
-      case UserRole.project:
-        getAssociations().then((assocs) => setAssociations(assocs));
-        return;
-    }
+    if (userRole)
+      switch (userRole) {
+        case UserRole.project:
+          getAssociations().then((assocs) => setAssociations(assocs));
+          return;
+        case UserRole.buyer:
+          router.push('/');
+      }
   }, [userRole, router]);
 
   useEffect(() => {

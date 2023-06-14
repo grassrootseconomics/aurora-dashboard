@@ -40,27 +40,37 @@ export default function SoldBatches() {
   };
 
   useEffect(() => {
-    switch (userRole) {
-      case UserRole.project:
-        getAssociations().then((assocs) => setAssociations(assocs));
-        return;
+    if (userRole && userRole === 'buyer') {
+      router.push('/');
     }
   }, [userRole, router]);
 
   useEffect(() => {
-    switch (userRole) {
-      case UserRole.project:
-        if (associations && selectedAssociation >= 1) {
-          getSoldBatches(associations[selectedAssociation - 1].name).then(
-            (data) => {
+    if (userRole)
+      switch (userRole) {
+        case UserRole.project:
+          getAssociations().then((assocs) => setAssociations(assocs));
+          if (associations && selectedAssociation >= 1) {
+            getSoldBatches(associations[selectedAssociation - 1].name).then(
+              (data) => {
+                setSoldBatches(data.basicBatches);
+                setSoldWeight(data.kgDryCocoaSold);
+                setSalesUsd(getTotalSalesGeneralGraph(data.monthlySalesInUSD));
+                setSalesKg(getTotalSalesKgGraph(data.salesInKg));
+                setLoading(false);
+              }
+            );
+          } else if (associations && selectedAssociation == 0) {
+            getSoldBatches().then((data) => {
               setSoldBatches(data.basicBatches);
               setSoldWeight(data.kgDryCocoaSold);
               setSalesUsd(getTotalSalesGeneralGraph(data.monthlySalesInUSD));
               setSalesKg(getTotalSalesKgGraph(data.salesInKg));
               setLoading(false);
-            }
-          );
-        } else if (associations && selectedAssociation == 0) {
+            });
+          }
+          return;
+        case UserRole.association:
           getSoldBatches().then((data) => {
             setSoldBatches(data.basicBatches);
             setSoldWeight(data.kgDryCocoaSold);
@@ -68,18 +78,8 @@ export default function SoldBatches() {
             setSalesKg(getTotalSalesKgGraph(data.salesInKg));
             setLoading(false);
           });
-        }
-        return;
-      case UserRole.association:
-        getSoldBatches().then((data) => {
-          setSoldBatches(data.basicBatches);
-          setSoldWeight(data.kgDryCocoaSold);
-          setSalesUsd(getTotalSalesGeneralGraph(data.monthlySalesInUSD));
-          setSalesKg(getTotalSalesKgGraph(data.salesInKg));
-          setLoading(false);
-        });
-        return;
-    }
+          return;
+      }
   }, [userRole, associations, selectedAssociation]);
 
   return (
