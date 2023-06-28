@@ -19,6 +19,7 @@ export function calculateYearsUntilPresentByYear(year: number): number {
 }
 
 export function convertToSimpleDate(isoDateString: string): string {
+  if(isoDateString == null || isoDateString == "") return "";
   const dateWithTimezone = new Date(isoDateString)
   const offset = new Date(isoDateString).getTimezoneOffset() * 60000; //milliseconds
   const dateObject = new Date(dateWithTimezone.getTime() + offset);

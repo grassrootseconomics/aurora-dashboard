@@ -1,6 +1,7 @@
 import { Bar } from 'react-chartjs-2';
 
 import { Dataset } from '@/util/models/Dataset';
+import { useTranslation } from 'react-i18next';
 
 interface ChartProps {
   backgroundColor: string;
@@ -8,22 +9,24 @@ interface ChartProps {
   datasets: Dataset[];
 }
 
-const labels = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
-
 const BarChart = (props: ChartProps) => {
+  const { t } = useTranslation('translation');
+
+  const labels = [
+    t("months.january"),
+    t("months.february"),
+    t("months.march"),
+    t("months.april"),
+    t("months.may"),
+    t("months.june"),
+    t("months.july"),
+    t("months.august"),
+    t("months.september"),
+    t("months.october"),
+    t("months.november"),
+    t("months.december")
+  ];
+
   const data = {
     labels,
     datasets: props.datasets.map((dataset: Dataset) => {

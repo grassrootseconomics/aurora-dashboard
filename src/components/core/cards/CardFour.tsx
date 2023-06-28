@@ -9,12 +9,13 @@ interface CardProps {
   text: string;
   icon: any;
   alt: string;
+  class?: string;
 }
 
 const CardFour = (props: CardProps) => {
   return (
     <div
-      className="card__container"
+      className={`card__container ${props.class}`}
       style={{ backgroundColor: props.backgroundColor }}
     >
       <div className="card__description">

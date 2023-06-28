@@ -29,15 +29,21 @@ export default function SoldBatches() {
   const [selectedAssociation, setSelectedAssociation] = useState<number>(0);
   const [soldWeight, setSoldWeight] = useState<any>();
   const [soldBatches, setSoldBatches] = useState<BasicSoldBatch[]>([]);
+  const [initialSoldBatches, setInitialSoldBatches] = useState<BasicSoldBatch[]>([]);
   const [salesKg, setSalesKg] = useState<Dataset[]>([]);
   const [salesUsd, setSalesUsd] = useState<Dataset[]>([]);
   const { userRole } = useUserAuthContext();
+  const [batchCodeSearch, setBatchCodeSearch] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setSelectedAssociation(newValue);
   };
+
+  const setSearchValue = (event: any) => {
+    setBatchCodeSearch(event.target.value)
+  }
 
   useEffect(() => {
     switch (userRole) {
@@ -53,7 +59,8 @@ export default function SoldBatches() {
         if (associations && selectedAssociation >= 1) {
           getSoldBatches(associations[selectedAssociation - 1].name).then(
             (data) => {
-              setSoldBatches(data.basicBatches);
+              setSoldBatches(data.basicBatches.filter((b : BasicSoldBatch) => b.batch.includes(batchCodeSearch)));
+              setInitialSoldBatches(data.basicBatches);
               setSoldWeight(data.kgDryCocoaSold);
               setSalesUsd(getTotalSalesGeneralGraph(data.monthlySalesInUSD));
               setSalesKg(getTotalSalesKgGraph(data.salesInKg));
@@ -62,7 +69,8 @@ export default function SoldBatches() {
           );
         } else if (associations && selectedAssociation == 0) {
           getSoldBatches().then((data) => {
-            setSoldBatches(data.basicBatches);
+            setSoldBatches(data.basicBatches.filter((b : BasicSoldBatch) => b.batch.includes(batchCodeSearch)));
+            setInitialSoldBatches(data.basicBatches);
             setSoldWeight(data.kgDryCocoaSold);
             setSalesUsd(getTotalSalesGeneralGraph(data.monthlySalesInUSD));
             setSalesKg(getTotalSalesKgGraph(data.salesInKg));
@@ -72,7 +80,8 @@ export default function SoldBatches() {
         return;
       case UserRole.association:
         getSoldBatches().then((data) => {
-          setSoldBatches(data.basicBatches);
+          setSoldBatches(data.basicBatches.filter((b : BasicSoldBatch) => b.batch.includes(batchCodeSearch)));
+          setInitialSoldBatches(data.basicBatches);
           setSoldWeight(data.kgDryCocoaSold);
           setSalesUsd(getTotalSalesGeneralGraph(data.monthlySalesInUSD));
           setSalesKg(getTotalSalesKgGraph(data.salesInKg));
@@ -81,6 +90,10 @@ export default function SoldBatches() {
         return;
     }
   }, [userRole, associations, selectedAssociation]);
+
+  useEffect(() => {
+    setSoldBatches(initialSoldBatches.filter(b => b.batch.includes(batchCodeSearch)))
+  }, [batchCodeSearch])
 
   return (
     <>
@@ -105,6 +118,9 @@ export default function SoldBatches() {
           </div>
         </div>
         <div className="dashboard__container-info">
+          <div style={{display: "flex", justifyContent: "flex-end"}}>
+            <input className="dashboard__search" type="text" placeholder={t("search") ?? ""} onChange={setSearchValue}/>
+          </div>
           {associations && userRole == UserRole.project ? (
             <Tabs
               value={selectedAssociation}
@@ -119,7 +135,7 @@ export default function SoldBatches() {
               scrollButtons="auto"
               aria-label="scrollable auto tabs example"
             >
-              <Tab key={-1} label={'All'} style={{ marginBottom: 10 }} />
+              <Tab key={-1} label={t("home.all")} style={{ marginBottom: 10 }} />
               {associations.map((item, index) => (
                 <Tab
                   key={index}

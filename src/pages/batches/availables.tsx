@@ -31,16 +31,24 @@ export default function AvailableBatches() {
   const [availableBatches, setAvailableBatches] = useState<
     BasicAvailableBatch[]
   >([]);
+  const [initialAvailableBatches, setInitialAvailableBatches] = useState<
+    BasicAvailableBatch[]
+  >([]);
   const [totalPulpCollected, setTotalPulpCollected] = useState<Dataset[]>([]);
   const [dryCocoaProduction, setDryCocoaProduction] = useState<Dataset[]>();
+  const [batchCodeSearch, setBatchCodeSearch] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const { userRole } = useUserAuthContext();
 
   const router = useRouter();
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setSelectedAssociation(newValue);
   };
+
+  const setSearchValue = (event: any) => {
+    setBatchCodeSearch(event.target.value)
+  }
 
   useEffect(() => {
     switch (userRole) {
@@ -56,7 +64,8 @@ export default function AvailableBatches() {
         if (associations && selectedAssociation >= 1) {
           getAvailableBatches(associations[selectedAssociation - 1].name).then(
             (data) => {
-              setAvailableBatches(data.basicBatches);
+              setAvailableBatches(data.basicBatches.filter((b : BasicAvailableBatch) => b.batch.includes(batchCodeSearch)));
+              setInitialAvailableBatches(data.basicBatches);
               setAvailableWeight(data.kgDryCocoaAvailable);
               setDryCocoaProduction(
                 getProductionOfDryCocoa(data.productionOfDryCocoa)
@@ -68,6 +77,7 @@ export default function AvailableBatches() {
         } else if (associations && selectedAssociation == 0) {
           getAvailableBatches().then((data) => {
             setAvailableBatches(data.basicBatches);
+            setInitialAvailableBatches(data.basicBatches);
             setAvailableWeight(data.kgDryCocoaAvailable);
             setDryCocoaProduction(
               getProductionOfDryCocoa(data.productionOfDryCocoa)
@@ -79,7 +89,8 @@ export default function AvailableBatches() {
         return;
       case UserRole.association:
         getAvailableBatches().then((data) => {
-          setAvailableBatches(data.basicBatches);
+          setAvailableBatches(data.basicBatches.filter((b : BasicAvailableBatch) => b.batch.includes(batchCodeSearch)));
+          setInitialAvailableBatches(data.basicBatches);
           setAvailableWeight(data.kgDryCocoaAvailable);
           setDryCocoaProduction(
             getProductionOfDryCocoa(data.productionOfDryCocoa)
@@ -90,6 +101,11 @@ export default function AvailableBatches() {
         return;
     }
   }, [userRole, associations, selectedAssociation]);
+
+
+  useEffect(() => {
+    setAvailableBatches(initialAvailableBatches.filter(b => b.batch.includes(batchCodeSearch)))
+  }, [batchCodeSearch])
 
   return (
     <>
@@ -114,6 +130,9 @@ export default function AvailableBatches() {
           </div>
         </div>
         <div className="dashboard__container-info">
+          <div style={{display: "flex", justifyContent: "flex-end"}}>
+            <input className="dashboard__search" type="text" placeholder={t("search") ?? ""} onChange={setSearchValue}/>
+          </div>
           {associations && userRole == UserRole.project ? (
             <Tabs
               value={selectedAssociation}
@@ -128,7 +147,7 @@ export default function AvailableBatches() {
               scrollButtons="auto"
               aria-label="scrollable auto tabs example"
             >
-              <Tab key={-1} label={'All'} style={{ marginBottom: 10 }} />
+              <Tab key={-1} label={t("home.all")} style={{ marginBottom: 10 }} />
               {associations.map((item, index) => (
                 <Tab
                   key={index}

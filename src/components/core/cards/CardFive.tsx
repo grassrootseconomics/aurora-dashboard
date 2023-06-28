@@ -9,17 +9,18 @@ interface CardProps {
   text: string;
   icon: any;
   alt: string;
+  class?: string
 }
 
 const CardFive = (props: CardProps) => {
   return (
     <div
-      className="card__container"
+      className={`card__container ${props.class}`}
       style={{ backgroundColor: props.backgroundColor }}
     >
       <div className="card__row">
         <p className="card__description">
-          {props.loading ? <LoadingBox /> : props.number}
+          {props.text}
         </p>
         <Image
           width={128}
@@ -30,7 +31,7 @@ const CardFive = (props: CardProps) => {
         />
       </div>
       <div className="card__row">
-        <div className="card__number">{props.number}</div>
+        <div className="card__number">{props.loading ? <LoadingBox /> : props.number}</div>
       </div>
     </div>
   );

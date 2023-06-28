@@ -362,7 +362,7 @@ const Home = () => {
             scrollButtons="auto"
             aria-label="scrollable auto tabs example"
           >
-            <Tab key={-1} label={'All'} style={{ marginBottom: 10 }} />
+            <Tab key={-1} label={t("home.all")} style={{ marginBottom: 10 }} />
             {departments.map((item, index) => (
               <Tab key={index} label={item.name} style={{ marginBottom: 10 }} />
             ))}

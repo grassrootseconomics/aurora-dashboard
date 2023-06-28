@@ -19,6 +19,26 @@
     "general_sensory_profile": "Caracterización Sensorial General",
     "cocoa_pulp_collected": "Cocoa em Baba Recolectado",
     "dry_cocoa_production": "Producción de Cacao Seco",
+    "search": "Buscar",
+    "months": {
+        "january": "enero",
+        "february": "febrero",
+        "march": "marzo",
+        "april": "abril",
+        "may": "mayo",
+        "june": "junio",
+        "july": "julio",
+        "august": "agosto",
+        "september": "septiembre",
+        "october": "octubre",
+        "november": "noviembre",
+        "december": "diciembre"
+    },
+    "menu": {
+        "home": "Home",
+        "about": "Acerca de Aurora",
+        "colombia_regions": "Regiones en Colombia"
+    },
     "home": {
         "production_by_association": "Producción por Asociaciones",
         "production_by_region": "Producción por Regiones",
@@ -29,7 +49,8 @@
         "usd_price": "Precio en USD",
         "total_sales_usd": "Ventas Totales en USD",
         "next_harvest": "Próxima cosecha",
-        "next_harvest_in": "Próxima cosecha en"
+        "next_harvest_in": "Próxima cosecha en",
+        "all": "Todo"
     },
     "sales": {
         "total_sales_kg": "Ventas Totales en Kg"
@@ -38,6 +59,14 @@
 
     },
     "single_batch": {
+        "stages": {
+            "sales": "Venta",
+            "storage": "Almacenamiento",
+            "drying": "Secado",
+            "fermentation": "Fermentación",
+            "pulp": "Pulpa",
+            "producers": "Productores"
+        },
         "title": "BACHE:",
         "batch_net_weight": "Peso neto del bache:",
         "batch_conversion_factor": "Factor de conversión del bache:",
@@ -143,7 +172,7 @@
     "producer_activity": {
         "pulp_harvesting": "Recolecciones de cacao en pulpa",
         "batches": "Baches a los que pertenece",
-        "batch_code": "Batch Code",
+        "batch_code": "Código de Bache",
         "date": "Fecha",
         "weight": "Peso (Kg)",
         "selling_price": "Precio de Compra",
@@ -223,5 +252,63 @@
     "footer": {
         "operated_by": "Operado por",
         "funded_by": "Financiado por"
+    },
+    "nft": {
+        "assoc_title": "DATOS DE LA ASOCIACIÓN",
+        "name": "NOMBRE",
+        "department": "DEPARTAMENTO",
+        "town": "MUNICIPIO",
+        "no_associates": "No ASOCIADOS",
+        "women_percentage": "% MUJERES",
+        "young_percentage": "% JÓVENES",
+        "achivements_text": "HISTORIA O PRINCIPALES LOGROS",
+        "years_existence": "AÑOS DE EXISTENCIA",
+        "certifications": "CERTIFICACIONES",
+        "region_information": "DATOS DE LA REGIÓN",
+        "description": "DESCRIPCIÓN",
+        "batch_information": "DATOS DEL BACHE",
+        "batch_code": "Código del bache",
+        "type_cocoa": "Tipo de cacao",
+        "total_net_weight": "Peso Total",
+        "processing_date": "Fecha de procesamiento",
+        "humidity_percentage": "% Humedad",
+        "grain_index": "Índice de grano",
+        "fermentation_days": "Días de fermentación",
+        "fermentation_model": "Modelo de fermentación",
+        "conversion_factor": "Factor de conversión",
+        "sensory_profiling": "Perfilamiento Sensorial",
+        "score": "Puntaje",
+        "traceability_process": "PROCESO DE TRAZABILIDAD",
+        "producers": "PRODUCTORES",
+        "identified_varieties": "Variedades Identificadas",
+        "wildlife": "Fauna silvestre",
+        "pulp_harvesting": "RECOLECCIÓN DE PULPA",
+        "cocoa_harvest_date": "Fecha de recolección de cacao",
+        "price_kg_cocoa_pulp": "Precio por Kg del cacao en pulpa",
+        "fermentation": "FERMENTACIÓN",
+        "fermentation_start_date": "Fecha de inicio de fermentación",
+        "batch_genetics": "Genética del bache",
+        "batch_net_weight": "Peso del bache",
+        "drained_hours": "Horas de drenado",
+        "bx_grain": "°Bx del grano",
+        "total_flips": "# de volteos totales",
+        "days_fermentation_process": "Días en proceso de fermentación",
+        "drying": "SECADO",
+        "start_date_drying_phase": "Fecha de inicio de etapa de secado",
+        "number_days": "Cantidad de días",
+        "final_humidity": "Humedad final",
+        "storage": "ALMACENAMIENTO",
+        "start_date_storage_phase": "Fecha de inicio de etapa de almacenamiento",
+        "batch_conversion_factor": "Factor de conversión del bache",
+        "batch_fermentation": "% de fermentación del bache",
+        "batch_grain_index": "índice de grano del bache",
+        "sales": "VENTA",
+        "purchase_generated_by": "ESTA COMPRA SE GENERÓ DIRECTAMENTE POR:",
+        "buyer": "Comprador",
+        "negotiation_term": "Término de negociación",
+        "price_kg": "Valor por Kg",
+        "lot": "Lote",
+        "country": "País",
+        "day_negotiation": "Día de negociación"
     }
 }

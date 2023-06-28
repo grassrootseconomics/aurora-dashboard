@@ -92,7 +92,7 @@ export default function Producers() {
                         </div>
                     </div>
                     { !isLoading ? <form onSubmit={handleSubmit(onSubmit)}>
-                        <Grid container spacing={2}>
+                        <Grid container spacing={6}>
                         <Grid item sm={12} md={6}>
                         <Controller
                             control={control}
@@ -105,7 +105,7 @@ export default function Producers() {
                                         InputProps={{
                                             startAdornment: (
                                                 <div className="producer__icon-label">
-                                                    <AccountCircle className="producer__icon" />
+                                                    <img src={"/assets/producer/person.svg"} className="producer__icon" />
                                                     {t('producers.first_name')}:
                                                 </div>
                                             )
@@ -126,7 +126,7 @@ export default function Producers() {
                                             InputProps={{
                                                 startAdornment: (
                                                     <div className="producer__icon-label">
-                                                        <AccountCircle className="producer__icon" />
+                                                    <img src={"/assets/producer/person.svg"} className="producer__icon" />
                                                         {t('producers.last_name')}:
                                                     </div>
                                                 )
@@ -147,7 +147,7 @@ export default function Producers() {
                                         InputProps={{
                                             startAdornment: (
                                                 <div className="producer__icon-label">
-                                                    <Phone className="producer__icon" />
+                                                    <img src={"/assets/producer/phone.svg"} className="producer__icon" />
                                                     {t('producers.phone_number')}:
                                                 </div>
                                             )
@@ -164,7 +164,7 @@ export default function Producers() {
                                 render={({ field }) => (
                                     <div className="producer__row">
                                         <div className="producer__icon-label">
-                                            <Wc className="producer__icon" />
+                                            <img src={"/assets/producer/gender.svg"} className="producer__icon" />
                                             {t('producers.gender')}:
                                         </div>
                                         <Select 
@@ -189,7 +189,7 @@ export default function Producers() {
                                         InputProps={{
                                             startAdornment: (
                                                 <div className="producer__icon-label">
-                                                    <Cake className="producer__icon" />
+                                                    <img src={"/assets/producer/calendar.svg"} className="producer__icon" />
                                                     {t('producers.year_birth')}:
                                                 </div>
                                             )
@@ -199,70 +199,71 @@ export default function Producers() {
                                     />
                                     )}
                             />   
-                                <Controller
-                                    name="idDepartment"
-                                    control={control}
-                                    defaultValue={control._defaultValues.idDepartment}
-                                    render={({ field }) => (
-                                        <div className="producer__row">
-                                            <div className="producer__icon-label">
-                                                <Business className="producer__icon" />
-                                                {t('producers.department')}:
+                            <Grid container>
+                                <Grid item className={"producer__map"} xs={3} md={3}>
+                                    <img src={"/assets/producer/colombia.svg"} className="producer__icon--colombia" />
+                                </Grid>
+                                <Grid item xs={9} md={9}>
+                                    <Controller
+                                        name="idDepartment"
+                                        control={control}
+                                        defaultValue={control._defaultValues.idDepartment}
+                                        render={({ field }) => (
+                                            <div className="producer__row">
+                                                <Select 
+                                                    {...field}
+                                                    disabled={!editMode}
+                                                    >
+                                                    {departments?.map(d => {
+                                                        return <MenuItem key={d.id} value={d.id}>{d.name}</MenuItem>
+                                                    })
+                                                    }
+                                                </Select>
                                             </div>
-                                            <Select 
-                                                {...field}
+                                        )}
+                                    /> 
+                                    <Controller
+                                        control={control}
+                                        name="municipiality"
+                                        defaultValue={control._defaultValues.municipiality}
+                                        render={({ field }) => (
+                                            <TextField
+                                                fullWidth
+                                                label="Municipality"
+                                                InputProps={{
+                                                    startAdornment: (
+                                                        <div className="producer__icon-label">
+                                                            {t('producers.municipality')}:
+                                                        </div>
+                                                    )
+                                                }}
                                                 disabled={!editMode}
-                                                >
-                                                {departments?.map(d => {
-                                                    return <MenuItem key={d.id} value={d.id}>{d.name}</MenuItem>
-                                                })
-                                                }
-                                            </Select>
-                                        </div>
-                                    )}
-                                /> 
-                            <Controller
-                                control={control}
-                                name="municipiality"
-                                defaultValue={control._defaultValues.municipiality}
-                                render={({ field }) => (
-                                    <TextField
-                                        fullWidth
-                                        label="Municipality"
-                                        InputProps={{
-                                            startAdornment: (
-                                                <div className="producer__icon-label">
-                                                    <LocationOn className="producer__icon" />
-                                                    {t('producers.municipality')}:
-                                                </div>
-                                            )
-                                        }}
-                                        disabled={!editMode}
-                                        {...field}
-                                    />
-                                )}
-                            />  
-                            <Controller
-                                control={control}
-                                name="village"
-                                defaultValue={control._defaultValues.village}
-                                render={({ field }) => (
-                                    <TextField
-                                        fullWidth
-                                        label="Village"
-                                        InputProps={{
-                                            startAdornment: (
-                                                <div className="producer__icon-label">
-                                                    <LocationOn className="producer__icon" />
-                                                    {t('producers.village')}:
-                                                </div>
-                                            )
-                                        }}
-                                        disabled={!editMode}
-                                        {...field}
-                                    />
-                                )}
-                            /> 
+                                                {...field}
+                                            />
+                                        )}
+                                    />  
+                                    <Controller
+                                        control={control}
+                                        name="village"
+                                        defaultValue={control._defaultValues.village}
+                                        render={({ field }) => (
+                                            <TextField
+                                                fullWidth
+                                                label="Village"
+                                                InputProps={{
+                                                    startAdornment: (
+                                                        <div className="producer__icon-label">
+                                                            {t('producers.village')}:
+                                                        </div>
+                                                    )
+                                                }}
+                                                disabled={!editMode}
+                                                {...field}
+                                            />
+                                        )}
+                                    /> 
+                                </Grid>
+                            </Grid>
                             { associations ? 
                                 <Controller
                                     name="idAssociation"
@@ -271,7 +272,7 @@ export default function Producers() {
                                     render={({ field }) => (
                                         <div className="producer__row">
                                             <div className="producer__icon-label">
-                                                <Domain className="producer__icon" />
+                                                <img src={"/assets/producer/association.svg"} className="producer__icon" />
                                                 {t('producers.association')}:
                                             </div>
                                             <Select 
@@ -300,7 +301,7 @@ export default function Producers() {
                                         InputProps={{
                                             startAdornment: (
                                                 <div className="producer__icon-label">
-                                                    <AgricultureIcon className="producer__icon" />
+                                                    <img src={"/assets/producer/farm.svg"} className="producer__icon" />
                                                     {t('producers.farm_name')}:
                                                 </div>
                                             )
@@ -321,7 +322,7 @@ export default function Producers() {
                                         InputProps={{
                                             startAdornment: (
                                                 <div className="producer__icon-label">
-                                                    <LocationOn className="producer__icon" />
+                                                    <img src={"/assets/producer/location.svg"} className="producer__icon" />
                                                     {t('producers.location')}:
                                                 </div>
                                             )
@@ -342,7 +343,7 @@ export default function Producers() {
                                         InputProps={{
                                             startAdornment: (
                                                 <div className="producer__icon-label">
-                                                    <Landscape className="producer__icon" />
+                                                    <img src={"/assets/producer/ha.svg"} className="producer__icon" />
                                                     {t('producers.no_ha')}:
                                                 </div>
                                             )
@@ -363,7 +364,7 @@ export default function Producers() {
                                         InputProps={{
                                             startAdornment: (
                                                 <div className="producer__icon-label">
-                                                    <Landscape className="producer__icon" />
+                                                    <img src={"/assets/producer/cocoaHa.svg"} className="producer__icon" />
                                                     {t('producers.no_cocoa_ha')}:
                                                 </div>
                                             )
@@ -384,7 +385,7 @@ export default function Producers() {
                                         InputProps={{
                                             startAdornment: (
                                                 <div className="producer__icon-label">
-                                                    <ForestIcon className="producer__icon" />
+                                                    <img src={"/assets/producer/forestHa.svg"} className="producer__icon" />
                                                     {t('producers.no_forest_ha')}:
                                                 </div>
                                             )
@@ -405,7 +406,7 @@ export default function Producers() {
                                         InputProps={{
                                             startAdornment: (
                                                 <div className="producer__icon-label">
-                                                    <AppsIcon className="producer__icon" />
+                                                    <img src={"/assets/producer/cocoaLots.svg"} className="producer__icon" />
                                                     {t('producers.no_cocoa_lots')}:
                                                 </div>
                                             )
@@ -426,7 +427,7 @@ export default function Producers() {
                                         InputProps={{
                                             startAdornment: (
                                                 <div className="producer__icon-label">
-                                                    <LocalDrink className="producer__icon" />
+                                                    <img src={"/assets/producer/waterSources.svg"} className="producer__icon" />
                                                     {t('producers.water_source')}:
                                                 </div>
                                             )
@@ -447,7 +448,7 @@ export default function Producers() {
                                         InputProps={{
                                             startAdornment: (
                                                 <div className="producer__icon-label">
-                                                    <Pets className="producer__icon" />
+                                                    <img src={"/assets/producer/wildlife.svg"} className="producer__icon" />
                                                     {t('producers.wildlife')}:
                                                 </div>
                                             )

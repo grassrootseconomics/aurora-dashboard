@@ -53,36 +53,36 @@ const BatchDetailsPage = () => {
                   <AssociationInfo batchCode={id as string} association={buyerBatch.association}/>
                 </div>
                 <div className="batch__details">
-                    <GeneralBuyerStage batch={buyerBatch} name="Storage" index={5} img={'/assets/batch/Storage.jpg'} background="#f6aa62" userRole={userRole}/>
-                    <GeneralBuyerStage batch={buyerBatch} name="Drying" index={4} img={'/assets/batch/Drying.jpg'} background="#f39a1a" userRole={userRole}/>
-                    <GeneralBuyerStage batch={buyerBatch} name="Fermentation" index={3} img={'/assets/batch/Fermentation.jpg'} background="#f1852d" userRole={userRole}/>
-                    <GeneralBuyerStage batch={buyerBatch} name="Pulp" index={2} img={'/assets/batch/Pulp.jpg'} background="#d0741a" userRole={userRole}/>
-                    <GeneralBuyerStage batch={buyerBatch} name="Producers" index={1} img={'/assets/batch/Producers.jpg'} background="#93471b" userRole={userRole}/>
+                    <GeneralBuyerStage batch={buyerBatch} name={t("single_batch.stages.storage")} index={5} img={'/assets/batch/Storage.jpg'} background="#f6aa62" userRole={userRole}/>
+                    <GeneralBuyerStage batch={buyerBatch} name={t("single_batch.stages.drying")} index={4} img={'/assets/batch/Drying.jpg'} background="#f39a1a" userRole={userRole}/>
+                    <GeneralBuyerStage batch={buyerBatch} name={t("single_batch.stages.fermentation")} index={3} img={'/assets/batch/Fermentation.jpg'} background="#f1852d" userRole={userRole}/>
+                    <GeneralBuyerStage batch={buyerBatch} name={t("single_batch.stages.pulp")} index={2} img={'/assets/batch/Pulp.jpg'} background="#d0741a" userRole={userRole}/>
+                    <GeneralBuyerStage batch={buyerBatch} name={t("single_batch.stages.producers")} index={1} img={'/assets/batch/Producers.jpg'} background="#93471b" userRole={userRole}/>
                 </div>
               </> 
                 : batch && userRole == UserRole.project ?
                   <div className="batch__details"> 
                     {
                       batch.salesPhase.buyerName ?
-                        <GeneralStage batch={batch} name="Sales" index={5} background="#7d2113" userRole={userRole}/> : ""
+                        <GeneralStage batch={batch} name={t("single_batch.stages.sales")} index={5} img={'/assets/batch/Sales.png'} background="#7d2113" userRole={userRole}/> : ""
                     }
-                      <GeneralStage batch={batch} name="Storage" index={4} img={'/assets/batch/Storage.jpg'} background="#f6aa62" userRole={userRole}/>
-                      <GeneralStage batch={batch} name="Drying" index={3} img={'/assets/batch/Drying.jpg'} background="#f39a1a" userRole={userRole}/>
-                      <GeneralStage batch={batch} name="Fermentation" index={2} img={'/assets/batch/Fermentation.jpg'} background="#f1852d" userRole={userRole}/>
-                      <GeneralStage batch={batch} name="Pulp" index={1} img={'/assets/batch/Pulp.jpg'} background="#d0741a" userRole={userRole}/>
-                      <GeneralStage batch={batch} name="Producers" index={0} img={'/assets/batch/Producers.jpg'} background="#93471b" userRole={userRole}/>
+                      <GeneralStage batch={batch} name={t("single_batch.stages.storage")} index={4} img={'/assets/batch/Storage.jpg'} background="#f6aa62" userRole={userRole}/>
+                      <GeneralStage batch={batch} name={t("single_batch.stages.drying")} index={3} img={'/assets/batch/Drying.jpg'} background="#f39a1a" userRole={userRole}/>
+                      <GeneralStage batch={batch} name={t("single_batch.stages.fermentation")} index={2} img={'/assets/batch/Fermentation.jpg'} background="#f1852d" userRole={userRole}/>
+                      <GeneralStage batch={batch} name={t("single_batch.stages.pulp")} index={1} img={'/assets/batch/Pulp.jpg'} background="#d0741a" userRole={userRole}/>
+                      <GeneralStage batch={batch} name={t("single_batch.stages.producers")} index={0} img={'/assets/batch/Producers.jpg'} background="#93471b" userRole={userRole}/>
                   </div>
                 : batch && userRole == UserRole.association ?
                   <div className="batch__details">
                     {
                       batch.salesPhase.buyerName ?
-                        <GeneralStage batch={batch} name="Sales" index={5} background="#7d2113" userRole={userRole}/> : ""
+                        <GeneralStage batch={batch} name={t("single_batch.stages.sales")} index={5} img={'/assets/batch/Sales.png'} background="#7d2113" userRole={userRole}/> : ""
                     }
-                      <GeneralStage batch={batch} name="Storage" index={4} img={'/assets/batch/Storage.jpg'} background="#f6aa62" userRole={userRole}/>
-                      <GeneralStage batch={batch} name="Drying" index={3} img={'/assets/batch/Drying.jpg'} background="#f39a1a" userRole={userRole}/>
-                      <GeneralStage batch={batch} name="Fermentation" index={2} img={'/assets/batch/Fermentation.jpg'} background="#f1852d" userRole={userRole}/>
-                      <GeneralStage batch={batch} name="Pulp" index={1} img={'/assets/batch/Pulp.jpg'} background="#d0741a" userRole={userRole}/>
-                      <GeneralStage batch={batch} name="Producers" index={0} img={'/assets/batch/Producers.jpg'} background="#93471b" userRole={userRole}/>
+                      <GeneralStage batch={batch} name={t("single_batch.stages.storage")} index={4} img={'/assets/batch/Storage.jpg'} background="#f6aa62" userRole={userRole}/>
+                      <GeneralStage batch={batch} name={t("single_batch.stages.drying")} index={3} img={'/assets/batch/Drying.jpg'} background="#f39a1a" userRole={userRole}/>
+                      <GeneralStage batch={batch} name={t("single_batch.stages.fermentation")} index={2} img={'/assets/batch/Fermentation.jpg'} background="#f1852d" userRole={userRole}/>
+                      <GeneralStage batch={batch} name={t("single_batch.stages.pulp")} index={1} img={'/assets/batch/Pulp.jpg'} background="#d0741a" userRole={userRole}/>
+                      <GeneralStage batch={batch} name={t("single_batch.stages.producers")} index={0} img={'/assets/batch/Producers.jpg'} background="#93471b" userRole={userRole}/>
                   </div> : ""
           }  
         </div>

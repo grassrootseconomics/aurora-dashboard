@@ -1,0 +1,22 @@
+export const ABI = [
+    // Read-only functions
+    {
+      "constant": true,
+      "inputs": [{ "name": "_tokenId", "type": "uint256" }],
+      "name": "ownerOf",
+      "outputs": [{ "name": "owner", "type": "address" }],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [{ "name": "_tokenId", "type": "uint256" }],
+      "name": "tokenURI",
+      "outputs": [{ "name": "", "type": "string" }],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    // Other functions and events of the ERC721 token contract
+];

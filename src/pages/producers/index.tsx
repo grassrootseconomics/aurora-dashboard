@@ -24,19 +24,25 @@ export default function Producers() {
   const { t } = useTranslation('translation');
   const [associations, setAssociations] = useState<Association[]>();
   const [selectedAssociation, setSelectedAssociation] = useState<number>(0);
-  const [producers, setProducers] = useState<BasicProducer[]>();
+  const [producers, setProducers] = useState<BasicProducer[]>([]);
+  const [initialProducers, setInitialProducers] = useState<BasicProducer[]>([]);
   const [producersCocoaHa, setProducersCocoaHa] = useState<number>(0);
   const [producersConservationHa, setProducersConservationHa] =
     useState<number>(0);
   const [producersStats, setProducersStats] = useState<ProducersStatistics>();
   const [menNo, setMenNo] = useState<number>(0);
   const [loading, setLoading] = useState(true);
+  const [producerCodeSearch, setProducerCodeSearch] = useState<string>("");
   const { userRole } = useUserAuthContext();
   const router = useRouter();
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setSelectedAssociation(newValue);
   };
+
+  const setSearchValue = (event: any) => {
+    setProducerCodeSearch(event.target.value)
+  }
 
   useEffect(() => {
     switch (userRole) {
@@ -53,6 +59,7 @@ export default function Producers() {
           getProducersInfoList(associations[selectedAssociation - 1].name).then(
             (data) => {
               setProducers(data.producers);
+              setInitialProducers(data.producers);
               setProducersCocoaHa(data.statistics.haCocoa);
               setProducersConservationHa(data.statistics.haForestConservation);
               setProducersStats(data.statistics);
@@ -63,6 +70,7 @@ export default function Producers() {
         } else if (associations && selectedAssociation == 0) {
           getProducersInfoList().then((data) => {
             setProducers(data.producers);
+            setInitialProducers(data.producers);
             setProducersCocoaHa(data.statistics.haCocoa);
             setProducersConservationHa(data.statistics.haForestConservation);
             setProducersStats(data.statistics);
@@ -74,6 +82,7 @@ export default function Producers() {
       case UserRole.association:
         getProducersInfoList().then((data) => {
           setProducers(data.producers);
+          setInitialProducers(data.producers);
           setProducersCocoaHa(data.statistics.haCocoa);
           setProducersConservationHa(data.statistics.haForestConservation);
           setProducersStats(data.statistics);
@@ -83,6 +92,10 @@ export default function Producers() {
         return;
     }
   }, [userRole, associations, selectedAssociation]);
+
+  useEffect(() => {
+    setProducers(initialProducers.filter(p => p.producerCode.toString().includes(producerCodeSearch)))
+  }, [producerCodeSearch])
 
   return (
     <>
@@ -98,7 +111,7 @@ export default function Producers() {
           <div className={`dashboard__cards  dashboard__cards--main`}>
             <CardOne
               backgroundColor="#d0741a"
-              number={producers?.length}
+              number={producersStats?.nrCocoaProducers}
               text={t('number_producers')}
               icon={'/assets/farmer.png'}
               loading={loading}
@@ -124,6 +137,9 @@ export default function Producers() {
           </div>
         </div>
         <div className="dashboard__container-info">
+          <div style={{display: "flex", justifyContent: "flex-end"}}>
+            <input className="dashboard__search" type="text" placeholder={t("search") ?? ""} onChange={setSearchValue}/>
+          </div>
           {associations ? (
             <Tabs
               value={selectedAssociation}
@@ -138,7 +154,7 @@ export default function Producers() {
               scrollButtons="auto"
               aria-label="scrollable auto tabs example"
             >
-              <Tab key={-1} label={'All'} style={{ marginBottom: 10 }} />
+              <Tab key={-1} label={t("home.all")} style={{ marginBottom: 10 }} />
               {associations.map((item, index) => (
                 <Tab
                   key={index}
