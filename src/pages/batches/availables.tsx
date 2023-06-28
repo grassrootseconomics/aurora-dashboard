@@ -42,7 +42,7 @@ export default function AvailableBatches() {
 
   const router = useRouter();
 
-  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setSelectedAssociation(newValue);
   };
 
@@ -51,30 +51,41 @@ export default function AvailableBatches() {
   }
 
   useEffect(() => {
-    switch (userRole) {
-      case UserRole.project:
-        getAssociations().then((assocs) => setAssociations(assocs));
-        return;
+    if (userRole && userRole === 'buyer') {
+      router.push('/');
     }
   }, [userRole, router]);
 
   useEffect(() => {
-    switch (userRole) {
-      case UserRole.project:
-        if (associations && selectedAssociation >= 1) {
-          getAvailableBatches(associations[selectedAssociation - 1].name).then(
-            (data) => {
-              setAvailableBatches(data.basicBatches.filter((b : BasicAvailableBatch) => b.batch.includes(batchCodeSearch)));
-              setInitialAvailableBatches(data.basicBatches);
+    if (userRole)
+      switch (userRole) {
+        case UserRole.project:
+          getAssociations().then((assocs) => setAssociations(assocs));
+          if (associations && selectedAssociation >= 1) {
+            getAvailableBatches(
+              associations[selectedAssociation - 1].name
+            ).then((data) => {
+              setAvailableBatches(data.basicBatches);
               setAvailableWeight(data.kgDryCocoaAvailable);
               setDryCocoaProduction(
                 getProductionOfDryCocoa(data.productionOfDryCocoa)
               );
               setTotalPulpCollected(getTotalPulpGraph(data.monthlyCocoaPulp));
               setLoading(false);
-            }
-          );
-        } else if (associations && selectedAssociation == 0) {
+            });
+          } else if (associations && selectedAssociation == 0) {
+            getAvailableBatches().then((data) => {
+              setAvailableBatches(data.basicBatches);
+              setAvailableWeight(data.kgDryCocoaAvailable);
+              setDryCocoaProduction(
+                getProductionOfDryCocoa(data.productionOfDryCocoa)
+              );
+              setTotalPulpCollected(getTotalPulpGraph(data.monthlyCocoaPulp));
+              setLoading(false);
+            });
+          }
+          return;
+        case UserRole.association:
           getAvailableBatches().then((data) => {
             setAvailableBatches(data.basicBatches);
             setInitialAvailableBatches(data.basicBatches);
@@ -85,21 +96,8 @@ export default function AvailableBatches() {
             setTotalPulpCollected(getTotalPulpGraph(data.monthlyCocoaPulp));
             setLoading(false);
           });
-        }
-        return;
-      case UserRole.association:
-        getAvailableBatches().then((data) => {
-          setAvailableBatches(data.basicBatches.filter((b : BasicAvailableBatch) => b.batch.includes(batchCodeSearch)));
-          setInitialAvailableBatches(data.basicBatches);
-          setAvailableWeight(data.kgDryCocoaAvailable);
-          setDryCocoaProduction(
-            getProductionOfDryCocoa(data.productionOfDryCocoa)
-          );
-          setTotalPulpCollected(getTotalPulpGraph(data.monthlyCocoaPulp));
-          setLoading(false);
-        });
-        return;
-    }
+          return;
+      }
   }, [userRole, associations, selectedAssociation]);
 
 
