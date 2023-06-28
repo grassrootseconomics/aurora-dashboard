@@ -1,4 +1,5 @@
-import { AxiosResponseData, api } from '@/plugins/axios';
+import { AxiosResponseData, api, authenticatedApi } from '@/plugins/axios';
+import { Association } from '@/util/models/BasicAssociation';
 import { fetchRefreshToken } from '@/util/tokenStorage';
 
 export const getNonce = async (address: string): Promise<{ nonce: string }> => {
@@ -43,4 +44,11 @@ export const generateAccessToken = async (
     }
   );
   return response.data.data;
+};
+
+
+export const getUserAssociation = async (): Promise<Association> => {
+  const response: AxiosResponseData<any> = await authenticatedApi.get(
+    `/v1/auth/association`);
+  return response.data.data.association;
 };

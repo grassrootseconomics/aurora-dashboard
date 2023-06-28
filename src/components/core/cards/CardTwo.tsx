@@ -1,8 +1,11 @@
 import Image from 'next/image';
 
+import LoadingBox from '../spinners/LoadingBox';
+
 interface CardProps {
   backgroundColor: string;
-  number: number;
+  number: number | string | undefined;
+  loading: boolean;
   text: string;
   icon: any;
   alt: string;
@@ -15,7 +18,9 @@ const CardTwo = (props: CardProps) => {
       style={{ backgroundColor: props.backgroundColor }}
     >
       <div className="card__row">
-        <div className="card__number">{props.number}</div>
+        <div className="card__number">
+          {props.loading ? <LoadingBox /> : props.number}
+        </div>
         <Image
           width={128}
           height={128}

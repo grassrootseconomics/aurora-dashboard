@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 
 const LanguageSelector = () => {
   const router = useRouter();
-
   const { i18n } = useTranslation('translation');
 
   const handleLanguageChange = (lang: string) => {
@@ -17,7 +16,6 @@ const LanguageSelector = () => {
         style={{
           background: 'transparent',
           border: '0',
-          color: 'white',
           cursor: 'pointer',
           fontWeight: 600,
           textDecoration: i18n.language === 'en' ? 'underline' : 'none',
@@ -31,10 +29,9 @@ const LanguageSelector = () => {
         style={{
           background: 'transparent',
           border: '0',
-          color: 'white',
           cursor: 'pointer',
           fontWeight: 600,
-          textDecoration: i18n.language === 'es' ? 'underline' : 'none',
+          textDecoration: i18n.language != 'en' ? 'underline' : 'none',
         }}
         onClick={() => handleLanguageChange('es')}
       >
