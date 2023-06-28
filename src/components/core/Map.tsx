@@ -3,8 +3,7 @@ import {
   ComposableMap,
   Geographies,
   Geography,
-  ProjectionConfig,
-  ZoomableGroup,
+  ProjectionConfig
 } from 'react-simple-maps';
 
 import { regionsOfColombia } from '@/util/constants/regions';

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,11 +10,11 @@ const Footer: FC = () => {
       <div className="footer__container">
         <div className="footer__container_item">
           <p>{t('footer.operated_by')}:</p>
-          <img src="/assets/logos/Insitu.png" alt="Insitu Logo" />
+          <Image width={100} height={80} src="/assets/logos/Insitu.png" alt="Insitu Logo" />
         </div>
         <div className="footer__container_item">
           <p>{t('footer.funded_by')}:</p>
-          <img src="/assets/logos/GIZ.png" alt="GIZ Logo" />
+          <Image width={100} height={80} src="/assets/logos/GIZ.png" alt="GIZ Logo" />
         </div>
       </div>
     </div>

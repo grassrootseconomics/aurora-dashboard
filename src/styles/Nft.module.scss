@@ -134,6 +134,7 @@
 
 .batchInfoImage {
     min-width: 100%;
+    height: auto;
 }
 
 .sensoryProfiling {
@@ -253,8 +254,10 @@
 }
 
 .image {
-    max-width: 100%;
+    min-width: 100%;
+    max-width: 860px;
     margin-top: 30px;
+    height: auto;
 }
 
 .salesRow {

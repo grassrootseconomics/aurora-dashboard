@@ -14,6 +14,7 @@ import FlipsTableNft from '@/components/core/nft/FlipsTableNft';
 import DailyReportsTableNft from '@/components/core/nft/DailyReportsTableNft';
 import { convertToSimpleDate } from '@/util/format/date';
 import { fetchNFTMetadata } from '@/util/celo';
+import Image from 'next/image';
 
 const NFT = () => {
     const { t, i18n } = useTranslation('translation');
@@ -23,8 +24,8 @@ const NFT = () => {
 
     const getNFTMetadata = async () => {
          const metadata = await fetchNFTMetadata("0");
-         const nftModel = await fetchNFTModel("metadata");
-         console.log(nftModel)
+         console.log(metadata)
+         const nftModel = await fetchNFTModel("metadata.ToString()");
          setNftModel(nftModel);
       };
     
@@ -39,7 +40,7 @@ const NFT = () => {
             nftModel ?
                 <div className={styles.container}>
                     <div className={styles.assocLogo}>
-                        <img src={`/assets/logos/${nftModel.assocDetails.name}.png`} alt="Association" />
+                        <Image width={200} height={150} src={`/assets/logos/${nftModel.assocDetails.name}.png`} alt="Association" />
                     </div>
 
                     <div className={styles.title}>{t("nft.assoc_title")}</div>
@@ -86,7 +87,7 @@ const NFT = () => {
                     <div className={styles.title}>{t("nft.region_information")}</div>
 
                     <div className={styles.tableRow}>
-                        <img className={styles.colombia_map} src="/assets/nft/colombia_map.svg" alt="Colombia Map" />
+                        <Image width={200} height={150} className={styles.colombia_map} src="/assets/nft/colombia_map.svg" alt="Colombia Map" />
                         <div className={styles.tableValue}>{nftModel.assocDetails.regionInformationL}</div>
                     </div>
 
@@ -109,7 +110,7 @@ const NFT = () => {
                             <div className={styles.infoContainer}>{t("nft.fermentation_model")}: {nftModel.batchDetails.fermentationModeL}</div>
                             <div className={styles.infoContainer}>{t("nft.conversion_factor")}: {nftModel.batchDetails.conversionFactor}</div>
                         </div>
-                        <img className={styles.batchInfoImage} src="/assets/nft/batch_info_image.png" alt="Batch Info" />
+                        <Image width={100} height={50} className={styles.batchInfoImage} src="/assets/nft/batch_info_image.png" alt="Batch Info" />
                     </div>
 
                     <div className={styles.sensoryProfiling}>{t("nft.sensory_profiling")}</div>
@@ -130,7 +131,7 @@ const NFT = () => {
                     </div>
 
                     <div className={styles.title}>{t("nft.traceability_process")}</div>
-                    <img className={styles.image} src={`/assets/nft/traceability-${i18n.language}.png`} />
+                    <Image width={900} height={50} alt={t("nft.traceability_process")} className={styles.image} src={`/assets/nft/traceability-${i18n.language}.png`} />
 
                     <div className={styles.processTitle}>
                         <span className={styles.processNumber}>1</span> {t("nft.producers")}
@@ -166,7 +167,7 @@ const NFT = () => {
                             </div>
                         </div>
                         <div className={styles.wildlifeLabel}>{t("nft.wildlife")}: </div>
-                        <img className={styles.image} src="/assets/nft/animals.png" />
+                        <Image width={500} height={50} alt={t("nft.wildlife")} className={styles.image} src="/assets/nft/animals.png" />
                     </div>
 
                     <div className={styles.processTitle}>
@@ -257,7 +258,7 @@ const NFT = () => {
                                     <div className={styles.infoContainer}>{t("nft.country")}: {nftModel.traceDetails.sales.country}</div>
                                 </div>
                                 <div className={styles.salesRow}>
-                                    <img className={styles.salesCalendar} src="/assets/nft/calendar.png" alt="Calendar" />
+                                    <Image width={40} height={45} className={styles.salesCalendar} src="/assets/nft/calendar.png" alt="Calendar" />
                                     <div className={styles.infoContainer}>{t("nft.day_negotiation")}: {convertToSimpleDate(nftModel.traceDetails.sales.negotiationDate)}</div>
                                 </div>
                             </div>

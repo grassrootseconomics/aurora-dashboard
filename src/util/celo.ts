@@ -8,7 +8,6 @@ export const fetchNFTMetadata = async (tokenId: string) => {
   const kit = await initContractKit();
   const contract = new kit.web3.eth.Contract(ABI as any, contractAddress);
   const metadata = await contract.methods.tokenURI(tokenId).call();
-  console.log(metadata)
   // You can use the metadata URL to retrieve the metadata details
   // You may need to parse the metadata if it's returned as JSON
   return metadata;

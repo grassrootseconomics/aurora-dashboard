@@ -12,6 +12,7 @@ import { UserRole } from '@/util/constants/users';
 import { BatchInfo } from '@/util/models/Batch/BatchInfo';
 import SalesStage from './SalesStage';
 import { updateDryingPhase, updateFermentationPhase, updateSalesPhase, updateStoragePhase } from '@/services/batch';
+import Image from 'next/image';
 
 interface GeneralStageProps {
     name: string;
@@ -141,7 +142,7 @@ const GeneralStage = (props: GeneralStageProps) => {
                     </div>
                 </div>
                 {
-                    props.img ? <img className="batch__stage-image" src={props.img} alt={props.name}/> : ""
+                    props.img ? <Image width={350} height={100} className="batch__stage-image" src={props.img} alt={props.name}/> : ""
                 } 
             </div>
         </div>

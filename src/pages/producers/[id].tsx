@@ -5,24 +5,10 @@ import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import {
-  AccountCircle,
-  Business,
-  Cake,
-  Domain,
-  Landscape,
-  LocalDrink,
-  LocationOn,
-  Pets,
-  Phone,
-  Wc,
-} from '@mui/icons-material';
+
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import AgricultureIcon from '@mui/icons-material/Agriculture';
-import AppsIcon from '@mui/icons-material/Apps';
 import CancelIcon from '@mui/icons-material/Cancel';
 import EditNoteIcon from '@mui/icons-material/EditNote';
-import ForestIcon from '@mui/icons-material/Forest';
 import { Select } from '@mui/material';
 
 import { BackButton } from '@/components/core/buttons/BackButton';
@@ -34,6 +20,7 @@ import { Association } from '@/util/models/BasicAssociation';
 import { Department } from '@/util/models/BasicDepartment';
 import { Producer } from '@/util/models/Producer/Producer';
 import { Container, Grid, MenuItem, TextField } from '@material-ui/core';
+import Image from 'next/image';
 
 export default function Producers() {
   const { t } = useTranslation('translation');
@@ -127,7 +114,7 @@ export default function Producers() {
                                 InputProps={{
                                     startAdornment: (
                                         <div className="producer__icon-label">
-                                            <img src={"/assets/producer/person.svg"} className="producer__icon" />
+                                            <Image width={24} height={24} alt={t('producers.first_name')} src={"/assets/producer/person.svg"} className="producer__icon" />
                                             {t('producers.first_name')}:
                                         </div>
                                     )
@@ -148,7 +135,7 @@ export default function Producers() {
                                     InputProps={{
                                         startAdornment: (
                                             <div className="producer__icon-label">
-                                            <img src={"/assets/producer/person.svg"} className="producer__icon" />
+                                            <Image width={24} height={24} alt={t('producers.last_name')} src={"/assets/producer/person.svg"} className="producer__icon" />
                                                 {t('producers.last_name')}:
                                             </div>
                                         )
@@ -169,7 +156,7 @@ export default function Producers() {
                                 InputProps={{
                                     startAdornment: (
                                         <div className="producer__icon-label">
-                                            <img src={"/assets/producer/phone.svg"} className="producer__icon" />
+                                            <Image width={24} height={24} alt={t('producers.phone_number')} src={"/assets/producer/phone.svg"} className="producer__icon" />
                                             {t('producers.phone_number')}:
                                         </div>
                                     )
@@ -186,7 +173,7 @@ export default function Producers() {
                         render={({ field }) => (
                             <div className="producer__row">
                                 <div className="producer__icon-label">
-                                    <img src={"/assets/producer/gender.svg"} className="producer__icon" />
+                                    <Image width={24} height={24} alt={t('producers.gender')} src={"/assets/producer/gender.svg"} className="producer__icon" />
                                     {t('producers.gender')}:
                                 </div>
                                 <Select 
@@ -211,7 +198,7 @@ export default function Producers() {
                                 InputProps={{
                                     startAdornment: (
                                         <div className="producer__icon-label">
-                                            <img src={"/assets/producer/calendar.svg"} className="producer__icon" />
+                                            <Image width={24} height={24} alt={t('producers.year_birth')} src={"/assets/producer/calendar.svg"} className="producer__icon" />
                                             {t('producers.year_birth')}:
                                         </div>
                                     )
@@ -223,7 +210,7 @@ export default function Producers() {
                     />   
                     <Grid container>
                         <Grid item className={"producer__map"} xs={3} md={3}>
-                            <img src={"/assets/producer/colombia.svg"} className="producer__icon--colombia" />
+                            <Image width={124} height={124} alt={"Colombia"} src={"/assets/producer/colombia.svg"} className="producer__icon--colombia" />
                         </Grid>
                         <Grid item xs={9} md={9}>
                             <Controller
@@ -294,7 +281,7 @@ export default function Producers() {
                             render={({ field }) => (
                                 <div className="producer__row">
                                     <div className="producer__icon-label">
-                                        <img src={"/assets/producer/association.svg"} className="producer__icon" />
+                                        <Image width={24} height={24} alt={t('producers.association')} src={"/assets/producer/association.svg"} className="producer__icon" />
                                         {t('producers.association')}:
                                     </div>
                                     <Select 
@@ -323,7 +310,7 @@ export default function Producers() {
                                 InputProps={{
                                     startAdornment: (
                                         <div className="producer__icon-label">
-                                            <img src={"/assets/producer/farm.svg"} className="producer__icon" />
+                                            <Image width={24} height={24} alt={t('producers.farm_name')} src={"/assets/producer/farm.svg"} className="producer__icon" />
                                             {t('producers.farm_name')}:
                                         </div>
                                     )
@@ -344,7 +331,7 @@ export default function Producers() {
                                 InputProps={{
                                     startAdornment: (
                                         <div className="producer__icon-label">
-                                            <img src={"/assets/producer/location.svg"} className="producer__icon" />
+                                            <Image width={24} height={24} alt={t('producers.location')} src={"/assets/producer/location.svg"} className="producer__icon" />
                                             {t('producers.location')}:
                                         </div>
                                     )
@@ -365,7 +352,7 @@ export default function Producers() {
                                 InputProps={{
                                     startAdornment: (
                                         <div className="producer__icon-label">
-                                            <img src={"/assets/producer/ha.svg"} className="producer__icon" />
+                                            <Image width={24} height={24} alt={t('producers.no_ha')} src={"/assets/producer/ha.svg"} className="producer__icon" />
                                             {t('producers.no_ha')}:
                                         </div>
                                     )
@@ -386,7 +373,7 @@ export default function Producers() {
                                 InputProps={{
                                     startAdornment: (
                                         <div className="producer__icon-label">
-                                            <img src={"/assets/producer/cocoaHa.svg"} className="producer__icon" />
+                                            <Image width={24} height={24} alt={t('producers.no_cocoa_ha')} src={"/assets/producer/cocoaHa.svg"} className="producer__icon" />
                                             {t('producers.no_cocoa_ha')}:
                                         </div>
                                     )
@@ -407,7 +394,7 @@ export default function Producers() {
                                 InputProps={{
                                     startAdornment: (
                                         <div className="producer__icon-label">
-                                            <img src={"/assets/producer/forestHa.svg"} className="producer__icon" />
+                                            <Image width={24} height={24} alt={t('producers.no_forest_ha')} src={"/assets/producer/forestHa.svg"} className="producer__icon" />
                                             {t('producers.no_forest_ha')}:
                                         </div>
                                     )
@@ -428,7 +415,7 @@ export default function Producers() {
                                 InputProps={{
                                     startAdornment: (
                                         <div className="producer__icon-label">
-                                            <img src={"/assets/producer/cocoaLots.svg"} className="producer__icon" />
+                                            <Image width={24} height={24} alt={t('producers.no_cocoa_lots')} src={"/assets/producer/cocoaLots.svg"} className="producer__icon" />
                                             {t('producers.no_cocoa_lots')}:
                                         </div>
                                     )
@@ -449,7 +436,7 @@ export default function Producers() {
                                 InputProps={{
                                     startAdornment: (
                                         <div className="producer__icon-label">
-                                            <img src={"/assets/producer/waterSources.svg"} className="producer__icon" />
+                                            <Image width={24} height={24} alt={t('producers.water_source')} src={"/assets/producer/waterSources.svg"} className="producer__icon" />
                                             {t('producers.water_source')}:
                                         </div>
                                     )
@@ -470,7 +457,7 @@ export default function Producers() {
                                 InputProps={{
                                     startAdornment: (
                                         <div className="producer__icon-label">
-                                            <img src={"/assets/producer/wildlife.svg"} className="producer__icon" />
+                                            <Image width={24} height={24} alt={t('producers.wildlife')} src={"/assets/producer/wildlife.svg"} className="producer__icon" />
                                             {t('producers.wildlife')}:
                                         </div>
                                     )
