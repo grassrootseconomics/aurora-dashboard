@@ -186,7 +186,10 @@
         "cancel_edit": "Cancelar Editar",
         "start_edit": "Empezar Editar",
         "close": "Cerca",
-        "delete": "Borrar"
+        "delete": "Borrar",
+        "download_available_batches": "Descargar Información de baches disponibles",
+        "download_sold_batches": "Descargar Información de baches vendidos",
+        "download_producers": "Descargar Información de productores"
     },
     "modals": {
         "report": {

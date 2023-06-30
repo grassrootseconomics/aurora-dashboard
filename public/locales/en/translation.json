@@ -4,7 +4,7 @@
     "number_women": "Number of women",
     "ha_forest_conservation": "Ha of forest conservation",
     "dry_cocoa_available": "of dry cocoa available",
-    "sold_international_market": "solt to the internation market",
+    "sold_international_market": "Sold to the internation market",
     "batch": "Batch",
     "buyer": "Buyer",
     "destination_country": "Destination Country",
@@ -186,7 +186,10 @@
         "cancel_edit": "Cancel Edit",
         "start_edit": "Start Edit",
         "close": "Close",
-        "delete": "Delete"
+        "delete": "Delete",
+        "download_available_batches": "Download information of available batches",
+        "download_sold_batches": "Download information of sold batches",
+        "download_producers": "Download information of producers"
     },
     "modals": {
         "report": {

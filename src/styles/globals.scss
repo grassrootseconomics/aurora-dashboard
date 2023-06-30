@@ -58,6 +58,15 @@ button {
         &--main {
             flex-direction: column;
         }
+
+        & .dashboard__download-button {
+            background: #f1852d;
+            color: white;
+            font-weight: 600;
+            padding: 14px 20px;
+            margin-bottom: 30px;
+            max-width: 260px;
+        }
     }
 
     &__chart {

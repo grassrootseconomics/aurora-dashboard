@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 
 import React, { useEffect, useState } from 'react';
+import { saveAs } from 'file-saver';
 
 import { Tab, Tabs } from '@mui/material';
 
@@ -13,7 +14,7 @@ import LineChart from '@/components/core/charts/LineChart';
 import SoldBatchesTable from '@/components/core/tables/SoldBatchesTable';
 import { useUserAuthContext } from '@/providers/UserAuthProvider';
 import { getAssociations } from '@/services/association';
-import { getSoldBatches } from '@/services/batch';
+import { downloadBatchesInExcel, getSoldBatches } from '@/services/batch';
 import {
   getTotalSalesGeneralGraph,
   getTotalSalesKgGraph,
@@ -45,6 +46,17 @@ export default function SoldBatches() {
     setBatchCodeSearch(event.target.value)
   }
 
+  const downloadSoldBatches = async () => {
+    try {
+      const response = await downloadBatchesInExcel(true);
+
+      // Save the Blob response as a file using FileSaver.js
+      saveAs(response.data, "Available Batches");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  
   useEffect(() => {
     if (userRole && userRole === 'buyer') {
       router.push('/');
@@ -104,15 +116,16 @@ export default function SoldBatches() {
       <div className="dashboard__container">
         <div>
           <BackButton />
-          <div className={`dashboard__cards`}>
+          <div className={`dashboard__cards  dashboard__cards--main`}>
             <CardTwo
-              backgroundColor="#d0741a"
+              backgroundColor="#f1852d"
               number={soldWeight}
               text={t('sold_international_market')}
               icon={'/assets/kilogram.png'}
               loading={loading}
               alt={'Kilogram'}
             />
+            <button className={"dashboard__download-button"} onClick={downloadSoldBatches}>{t("buttons.download_sold_batches")}</button>
           </div>
         </div>
         <div className="dashboard__container-info">

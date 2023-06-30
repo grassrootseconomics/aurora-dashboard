@@ -15,6 +15,7 @@ import DailyReportsTableNft from '@/components/core/nft/DailyReportsTableNft';
 import { convertToSimpleDate } from '@/util/format/date';
 import { fetchNFTMetadata } from '@/util/celo';
 import Image from 'next/image';
+import { associations } from '@/util/constants/associations';
 
 const NFT = () => {
     const { t, i18n } = useTranslation('translation');
@@ -40,7 +41,11 @@ const NFT = () => {
             nftModel ?
                 <div className={styles.container}>
                     <div className={styles.assocLogo}>
-                        <Image width={200} height={150} src={`/assets/logos/${nftModel.assocDetails.name}.png`} alt="Association" />
+                        { 
+                            associations.includes(nftModel.assocDetails.name.toLowerCase()) ?
+                                <Image width={200} height={150} src={`/assets/logos/${nftModel.assocDetails.name}.png`} alt="Association" /> : 
+                                <Image width={200} height={150} src={`/assets/logos/Aurora.png`} alt="Aurora" /> 
+                        }
                     </div>
 
                     <div className={styles.title}>{t("nft.assoc_title")}</div>

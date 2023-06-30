@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 
 import React, { useEffect, useState } from 'react';
+import { saveAs } from 'file-saver';
 
 import { Tab, Tabs } from '@mui/material';
 
@@ -14,7 +15,7 @@ import PieChart from '@/components/core/charts/PieChart';
 import ProducersTable from '@/components/core/tables/ProducersTable';
 import { useUserAuthContext } from '@/providers/UserAuthProvider';
 import { getAssociations } from '@/services/association';
-import { getProducersInfoList } from '@/services/producer';
+import { downloadProducersInExcel, getProducersInfoList } from '@/services/producer';
 import { UserRole } from '@/util/constants/users';
 import { Association } from '@/util/models/BasicAssociation';
 import { BasicProducer } from '@/util/models/Producer/BasicProducer';
@@ -43,6 +44,17 @@ export default function Producers() {
   const setSearchValue = (event: any) => {
     setProducerCodeSearch(event.target.value)
   }
+
+  const downloadProducers = async () => {
+    try {
+      const response = await downloadProducersInExcel();
+
+      // Save the Blob response as a file using FileSaver.js
+      saveAs(response.data, "Producers");
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
     if (userRole)
@@ -137,6 +149,7 @@ export default function Producers() {
               alt={'Women'}
               maxIconWidth="145px"
             />
+            <button className={"dashboard__download-button"} onClick={downloadProducers}>{t("buttons.download_producers")}</button>
           </div>
         </div>
         <div className="dashboard__container-info">
