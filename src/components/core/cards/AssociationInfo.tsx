@@ -28,7 +28,7 @@ const AssociationInfo = (props: AssocProps) => {
                             height={0}
                             style={{ height: 'auto' }}
                             className="info__logo"
-                            src={`/assets/logos/${props.association.name}.png`}
+                            src={`/assets/logos/${props.association.name.toLowerCase()}.png`}
                             alt={"Association"}
                         />
                     </div>

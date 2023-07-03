@@ -146,6 +146,45 @@ const BatchDetailsPage = () => {
     }
   }, [userRole, id]);
 
+  /**
+ * 
+ *                 <Grid container justifyContent={'center'}>
+                  <Grid item>
+                    <BatchButton
+                      action={() => {
+                        // Hardcoded for now.
+                        // Should just later.
+                        setBuyer('0xcBDe28A47b6ae762B81a9Ba62b4F17a04D89646E');
+                        generateBatchSnapshotCertificate();
+                      }}
+                      label={'Generate NFT'}
+                    />
+                  </Grid>
+                </Grid>
+ * 
+ */
+
+  useEffect(() => {
+    if (!id) return;
+    switch (userRole) {
+      case UserRole.buyer:
+        getBatchByCodeForBuyers(id as string).then((b) => {
+          setBuyerBatch(b);
+        });
+        return;
+      case UserRole.project:
+        getBatchByCode(id as string).then((b) => {
+          setBatch(b);
+        });
+        return;
+      case UserRole.association:
+        getBatchByCode(id as string).then((b) => {
+          setBatch(b);
+        });
+        return;
+    }
+  }, [userRole, id]);
+
   return (
     <>
       <div className="batch__details-title">
@@ -163,7 +202,7 @@ const BatchDetailsPage = () => {
             <div className="batch__details">
               <GeneralBuyerStage
                 batch={buyerBatch}
-                name="Storage"
+                name={t('single_batch.stages.storage')}
                 index={5}
                 img={'/assets/batch/Storage.jpg'}
                 background="#f6aa62"
@@ -171,7 +210,7 @@ const BatchDetailsPage = () => {
               />
               <GeneralBuyerStage
                 batch={buyerBatch}
-                name="Drying"
+                name={t('single_batch.stages.drying')}
                 index={4}
                 img={'/assets/batch/Drying.jpg'}
                 background="#f39a1a"
@@ -179,7 +218,7 @@ const BatchDetailsPage = () => {
               />
               <GeneralBuyerStage
                 batch={buyerBatch}
-                name="Fermentation"
+                name={t('single_batch.stages.fermentation')}
                 index={3}
                 img={'/assets/batch/Fermentation.jpg'}
                 background="#f1852d"
@@ -187,7 +226,7 @@ const BatchDetailsPage = () => {
               />
               <GeneralBuyerStage
                 batch={buyerBatch}
-                name="Pulp"
+                name={t('single_batch.stages.pulp')}
                 index={2}
                 img={'/assets/batch/Pulp.jpg'}
                 background="#d0741a"
@@ -195,7 +234,7 @@ const BatchDetailsPage = () => {
               />
               <GeneralBuyerStage
                 batch={buyerBatch}
-                name="Producers"
+                name={t('single_batch.stages.producers')}
                 index={1}
                 img={'/assets/batch/Producers.jpg'}
                 background="#93471b"
@@ -222,8 +261,9 @@ const BatchDetailsPage = () => {
                 </Grid>
                 <GeneralStage
                   batch={batch}
-                  name="Sales"
+                  name={t('single_batch.stages.sales')}
                   index={5}
+                  img={'/assets/batch/Sales.png'}
                   background="#7d2113"
                   userRole={userRole}
                 />
@@ -233,7 +273,7 @@ const BatchDetailsPage = () => {
             )}
             <GeneralStage
               batch={batch}
-              name="Storage"
+              name={t('single_batch.stages.storage')}
               index={4}
               img={'/assets/batch/Storage.jpg'}
               background="#f6aa62"
@@ -241,7 +281,7 @@ const BatchDetailsPage = () => {
             />
             <GeneralStage
               batch={batch}
-              name="Drying"
+              name={t('single_batch.stages.drying')}
               index={3}
               img={'/assets/batch/Drying.jpg'}
               background="#f39a1a"
@@ -249,7 +289,7 @@ const BatchDetailsPage = () => {
             />
             <GeneralStage
               batch={batch}
-              name="Fermentation"
+              name={t('single_batch.stages.fermentation')}
               index={2}
               img={'/assets/batch/Fermentation.jpg'}
               background="#f1852d"
@@ -257,7 +297,7 @@ const BatchDetailsPage = () => {
             />
             <GeneralStage
               batch={batch}
-              name="Pulp"
+              name={t('single_batch.stages.pulp')}
               index={1}
               img={'/assets/batch/Pulp.jpg'}
               background="#d0741a"
@@ -265,7 +305,7 @@ const BatchDetailsPage = () => {
             />
             <GeneralStage
               batch={batch}
-              name="Producers"
+              name={t('single_batch.stages.producers')}
               index={0}
               img={'/assets/batch/Producers.jpg'}
               background="#93471b"
@@ -291,8 +331,9 @@ const BatchDetailsPage = () => {
                 </Grid>
                 <GeneralStage
                   batch={batch}
-                  name="Sales"
+                  name={t('single_batch.stages.sales')}
                   index={5}
+                  img={'/assets/batch/Sales.png'}
                   background="#7d2113"
                   userRole={userRole}
                 />
@@ -302,7 +343,7 @@ const BatchDetailsPage = () => {
             )}
             <GeneralStage
               batch={batch}
-              name="Storage"
+              name={t('single_batch.stages.storage')}
               index={4}
               img={'/assets/batch/Storage.jpg'}
               background="#f6aa62"
@@ -310,7 +351,7 @@ const BatchDetailsPage = () => {
             />
             <GeneralStage
               batch={batch}
-              name="Drying"
+              name={t('single_batch.stages.drying')}
               index={3}
               img={'/assets/batch/Drying.jpg'}
               background="#f39a1a"
@@ -318,7 +359,7 @@ const BatchDetailsPage = () => {
             />
             <GeneralStage
               batch={batch}
-              name="Fermentation"
+              name={t('single_batch.stages.fermentation')}
               index={2}
               img={'/assets/batch/Fermentation.jpg'}
               background="#f1852d"
@@ -326,7 +367,7 @@ const BatchDetailsPage = () => {
             />
             <GeneralStage
               batch={batch}
-              name="Pulp"
+              name={t('single_batch.stages.pulp')}
               index={1}
               img={'/assets/batch/Pulp.jpg'}
               background="#d0741a"
@@ -334,7 +375,7 @@ const BatchDetailsPage = () => {
             />
             <GeneralStage
               batch={batch}
-              name="Producers"
+              name={t('single_batch.stages.producers')}
               index={0}
               img={'/assets/batch/Producers.jpg'}
               background="#93471b"
