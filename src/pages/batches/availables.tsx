@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 
 import React, { useEffect, useState } from 'react';
+import { saveAs } from 'file-saver';
 
 import { Tab, Tabs } from '@mui/material';
 
@@ -13,7 +14,7 @@ import LineChart from '@/components/core/charts/LineChart';
 import AvailableBatchesTable from '@/components/core/tables/AvailableBatchesTable';
 import { useUserAuthContext } from '@/providers/UserAuthProvider';
 import { getAssociations } from '@/services/association';
-import { getAvailableBatches } from '@/services/batch';
+import { downloadBatchesInExcel, getAvailableBatches } from '@/services/batch';
 import {
   getProductionOfDryCocoa,
   getTotalPulpGraph,
@@ -31,8 +32,12 @@ export default function AvailableBatches() {
   const [availableBatches, setAvailableBatches] = useState<
     BasicAvailableBatch[]
   >([]);
+  const [initialAvailableBatches, setInitialAvailableBatches] = useState<
+    BasicAvailableBatch[]
+  >([]);
   const [totalPulpCollected, setTotalPulpCollected] = useState<Dataset[]>([]);
   const [dryCocoaProduction, setDryCocoaProduction] = useState<Dataset[]>();
+  const [batchCodeSearch, setBatchCodeSearch] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const { userRole } = useUserAuthContext();
 
@@ -40,6 +45,21 @@ export default function AvailableBatches() {
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setSelectedAssociation(newValue);
+  };
+
+  const setSearchValue = (event: any) => {
+    setBatchCodeSearch(event.target.value)
+  }
+
+  const downloadAvailableBatches = async () => {
+    try {
+      const response = await downloadBatchesInExcel(false);
+
+      // Save the Blob response as a file using FileSaver.js
+      saveAs(response.data, "Available Batches");
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => {
@@ -80,6 +100,7 @@ export default function AvailableBatches() {
         case UserRole.association:
           getAvailableBatches().then((data) => {
             setAvailableBatches(data.basicBatches);
+            setInitialAvailableBatches(data.basicBatches);
             setAvailableWeight(data.kgDryCocoaAvailable);
             setDryCocoaProduction(
               getProductionOfDryCocoa(data.productionOfDryCocoa)
@@ -90,6 +111,11 @@ export default function AvailableBatches() {
           return;
       }
   }, [userRole, associations, selectedAssociation]);
+
+
+  useEffect(() => {
+    setAvailableBatches(initialAvailableBatches.filter(b => b.batch.includes(batchCodeSearch)))
+  }, [batchCodeSearch])
 
   return (
     <>
@@ -102,18 +128,22 @@ export default function AvailableBatches() {
       <div className="dashboard__container">
         <div>
           <BackButton />
-          <div className={`dashboard__cards`}>
+          <div className={`dashboard__cards  dashboard__cards--main`}>
             <CardTwo
-              backgroundColor="#d0741a"
+              backgroundColor="#f1852d"
               number={availableWeight}
               text={t('dry_cocoa_available')}
               icon={'/assets/kilogram.png'}
               loading={loading}
               alt={'Kilogram'}
             />
+            <button className={"dashboard__download-button"} onClick={downloadAvailableBatches}>{t("buttons.download_available_batches")}</button>
           </div>
         </div>
         <div className="dashboard__container-info">
+          <div style={{display: "flex", justifyContent: "flex-end"}}>
+            <input className="dashboard__search" type="text" placeholder={t("search") ?? ""} onChange={setSearchValue}/>
+          </div>
           {associations && userRole == UserRole.project ? (
             <Tabs
               value={selectedAssociation}
@@ -128,7 +158,7 @@ export default function AvailableBatches() {
               scrollButtons="auto"
               aria-label="scrollable auto tabs example"
             >
-              <Tab key={-1} label={'All'} style={{ marginBottom: 10 }} />
+              <Tab key={-1} label={t("home.all")} style={{ marginBottom: 10 }} />
               {associations.map((item, index) => (
                 <Tab
                   key={index}

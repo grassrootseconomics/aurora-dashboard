@@ -4,7 +4,7 @@
     "number_women": "Number of women",
     "ha_forest_conservation": "Ha of forest conservation",
     "dry_cocoa_available": "of dry cocoa available",
-    "sold_international_market": "solt to the internation market",
+    "sold_international_market": "Sold to the internation market",
     "batch": "Batch",
     "buyer": "Buyer",
     "destination_country": "Destination Country",
@@ -19,6 +19,26 @@
     "general_sensory_profile": "General sensory profile",
     "cocoa_pulp_collected": "Cocoa pulp collected",
     "dry_cocoa_production": "Dry cocoa production",
+    "search": "Search",
+    "months": {
+        "january": "January",
+        "february": "February",
+        "march": "March",
+        "april": "April",
+        "may": "May",
+        "june": "June",
+        "july": "July",
+        "august": "August",
+        "september": "September",
+        "october": "October",
+        "november": "November",
+        "december": "December"
+    },
+    "menu": {
+        "home": "Home",
+        "about": "About Aurora",
+        "colombia_regions": "Colombia Regions"
+    },
     "home": {
         "production_by_association": "Production by association",
         "production_by_region": "Production by regions",
@@ -29,7 +49,8 @@
         "usd_price": "USD price",
         "total_sales_usd": "Total sales in USD",
         "next_harvest": "Next harvest",
-        "next_harvest_in": "Next harvest in"
+        "next_harvest_in": "Next harvest in",
+        "all": "All"
     },
     "sales": {
         "total_sales_kg": "Total sales in Kg"
@@ -38,6 +59,14 @@
 
     },
     "single_batch": {
+        "stages": {
+            "sales": "Sales",
+            "storage": "Storage",
+            "drying": "Drying",
+            "fermentation": "Fermentation",
+            "pulp": "Pulp",
+            "producers": "Producers"
+        },
         "title": "BATCH:",
         "batch_net_weight": "Batch net weight:",
         "batch_conversion_factor": "Batch conversion factor:",
@@ -157,7 +186,10 @@
         "cancel_edit": "Cancel Edit",
         "start_edit": "Start Edit",
         "close": "Close",
-        "delete": "Delete"
+        "delete": "Delete",
+        "download_available_batches": "Download information of available batches",
+        "download_sold_batches": "Download information of sold batches",
+        "download_producers": "Download information of producers"
     },
     "modals": {
         "report": {
@@ -223,5 +255,63 @@
     "footer": {
         "operated_by": "Operated by",
         "funded_by": "Funded by"
+    },
+    "nft": {
+        "assoc_title": "Association Information",
+        "name": "Name",
+        "department": "Department",
+        "town": "Town",
+        "no_associates": "No ASSOCIATES",
+        "women_percentage": "% Women",
+        "young_percentage": "% Young People",
+        "achivements_text": "Story or Main Achivements",
+        "years_existence": "Years of Existence",
+        "certifications": "Certifications",
+        "region_information": "Region Information",
+        "description": "Description",
+        "batch_information": "Batch Information",
+        "batch_code": "Batch Code",
+        "type_cocoa": "Type of cocoa",
+        "total_net_weight": "Total net weight",
+        "processing_date": "Processing date",
+        "humidity_percentage": "% Humidity",
+        "grain_index": "Grain Index",
+        "fermentation_days": "Fermentation days",
+        "fermentation_model": "Fermentation model",
+        "conversion_factor": "Conversion factor",
+        "sensory_profiling": "Sensory profiling",
+        "score": "Score",
+        "traceability_process": "Traceability Process",
+        "producers": "Producers",
+        "identified_varieties": "Identified varieties",
+        "wildlife": "Wildlife",
+        "pulp_harvesting": "Pulp Harvesting",
+        "cocoa_harvest_date": "Cocoa harvest date",
+        "price_kg_cocoa_pulp": "Price per kg of cocoa pulp",
+        "fermentation": "Fermentation",
+        "fermentation_start_date": "Fermentation start date",
+        "batch_genetics": "Batch genetics",
+        "batch_net_weight": "Batch net weight",
+        "drained_hours": "Drained hours",
+        "bx_grain": "°Bx of grain",
+        "total_flips": "Total flips",
+        "days_fermentation_process": "Days during fermentation process",
+        "drying": "Drying",
+        "start_date_drying_phase": "Start date of drying phase",
+        "number_days": "Number of days",
+        "final_humidity": "Final humidity",
+        "storage": "Storage",
+        "start_date_storage_phase": "Start date of storage phase",
+        "batch_conversion_factor": "Batch conversion factor",
+        "batch_fermentation": "Batch fermentation %",
+        "batch_grain_index": "Batch grain index",
+        "sales": "Sales",
+        "purchase_generated_by": "THIS PURCHASE WAS GENERATED DIRECTLY BY:",
+        "buyer": "Buyer",
+        "negotiation_term": "Negotiation term",
+        "price_kg": "Price per Kg",
+        "lot": "Lot",
+        "country": "Country",
+        "day_negotiation": "Day of negotiation"
     }
 }

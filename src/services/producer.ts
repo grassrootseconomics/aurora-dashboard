@@ -118,3 +118,11 @@ export const updateProducer = async (
 
   return response;
 };
+
+export const downloadProducersInExcel = async (): Promise<any> => {
+  const response: AxiosResponseData<any> = await authenticatedApi.get(
+      `/v1/producer/download/all`, {
+        responseType: 'blob',
+      });
+  return response;
+};

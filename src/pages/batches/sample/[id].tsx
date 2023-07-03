@@ -54,7 +54,7 @@ const SampleForm: FC = () => {
     }));
   };
 
-  const countries = countryList;
+  const countries = countryList.map(c => c.name);
 
   return (
     <>

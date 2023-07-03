@@ -22,6 +22,26 @@ button {
         padding-top: 50px;
     }
 
+    &__search {
+        background: #f39a1a;
+        border: 1px solid;
+        outline: none;
+        padding: 8px 15px;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        text-align: center;
+        display: flex;
+        border-radius: 15px;
+        margin-bottom: 15px;
+        max-width: 150px;
+        margin-right: 25px;
+
+        &::placeholder {
+            color: white;
+        }
+    }
+
     &__logo {
         display: flex;
         margin: 35px auto 20px;
@@ -31,9 +51,21 @@ button {
     &__cards {
         display: flex;
         overflow-x: auto;
+        gap: 30px;
+        justify-content: space-between;
+        padding: 0 20px;
 
         &--main {
             flex-direction: column;
+        }
+
+        & .dashboard__download-button {
+            background: #f1852d;
+            color: white;
+            font-weight: 600;
+            padding: 14px 20px;
+            margin-bottom: 30px;
+            max-width: 260px;
         }
     }
 
@@ -41,6 +73,10 @@ button {
         height: auto;
         margin: 20px;
         min-width: 510px;
+
+        @media (max-width: 950px) {
+            min-width: 300px;
+        }
     }
 
     &__chart--pie {
@@ -82,7 +118,11 @@ button {
         width: 260px;
         border-radius: 15px;
         padding: 10px 40px;
-        margin: 20px;
+
+        &--nft{
+            width: 210px;
+            padding: 10px 10px;
+        }
     }
 
     &__description {
@@ -133,6 +173,10 @@ button {
                 flex-direction: column;
                 align-items: flex-start;
             }
+        }
+
+        &-image {
+            height: auto;
         }
 
         &-name {
@@ -262,7 +306,7 @@ button {
         margin: 20px;
         border-radius: 20px;
     }
-
+    
     &__container--pie {
         padding: 0 50px;
     }
@@ -287,8 +331,12 @@ button {
 
     &__row {
         display: flex;
-        border-bottom: 2px solid;
+        border-bottom: 1px solid;
         margin-top: 11px;
+
+        div {
+            padding-left: 0;
+        }
     }
 
     &__button {
@@ -318,6 +366,7 @@ button {
         color: white!important;
         margin: 10px 0 7px;
         font-size: 22px;
+        padding: 0 15px 0 0;
     }
 
     .MuiInputLabel-formControl,
@@ -327,13 +376,14 @@ button {
 
     .MuiInput-underline,
     .MuiInput-underline:after {
-        border-bottom: 2px solid white;
-        margin-top: 16px;
+        border-bottom: 1px solid white;
+        margin-top: 10px;
     }
 
     .MuiSelect-select {
         display: flex;
         align-items: center;
+        margin: 5px 0 5px;
     }
 
     .MuiInputBase-input.Mui-disabled {
@@ -349,8 +399,17 @@ button {
         font-size: 22px;
 
         & .producer__icon {
-            margin-right: 5px;
+            margin-right: 10px;
+            width: 30px;
+            height: 30px;
         }
+    }
+
+    &__map {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 20px;
     }
 
     &-edit {
@@ -699,6 +758,11 @@ button {
     font-size: 24px;
     line-height: 1;
     padding: 2px 7px;
+
+    svg {
+        width: 14px;
+        height: 19px;
+    }
 }
 
 .action-button {
@@ -756,6 +820,7 @@ button {
             & img {
                 max-height: 70px;
                 margin-left: 10px;
+                width: auto;
             }
         }
     }
@@ -788,6 +853,10 @@ button {
 
         &__logo {
             margin: 35px 50px 20px;
+        }
+
+        &__cards {
+            gap: 10px;
         }
 
         &__cards--main {
@@ -897,10 +966,11 @@ button {
     .batch-action {
         font-size: 16px;
         padding: 2px 5px;
-    }
 
-    .home_cards {
-        justify-content: center;
+        svg {
+            width: 11px;
+            height: 14px;
+        }
     }
 }
 
@@ -917,6 +987,7 @@ button {
 
                 img {
                     max-height: 45px;
+                    width: auto;
                 }
             }
         }
@@ -956,10 +1027,13 @@ button {
     .home_cards {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 0;
     }
 
     .batch__stage-image {
         max-width: 100%;
+        height: auto;
     }
 
     .producer {
@@ -974,6 +1048,14 @@ button {
 
         &__code {
             font-size: 18px;
+        }
+
+        &__map img{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 70px;
+            padding-top: 0;
         }
     }
 
@@ -1116,10 +1198,8 @@ button {
 
     &-container {
         position: relative;
-
-        & .rsm-geographies {
-            transform: scaleX(1.3);
-        }
+        max-width: 1920px;
+        margin: auto;
     }
 
     &-tooltip {
@@ -1131,14 +1211,46 @@ button {
         border-radius: 15px;
         padding: 0 20px 10px;
         max-width: 400px;
+        opacity: 0.3;
 
-        @media (max-width: 800px) {
+        @media (max-width: 1400px) {
+            left: 50px;
+            max-width: 350px;
+        }
+
+        @media (max-width: 1279px) {
             position: relative;
             top: 10px;
             left: 30px;
-            max-width: calc(100% - 60px)
+            max-width: calc(100% - 60px);
+            opacity: 1;
+            margin: 30px 0;
         }
     }
+
+    &-tooltip--caqueta {
+        @media (min-width: 1280px) {
+            top: 100px;
+            right: 100px;
+            left: auto;
+        }
+
+        @media (min-width: 1280px) {
+            right: 50px;
+        }
+    }
+}
+
+.rsm-svg {
+    max-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+}
+
+.opacity {
+    opacity: 1;
 }
 
 .about {
