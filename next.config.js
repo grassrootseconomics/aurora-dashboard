@@ -11,6 +11,8 @@ const nextConfig = {
 
     ACCESS_TOKEN_STORAGE: process.env.ACCESS_TOKEN_STORAGE,
     REFRESH_TOKEN_STORAGE: process.env.REFRESH_TOKEN_STORAGE,
+
+    NFT_CONTRACT: process.env.NFT_CONTRACT,
   },
 };
 

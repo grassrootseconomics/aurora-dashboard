@@ -10,6 +10,7 @@ import { BatchButton } from '@/components/core/buttons/BatchButton';
 import AssociationInfo from '@/components/core/cards/AssociationInfo';
 import GeneralStage from '@/components/core/steps/associations/GeneralStage';
 import GeneralBuyerStage from '@/components/core/steps/buyer/GeneralBuyerStage';
+import { WEB_3 } from '@/config';
 import { useUserAuthContext } from '@/providers/UserAuthProvider';
 import {
   generateBatchSnapshotHash,
@@ -20,7 +21,20 @@ import {
 import { UserRole } from '@/util/constants/users';
 import { BatchInfo } from '@/util/models/Batch/BatchInfo';
 import { BuyerBatchInfo } from '@/util/models/Batch/BuyerBatchInfo';
-import { useSignMessage } from 'wagmi';
+import {
+  useContractWrite,
+  usePrepareContractWrite,
+  useSignMessage,
+} from 'wagmi';
+
+import CERT_ABI from '../../contracts/abi-certificate-nft.json';
+
+type CertificateNFTProps = {
+  name: string;
+  buyer: string;
+  description: string;
+  certification: string;
+};
 
 const BatchDetailsPage = () => {
   const { t } = useTranslation('translation');
@@ -31,18 +45,55 @@ const BatchDetailsPage = () => {
   const { userRole } = useUserAuthContext();
   const { signMessageAsync } = useSignMessage();
 
-  const generateCertificate = useCallback(async () => {
+  // Parametes for the mint.
+  const [certificateProps, setCertificateProps] = useState<CertificateNFTProps>(
+    {
+      // NFT Name
+      name: '',
+      // NFT Buyer Wallet
+      buyer: '',
+      // NFT Description
+      description: '',
+      // NFT Certification
+      certification: '',
+    }
+  );
+
+  const [certName, setCertName] = useState('Dumy Data');
+  const [certDescription, setCertDescription] = useState(
+    'Description for the NFT.'
+  );
+  const [certKey, setCertKey] = useState('');
+  const [certBuyer, setBuyer] = useState('');
+
+  const { config } = usePrepareContractWrite({
+    address: `0x${WEB_3.NFT_CONTRACT.split('0x').pop()}`,
+    abi: CERT_ABI,
+    functionName: 'mintTo',
+    args: [certBuyer, certName, certDescription, [certKey]],
+  });
+
+  const { writeAsync } = useContractWrite(config);
+
+  /**
+   *
+   * Generate a Batch Snapshot.
+   *
+   * Hint: Correctly submitting the wallet should submit the mint.
+   *
+   */
+  const generateBatchSnapshotCertificate = useCallback(async () => {
     try {
-      if (id) {
+      if (id && writeAsync) {
+        // Generate a new Snapshot fingerprint.
+        // If one already exists
         const response = await generateBatchSnapshotHash(id.toString());
-
-        // We got the certification!
-
+        // Sign the snapshot fingerprint.
         const signedFingerprint = await signMessageAsync({
           message: response.fingerprint,
         });
         const dateSigned = new Date();
-
+        // Fetch the new certification of the batch fingerprint.
         const keyResult = await updateBatchSnapshotHashWithSignerData(
           id.toString(),
           {
@@ -51,13 +102,28 @@ const BatchDetailsPage = () => {
             dateSigned,
           }
         );
+        // Set
+        setCertificateProps({
+          ...certificateProps,
+          certification: keyResult.key,
+        });
 
-        console.log(keyResult);
+        setCertKey(keyResult.key);
+
+        const result = await writeAsync();
+
+        console.log(result);
+        // Show input wallet modal.
+        // If the input
+        // Then you mint
+        // You await for it to mint.
+        // Once it finishes, you get the mint date.
+        // You update the flow
       }
     } catch (err) {
       console.log(err);
     }
-  }, [id, signMessageAsync]);
+  }, [certificateProps, id, signMessageAsync, writeAsync]);
 
   useEffect(() => {
     if (!id) return;
@@ -144,7 +210,12 @@ const BatchDetailsPage = () => {
                 <Grid container justifyContent={'center'}>
                   <Grid item>
                     <BatchButton
-                      action={generateCertificate}
+                      action={() => {
+                        // Hardcoded for now.
+                        // Should just later.
+                        setBuyer('0xcBDe28A47b6ae762B81a9Ba62b4F17a04D89646E');
+                        generateBatchSnapshotCertificate();
+                      }}
                       label={'Generate NFT'}
                     />
                   </Grid>
@@ -208,7 +279,12 @@ const BatchDetailsPage = () => {
                 <Grid container justifyContent={'center'}>
                   <Grid item>
                     <BatchButton
-                      action={generateCertificate}
+                      action={() => {
+                        // Hardcoded for now.
+                        // Should just later.
+                        setBuyer('0xcBDe28A47b6ae762B81a9Ba62b4F17a04D89646E');
+                        generateBatchSnapshotCertificate();
+                      }}
                       label={'Generate NFT'}
                     />
                   </Grid>
