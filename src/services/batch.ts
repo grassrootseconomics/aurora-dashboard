@@ -306,6 +306,7 @@ export const updateBatchSnapshotHashWithMintData = async (
 
   return response.data;
 };
+
 export const downloadBatchesInExcel = async (sold: boolean): Promise<any> => {
   const response: AxiosResponseData<any> = await authenticatedApi.get(
     `/v1/batch/download/all`,

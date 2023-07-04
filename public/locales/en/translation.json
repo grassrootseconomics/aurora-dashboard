@@ -110,7 +110,8 @@
         "negotiation_date": "Negotiation date:",
         "no_associates": "No ASSOCIATES",
         "years_existence": "Years of existence",
-        "ask_sample": "Ask for your sample"
+        "ask_sample": "Ask for your sample",
+        "generate_nft": "Generate NFT"
     },
     "producers": {
         "title": "Producer",
@@ -191,6 +192,9 @@
         "download_sold_batches": "Download information of sold batches",
         "download_producers": "Download information of producers"
     },
+    "error": {
+        "invalid_address": "Invalid Wallet Address"
+    },
     "modals": {
         "report": {
             "add_title": "Add Day Report",
@@ -239,6 +243,9 @@
         "delete": {
             "title": "Delete Confirmation",
             "message": "Are you sure you want to delete this item? This action cannot be undone."
+        },
+        "wallet": {
+            "title": "Insert Receiver Wallet (Buyer)"
         }
     },
     "regions_colombia": "Regions in Colombia",
