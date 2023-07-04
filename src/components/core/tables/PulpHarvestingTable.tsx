@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import AddPulpModal from '../modals/AddPulpModal';
 import EditPulpModal from '../modals/EditPulpModal';
 import TablePaginationActions from './TablePaginationActions';
+import EditIcon from '@mui/icons-material/Edit';
 
 interface PulpHarvestingProps {
     codeProducer: string;
@@ -78,7 +79,7 @@ const PulpHarvestingTable = (props: PulpHarvestingProps) => {
                     <TableRow
                         key={row.id}
                     >
-                        <TableCell align="center"><button className="batch-action" onClick={() => handleOpenEditModal(row.id)}>?</button></TableCell>
+                        <TableCell align="center"><button className="batch-action" onClick={() => handleOpenEditModal(row.id)}><EditIcon/></button></TableCell>
                         <TableCell align="center"><div className="table__cell-container">{row.batchCode}</div></TableCell>
                         <TableCell align="center"><div className="table__cell-container">{row.date}</div></TableCell>
                         <TableCell align="center"><div className="table__cell-container">{row.weight}</div></TableCell>

@@ -8,8 +8,10 @@ import {
   BuyerBatchInfo,
   mapToBuyerBatchInfo,
 } from '@/util/models/Batch/BuyerBatchInfo';
+import { CertificationSignerFields } from '@/util/models/Batch/Certification';
 import { DailyReport, Flip } from '@/util/models/Batch/Fermentation';
 import { EmailSample } from '@/util/models/EmailSample';
+import ResponseStructure from '@/util/models/ResponseStructure';
 
 export const getBatchesWithoutAuth = async (
   department?: string
@@ -269,5 +271,52 @@ export const sendSampleEmail = async (
       fields: emailFields,
     }
   );
+  return response;
+};
+
+export const generateBatchSnapshotHash = async (
+  code: string
+): Promise<{ fingerprint: string }> => {
+  const response: AxiosResponseData<{ fingerprint: string }> =
+    await authenticatedApi.post(`/v1/nft/${code}`);
+
+  return response.data.data;
+};
+
+export const updateBatchSnapshotHashWithSignerData = async (
+  code: string,
+  signData: CertificationSignerFields
+): Promise<{ key: string }> => {
+  const response: AxiosResponseData<{ key: string }> =
+    await authenticatedApi.patch(`/v1/nft/${code}`, {
+      fingerprints: { ...signData },
+    });
+
+  return response.data.data;
+};
+
+export const updateBatchSnapshotHashWithMintData = async (
+  code: string,
+  mintDetails: CertificationSignerFields
+): Promise<ResponseStructure<undefined>> => {
+  const response: AxiosResponseData<undefined> = await authenticatedApi.patch(
+    `/v1/nft/${code}`,
+    { mintDetails }
+  );
+
+  return response.data;
+};
+
+export const downloadBatchesInExcel = async (sold: boolean): Promise<any> => {
+  const response: AxiosResponseData<any> = await authenticatedApi.get(
+    `/v1/batch/download/all`,
+    {
+      responseType: 'blob',
+      params: {
+        sold: sold,
+      },
+    }
+  );
+
   return response;
 };

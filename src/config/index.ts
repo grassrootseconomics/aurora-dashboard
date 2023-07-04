@@ -1,6 +1,7 @@
 const WEB_3 = {
   NETWORK: process.env.NETWORK || 'TESTNET',
   APP_NAME: process.env.APP_NAME || 'Aurora Cacao',
+  NFT_CONTRACT: process.env.NFT_CONTRACT || '',
 };
 
 const API = {

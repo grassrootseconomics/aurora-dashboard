@@ -29,6 +29,7 @@ import {
   getTotalSalesGraph,
   getTotalSalesKgGraph,
 } from '@/services/graphics';
+import { associations } from '@/util/constants/associations';
 import { UserRole } from '@/util/constants/users';
 import { Association } from '@/util/models/BasicAssociation';
 import { Department } from '@/util/models/BasicDepartment';
@@ -136,13 +137,16 @@ const Home = () => {
       </Head>
       <div className="dashboard__container">
         <div className="dashboard__container_header">
-          {userRole == UserRole.association ? (
+          {userRole == UserRole.association &&
+          associations.includes(
+            currentAssociation?.name.toLowerCase() ?? ''
+          ) ? (
             <Image
               width={200}
               height={0}
               style={{ height: 'auto' }}
               className="dashboard__logo"
-              src={`/assets/logos/${currentAssociation?.name}.png`}
+              src={`/assets/logos/${currentAssociation?.name.toLowerCase()}.png`}
               alt="Aurora"
             />
           ) : (
@@ -362,7 +366,7 @@ const Home = () => {
             scrollButtons="auto"
             aria-label="scrollable auto tabs example"
           >
-            <Tab key={-1} label={'All'} style={{ marginBottom: 10 }} />
+            <Tab key={-1} label={t('home.all')} style={{ marginBottom: 10 }} />
             {departments.map((item, index) => (
               <Tab key={index} label={item.name} style={{ marginBottom: 10 }} />
             ))}

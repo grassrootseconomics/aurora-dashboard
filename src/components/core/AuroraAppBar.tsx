@@ -7,6 +7,7 @@ import ConnectWalletButton from './ConnectWalletButton';
 import LanguageSelector from './language/LanguageSelector';
 import { useRouter } from 'next/router';
 import HamburgerMenu from './menus/HamburgerMenu';
+import { useTranslation } from 'react-i18next';
 
 const useStyles: any = makeStyles(() => ({
   appBar: {
@@ -17,6 +18,7 @@ const useStyles: any = makeStyles(() => ({
 }));
 
 const AuroraAppBar: FC = () => {
+  const { t } = useTranslation('translation');
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const classes = useStyles();
   const router = useRouter();
@@ -60,9 +62,9 @@ const AuroraAppBar: FC = () => {
             <>
               <LanguageSelector />
               <div className="menu-items">
-                <Link onClick={() => router.push("/")}>Home</Link>
-                <Link onClick={() => router.push("/about-aurora")}>About Aurora</Link>
-                <Link onClick={() => router.push("/colombia-regions")}>Colombia Regions</Link>
+                <Link onClick={() => router.push("/")}>{t("menu.home")}</Link>
+                <Link onClick={() => router.push("/about-aurora")}>{t("menu.about")}</Link>
+                <Link onClick={() => router.push("/colombia-regions")}>{t("menu.colombia_regions")}</Link>
                 <ConnectWalletButton />
               </div>
             </> 
