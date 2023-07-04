@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 
 import React, { useEffect, useState } from 'react';
+import { saveAs } from 'file-saver';
 
 import { Tab, Tabs } from '@mui/material';
 
@@ -13,7 +14,7 @@ import LineChart from '@/components/core/charts/LineChart';
 import SoldBatchesTable from '@/components/core/tables/SoldBatchesTable';
 import { useUserAuthContext } from '@/providers/UserAuthProvider';
 import { getAssociations } from '@/services/association';
-import { getSoldBatches } from '@/services/batch';
+import { downloadBatchesInExcel, getSoldBatches } from '@/services/batch';
 import {
   getTotalSalesGeneralGraph,
   getTotalSalesKgGraph,
@@ -29,16 +30,33 @@ export default function SoldBatches() {
   const [selectedAssociation, setSelectedAssociation] = useState<number>(0);
   const [soldWeight, setSoldWeight] = useState<any>();
   const [soldBatches, setSoldBatches] = useState<BasicSoldBatch[]>([]);
+  const [initialSoldBatches, setInitialSoldBatches] = useState<BasicSoldBatch[]>([]);
   const [salesKg, setSalesKg] = useState<Dataset[]>([]);
   const [salesUsd, setSalesUsd] = useState<Dataset[]>([]);
   const { userRole } = useUserAuthContext();
+  const [batchCodeSearch, setBatchCodeSearch] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setSelectedAssociation(newValue);
   };
 
+  const setSearchValue = (event: any) => {
+    setBatchCodeSearch(event.target.value)
+  }
+
+  const downloadSoldBatches = async () => {
+    try {
+      const response = await downloadBatchesInExcel(true);
+
+      // Save the Blob response as a file using FileSaver.js
+      saveAs(response.data, "Available Batches");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  
   useEffect(() => {
     if (userRole && userRole === 'buyer') {
       router.push('/');
@@ -72,7 +90,8 @@ export default function SoldBatches() {
           return;
         case UserRole.association:
           getSoldBatches().then((data) => {
-            setSoldBatches(data.basicBatches);
+            setSoldBatches(data.basicBatches.filter((b : BasicSoldBatch) => b.batch.includes(batchCodeSearch)));
+            setInitialSoldBatches(data.basicBatches);
             setSoldWeight(data.kgDryCocoaSold);
             setSalesUsd(getTotalSalesGeneralGraph(data.monthlySalesInUSD));
             setSalesKg(getTotalSalesKgGraph(data.salesInKg));
@@ -81,6 +100,10 @@ export default function SoldBatches() {
           return;
       }
   }, [userRole, associations, selectedAssociation]);
+
+  useEffect(() => {
+    setSoldBatches(initialSoldBatches.filter(b => b.batch.includes(batchCodeSearch)))
+  }, [batchCodeSearch])
 
   return (
     <>
@@ -93,18 +116,22 @@ export default function SoldBatches() {
       <div className="dashboard__container">
         <div>
           <BackButton />
-          <div className={`dashboard__cards`}>
+          <div className={`dashboard__cards  dashboard__cards--main`}>
             <CardTwo
-              backgroundColor="#d0741a"
+              backgroundColor="#f1852d"
               number={soldWeight}
               text={t('sold_international_market')}
               icon={'/assets/kilogram.png'}
               loading={loading}
               alt={'Kilogram'}
             />
+            <button className={"dashboard__download-button"} onClick={downloadSoldBatches}>{t("buttons.download_sold_batches")}</button>
           </div>
         </div>
         <div className="dashboard__container-info">
+          <div style={{display: "flex", justifyContent: "flex-end"}}>
+            <input className="dashboard__search" type="text" placeholder={t("search") ?? ""} onChange={setSearchValue}/>
+          </div>
           {associations && userRole == UserRole.project ? (
             <Tabs
               value={selectedAssociation}
@@ -119,7 +146,7 @@ export default function SoldBatches() {
               scrollButtons="auto"
               aria-label="scrollable auto tabs example"
             >
-              <Tab key={-1} label={'All'} style={{ marginBottom: 10 }} />
+              <Tab key={-1} label={t("home.all")} style={{ marginBottom: 10 }} />
               {associations.map((item, index) => (
                 <Tab
                   key={index}

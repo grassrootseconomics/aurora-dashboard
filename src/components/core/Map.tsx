@@ -3,7 +3,7 @@ import {
   ComposableMap,
   Geographies,
   Geography,
-  ZoomableGroup,
+  ProjectionConfig
 } from 'react-simple-maps';
 
 import { regionsOfColombia } from '@/util/constants/regions';
@@ -11,37 +11,46 @@ import { regionsOfColombia } from '@/util/constants/regions';
 const geoUrl = 'geojson/colombia-regions.json';
 
 const ColombiaMap: React.FC = () => {
-  const [tooltipContent, setTooltipContent] = useState({
-    header: '',
-    description: '',
+  const [hasHuilaClass, setHasHuilaClass] = useState<boolean>(false);
+  const [hasCaquetaClass, setHasCaquetaClass] = useState<boolean>(false);
+  const [projection, setProjection] = useState<ProjectionConfig>({
+    scale: 1060,
+    rotate: [70.5, 4, -20]
   });
-  const [center, setCenter] = useState<[number, number]>([
-    -50.080916, -3.60971,
-  ]);
-  const [zoom, setZoom] = useState(4.6);
+
+  const huilaContent = {
+    header: 'Huila',
+    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+  };
+
+  const caqueta = { 
+    header: 'Caqueta',
+    description: "Lorem Caqueta is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+  };
 
   const handleMouseEnter = (geography: any) => {
     const region = regionsOfColombia.find(
       (r) => r == geography.properties.NAME_1
     );
-    if (region) {
-      setTooltipContent({
-        header: geography.properties.NAME_1,
-        description:
-          region == 'Huila'
-            ? 'Description of Huila'
-            : "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-      });
+    if (region == 'Huila') {
+      setHasHuilaClass(true);
+    } else {
+      setHasCaquetaClass(true);
     }
   };
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 800) {
-        setZoom(10.1);
-        setCenter([-50.080916, 4.091]);
+      if (window.innerWidth < 1280) {
+        setProjection({
+          scale: 2060,
+          rotate: [72.5, -3.4, -20]
+        })
       } else {
-        setZoom(4.6);
+        setProjection({
+          scale: 1760,
+          rotate: [73.5, -4.5, -20]
+        })
       }
     };
 
@@ -54,24 +63,15 @@ const ColombiaMap: React.FC = () => {
   }, []);
 
   const handleMouseLeave = () => {
-    setTooltipContent({
-      header: '',
-      description: '',
-    });
+    setHasHuilaClass(false);
+    setHasCaquetaClass(false);
   };
 
   return (
     <div className="map-container">
-      <ComposableMap>
-        <ZoomableGroup
-          zoom={zoom}
-          center={center}
-          onMoveEnd={({ zoom, coordinates }) => {
-            setZoom(zoom);
-            setCenter(coordinates);
-          }}
-          disablePanning
-        >
+      <ComposableMap projection="geoMercator"
+        projectionConfig={projection}>
+   
           <Geographies geography={geoUrl}>
             {({ geographies }) =>
               geographies.map((geo) => (
@@ -94,19 +94,20 @@ const ColombiaMap: React.FC = () => {
                   onMouseEnter={() => handleMouseEnter(geo)}
                   onMouseLeave={handleMouseLeave}
                   stroke="#f29a1a"
-                  strokeWidth={0.2}
+                  strokeWidth={1}
                 />
               ))
             }
           </Geographies>
-        </ZoomableGroup>
       </ComposableMap>
-      {tooltipContent.header && (
-        <div className="map-tooltip">
-          <h2>{tooltipContent.header}</h2>
-          <p>{tooltipContent.description}</p>
+        <div className={`map-tooltip ${hasHuilaClass ? 'opacity' : ''}`}>
+          <h2>{huilaContent.header}</h2>
+          <p>{huilaContent.description}</p>
         </div>
-      )}
+        <div className={`map-tooltip map-tooltip--caqueta ${hasCaquetaClass ? 'opacity' : ''}`}>
+          <h2>{caqueta.header}</h2>
+          <p>{caqueta.description}</p>
+        </div>
     </div>
   );
 };

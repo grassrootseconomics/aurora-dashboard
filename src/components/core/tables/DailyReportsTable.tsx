@@ -8,6 +8,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import AddDayReportModal from '../modals/AddDayReportModal';
 import EditDayReportModal from '../modals/EditDayReportModal';
+import EditIcon from '@mui/icons-material/Edit';
 
 interface DailyReportsProps {
     fermentationPhase: FermentationPhase;
@@ -97,7 +98,7 @@ const DailyReportsTable = (props: DailyReportsProps) => {
                             props.fermentationPhase.dailyReports?.map((row, index) => { return (
                                     <TableCell key={index} align="center">
                                         <div className="table__cell-container">
-                                            <button className="batch-action" onClick={() => handleOpenEditModal(index, row)}>?</button>
+                                            <button className="batch-action" onClick={() => handleOpenEditModal(index, row)}><EditIcon /></button>
                                         </div>
                                     </TableCell>
                                 )

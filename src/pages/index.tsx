@@ -37,6 +37,7 @@ import { Batch } from '@/util/models/Batch/Batch';
 import { BatchStatistics } from '@/util/models/Batch/BatchStatistics';
 import { Dataset } from '@/util/models/Dataset';
 import { ProducersStatistics } from '@/util/models/Producer/ProducersStatistics';
+import { associations } from '@/util/constants/associations';
 
 const Home = () => {
   const [selectedDepartment, setSelectedDepartment] = useState(0);
@@ -116,6 +117,7 @@ const Home = () => {
             getTotalPulpGraph(data.report.monthlyCocoaPulp)
           );
           getUserAssociation().then((a) => setCurrentAssociation(a));
+          console.log(currentAssociation)
           setProducersStats(data.statistics);
           setSoldBatches(data.statistics.kgDryCocoaInternationallySold);
           setAvailableWeight(data.statistics.kgDryCocoaAvailable);
@@ -136,13 +138,13 @@ const Home = () => {
       </Head>
       <div className="dashboard__container">
         <div className="dashboard__container_header">
-          {userRole == UserRole.association ? (
+          {userRole == UserRole.association && associations.includes(currentAssociation?.name.toLowerCase() ?? "") ? (
             <Image
               width={200}
               height={0}
               style={{ height: 'auto' }}
               className="dashboard__logo"
-              src={`/assets/logos/${currentAssociation?.name}.png`}
+              src={`/assets/logos/${currentAssociation?.name.toLowerCase()}.png`}
               alt="Aurora"
             />
           ) : (
@@ -362,7 +364,7 @@ const Home = () => {
             scrollButtons="auto"
             aria-label="scrollable auto tabs example"
           >
-            <Tab key={-1} label={'All'} style={{ marginBottom: 10 }} />
+            <Tab key={-1} label={t("home.all")} style={{ marginBottom: 10 }} />
             {departments.map((item, index) => (
               <Tab key={index} label={item.name} style={{ marginBottom: 10 }} />
             ))}

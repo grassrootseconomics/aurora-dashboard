@@ -28,6 +28,7 @@ import {
 } from 'wagmi';
 
 import CERT_ABI from '../../contracts/abi-certificate-nft.json';
+import WalletModal from '@/components/core/modals/WalletModal';
 
 type CertificateNFTProps = {
   name: string;
@@ -44,6 +45,7 @@ const BatchDetailsPage = () => {
   const [batch, setBatch] = useState<BatchInfo>();
   const { userRole } = useUserAuthContext();
   const { signMessageAsync } = useSignMessage();
+  const [ openWalletModal, setOpenWalletModal ] = useState<boolean>(false);
 
   // Parametes for the mint.
   const [certificateProps, setCertificateProps] = useState<CertificateNFTProps>(
@@ -74,6 +76,18 @@ const BatchDetailsPage = () => {
   });
 
   const { writeAsync } = useContractWrite(config);
+
+  const handleOpenWalletModal = () => {
+    setOpenWalletModal(true);
+  };
+
+  const handleCloseWalletModal = () => {
+    setOpenWalletModal(false);
+  }
+
+  const handleConfirmWalletModal = (wallet: any) => {
+    setBuyer(wallet);
+  }
 
   /**
    *
@@ -113,7 +127,10 @@ const BatchDetailsPage = () => {
         const result = await writeAsync();
 
         console.log(result);
+
         // Show input wallet modal.
+        handleOpenWalletModal();
+
         // If the input
         // Then you mint
         // You await for it to mint.
@@ -213,10 +230,9 @@ const BatchDetailsPage = () => {
                       action={() => {
                         // Hardcoded for now.
                         // Should just later.
-                        setBuyer('0xcBDe28A47b6ae762B81a9Ba62b4F17a04D89646E');
                         generateBatchSnapshotCertificate();
                       }}
-                      label={'Generate NFT'}
+                      label={t('single_batch.generate_nft')}
                     />
                   </Grid>
                 </Grid>
@@ -226,7 +242,9 @@ const BatchDetailsPage = () => {
                   index={5}
                   background="#7d2113"
                   userRole={userRole}
+                  img={'/assets/batch/Sales.png'} 
                 />
+                <WalletModal open={openWalletModal} onClose={handleCloseWalletModal} onConfirm={handleConfirmWalletModal}/>
               </>
             ) : (
               ''
@@ -282,10 +300,9 @@ const BatchDetailsPage = () => {
                       action={() => {
                         // Hardcoded for now.
                         // Should just later.
-                        setBuyer('0xcBDe28A47b6ae762B81a9Ba62b4F17a04D89646E');
                         generateBatchSnapshotCertificate();
                       }}
-                      label={'Generate NFT'}
+                      label={t('single_batch.generate_nft')}
                     />
                   </Grid>
                 </Grid>
@@ -294,8 +311,10 @@ const BatchDetailsPage = () => {
                   name="Sales"
                   index={5}
                   background="#7d2113"
+                  img={'/assets/batch/Sales.png'} 
                   userRole={userRole}
                 />
+                <WalletModal open={openWalletModal} onClose={handleCloseWalletModal} onConfirm={handleConfirmWalletModal}/>
               </>
             ) : (
               ''
@@ -350,3 +369,4 @@ const BatchDetailsPage = () => {
 };
 
 export default BatchDetailsPage;
+  
