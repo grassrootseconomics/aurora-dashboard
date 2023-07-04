@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { Grid } from '@mui/material';
 
@@ -26,16 +26,10 @@ import {
   useContractWrite,
   usePrepareContractWrite,
   useSignMessage,
+  useWaitForTransaction,
 } from 'wagmi';
 
 import CERT_ABI from '../../contracts/abi-certificate-nft.json';
-
-type CertificateNFTProps = {
-  name: string;
-  buyer: string;
-  description: string;
-  certification: string;
-};
 
 const BatchDetailsPage = () => {
   const { t } = useTranslation('translation');
@@ -48,26 +42,15 @@ const BatchDetailsPage = () => {
   const [openWalletModal, setOpenWalletModal] = useState<boolean>(false);
 
   // Parametes for the mint.
-  const [certificateProps, setCertificateProps] = useState<CertificateNFTProps>(
-    {
-      // NFT Name
-      name: '',
-      // NFT Buyer Wallet
-      buyer: '',
-      // NFT Description
-      description: '',
-      // NFT Certification
-      certification: '',
-    }
-  );
-
-  const [certName, setCertName] = useState('Dumy Data');
-  const [certDescription, setCertDescription] = useState(
-    'Description for the NFT.'
+  const certName = useMemo(() => `Aurora Batch #${id} Certificate`, [id]);
+  const certDescription = useMemo(
+    () => `Certificate NFT Ownership of Aurora Batch #${id}`,
+    [id]
   );
   const [certKey, setCertKey] = useState('');
   const [certBuyer, setBuyer] = useState('');
 
+  // Initialize contract config with ABI.
   const { config } = usePrepareContractWrite({
     address: `0x${WEB_3.NFT_CONTRACT.split('0x').pop()}`,
     abi: CERT_ABI,
@@ -75,7 +58,19 @@ const BatchDetailsPage = () => {
     args: [certBuyer, certName, certDescription, [certKey]],
   });
 
-  const { writeAsync } = useContractWrite(config);
+  // Get mint action.
+  const { writeAsync, data } = useContractWrite(config);
+
+  const { isLoading: isLoadingMint, isSuccess: isMintSuccess } =
+    useWaitForTransaction({
+      hash: data?.hash,
+    });
+
+  const mintTx = useMemo(() => {
+    if (data && isMintSuccess) return data.hash;
+  }, [isMintSuccess, data]);
+
+  const [isLoadingCert, setIsLoadingCert] = useState<boolean>(false);
 
   const handleOpenWalletModal = () => {
     setOpenWalletModal(true);
@@ -85,8 +80,13 @@ const BatchDetailsPage = () => {
     setOpenWalletModal(false);
   };
 
-  const handleConfirmWalletModal = (wallet: any) => {
+  /**
+   *
+   * @param wallet
+   */
+  const handleConfirmWalletModal = (wallet: string) => {
     setBuyer(wallet);
+    // Will start the whole minting process.
   };
 
   /**
@@ -98,7 +98,12 @@ const BatchDetailsPage = () => {
    */
   const generateBatchSnapshotCertificate = useCallback(async () => {
     try {
-      if (id && writeAsync) {
+      if (id) {
+        setIsLoadingCert(true);
+
+        // Show input wallet modal.
+        handleOpenWalletModal();
+
         // Generate a new Snapshot fingerprint.
         // If one already exists
         const response = await generateBatchSnapshotHash(id.toString());
@@ -116,31 +121,36 @@ const BatchDetailsPage = () => {
             dateSigned,
           }
         );
-        // Set
-        setCertificateProps({
-          ...certificateProps,
-          certification: keyResult.key,
-        });
 
         setCertKey(keyResult.key);
+        setIsLoadingCert(false);
+      }
+    } catch (err) {
+      setIsLoadingCert(false);
+      console.log(err);
+    }
+  }, [id, signMessageAsync]);
 
+  const mintCertificateNFT = useCallback(async () => {
+    if (writeAsync) {
+      try {
+        setIsLoadingCert(true);
         const result = await writeAsync();
 
         console.log(result);
-
-        // Show input wallet modal.
-        handleOpenWalletModal();
-
-        // If the input
-        // Then you mint
-        // You await for it to mint.
-        // Once it finishes, you get the mint date.
-        // You update the flow
+        setIsLoadingCert(false);
+      } catch (err) {
+        setIsLoadingCert(false);
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
     }
-  }, [certificateProps, id, signMessageAsync, writeAsync]);
+  }, [writeAsync]);
+
+  useEffect(() => {
+    if (certBuyer && certName && certDescription && certKey) {
+      mintCertificateNFT();
+    }
+  }, [certBuyer, certName, certDescription, certKey, mintCertificateNFT]);
 
   useEffect(() => {
     if (!id) return;
@@ -162,24 +172,6 @@ const BatchDetailsPage = () => {
         return;
     }
   }, [userRole, id]);
-
-  /**
- * 
- *                 <Grid container justifyContent={'center'}>
-                  <Grid item>
-                    <BatchButton
-                      action={() => {
-                        // Hardcoded for now.
-                        // Should just later.
-                        setBuyer('0xcBDe28A47b6ae762B81a9Ba62b4F17a04D89646E');
-                        generateBatchSnapshotCertificate();
-                      }}
-                      label={'Generate NFT'}
-                    />
-                  </Grid>
-                </Grid>
- * 
- */
 
   useEffect(() => {
     if (!id) return;
@@ -267,8 +259,6 @@ const BatchDetailsPage = () => {
                   <Grid item>
                     <BatchButton
                       action={() => {
-                        // Hardcoded for now.
-                        // Should just later.
                         generateBatchSnapshotCertificate();
                       }}
                       label={t('single_batch.generate_nft')}
@@ -287,6 +277,9 @@ const BatchDetailsPage = () => {
                   open={openWalletModal}
                   onClose={handleCloseWalletModal}
                   onConfirm={handleConfirmWalletModal}
+                  isLoading={isLoadingMint || isLoadingCert}
+                  isComplete={isMintSuccess}
+                  mintTx={mintTx}
                 />
               </>
             ) : (
@@ -341,8 +334,6 @@ const BatchDetailsPage = () => {
                   <Grid item>
                     <BatchButton
                       action={() => {
-                        // Hardcoded for now.
-                        // Should just later.
                         generateBatchSnapshotCertificate();
                       }}
                       label={t('single_batch.generate_nft')}
@@ -361,6 +352,9 @@ const BatchDetailsPage = () => {
                   open={openWalletModal}
                   onClose={handleCloseWalletModal}
                   onConfirm={handleConfirmWalletModal}
+                  isLoading={isLoadingMint || isLoadingCert}
+                  isComplete={isMintSuccess}
+                  mintTx={mintTx}
                 />
               </>
             ) : (

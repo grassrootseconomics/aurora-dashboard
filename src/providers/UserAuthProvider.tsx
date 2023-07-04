@@ -54,12 +54,12 @@ const UserAuthProvider: FC<PropsWithChildren> = ({ children }) => {
     clearSession();
   }, [disconnect]);
 
-  const isTokenExpired = useCallback((token: string) => {
+  const isTokenValid = useCallback((token: string, address: string) => {
     const decoded: AccessTokenStructure = jwtDecode(token);
 
     const secondsNow = Date.now() / 1000;
 
-    return decoded.exp < secondsNow;
+    return decoded.exp < secondsNow && decoded.address === address;
   }, []);
 
   const setRole = useCallback((token: string) => {
@@ -69,8 +69,8 @@ const UserAuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     const token = fetchAccessToken();
-    if (token) {
-      if (isTokenExpired(token)) {
+    if (token && address) {
+      if (isTokenValid(token, address)) {
         clearUserSession();
       } else {
         setRole(token);
@@ -80,7 +80,7 @@ const UserAuthProvider: FC<PropsWithChildren> = ({ children }) => {
       setUserRole(UserRole.buyer);
       setIsAuthenticated(false);
     }
-  }, [clearUserSession, isTokenExpired, setIsAuthenticated, setRole]);
+  }, [address, clearUserSession, isTokenValid, setIsAuthenticated, setRole]);
 
   const value = useMemo<UserAuthContextValue>(() => {
     return {
