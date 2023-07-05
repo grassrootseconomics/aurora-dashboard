@@ -254,7 +254,8 @@
     },
     "footer": {
         "operated_by": "Operado por",
-        "funded_by": "Financiado por"
+        "funded_by": "Financiado por",
+        "powered_by": "Energizado por"
     },
     "nft": {
         "assoc_title": "DATOS DE LA ASOCIACIÓN",

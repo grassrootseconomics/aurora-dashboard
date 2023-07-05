@@ -55,17 +55,26 @@ const Home = () => {
   const [productionPerAssoc, setProductionPerAssoc] = useState<Dataset[]>([]);
   const [productionPerRegion, setProductionPerRegion] = useState<Dataset[]>([]);
   const [currentAssociation, setCurrentAssociation] = useState<Association>();
+  const [openHarvestingModal, setOpenHarvestingModal] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setSelectedDepartment(newValue);
   };
+
+  const handleOpenHarvestingModal = () => {
+    setOpenHarvestingModal(true);
+  };
+
+  const handleCloseHarvestingModal = () => {
+    setOpenHarvestingModal(false);
+  }
 
   useEffect(() => {
     switch (userRole) {
       case UserRole.project: {
-        getBatchesWithAuth().then((data) => {
+        getBatchesWithAuth().then((data: any) => {
           setProductionPerAssoc(getProductionPerAssociationsGraph(data));
           setProductionPerRegion(getProductionPerRegionsGraph(data));
           setSalesInUsd(getTotalSalesGraph(data));
@@ -82,7 +91,7 @@ const Home = () => {
           selectedDepartment - 1 >= 0
             ? departments[selectedDepartment - 1].name
             : ''
-        ).then((data) => {
+        ).then((data: any) => {
           setSalesInUsd(getTotalSalesForBuyerGraph(data));
           setProductionPerRegion(getProductionByOriginGraph(data));
           setAvailableBatches(
@@ -109,7 +118,7 @@ const Home = () => {
         return;
       }
       case UserRole.association: {
-        getBatchesWithAuth().then((data) => {
+        getBatchesWithAuth().then((data: any) => {
           setProductionPerAssoc(getProductionPerAssociationsGraph(data));
           setSalesInKg(getTotalSalesKgGraph(data.report.salesInKg));
           setSalesInUsd(getTotalSalesGraph(data));
@@ -178,6 +187,13 @@ const Home = () => {
                   alt={''}
                 />
               </button>
+              {
+                userRole == UserRole.project ? 
+                  <>
+                    <button className={"dashboard__download-button"} onClick={handleOpenHarvestingModal}>{t("buttons.download_sold_batches")}</button>
+                  </>
+                  : ""
+              }
             </div>
           ) : (
             ''

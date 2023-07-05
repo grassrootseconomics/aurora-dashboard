@@ -254,7 +254,8 @@
     },
     "footer": {
         "operated_by": "Operated by",
-        "funded_by": "Funded by"
+        "funded_by": "Funded by",
+        "powered_by": "Powered by"
     },
     "nft": {
         "assoc_title": "Association Information",
