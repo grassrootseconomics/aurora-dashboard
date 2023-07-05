@@ -1,4 +1,4 @@
-import { api, AxiosResponseData } from "@/plugins/axios";
+import { api, authenticatedApi, AxiosResponseData } from "@/plugins/axios";
 import { Department } from "@/util/models/BasicDepartment";
 
 export const getDepartments = async (): Promise<Department[]> => {
@@ -7,4 +7,15 @@ export const getDepartments = async (): Promise<Department[]> => {
     );
     return response.data.data.departments;
 };
-  
+
+export const updateNextHarvest = async (id: number, nextHarvest: string): Promise<any> => {
+  const response: AxiosResponseData<any> = await authenticatedApi.patch(
+    `/v1/department/${id}`, 
+    {
+      department: {
+        nextHarvest: nextHarvest
+      }
+    }
+  );
+  return response;
+};

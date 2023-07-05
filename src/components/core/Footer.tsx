@@ -19,9 +19,9 @@ const Footer: FC = () => {
         </div>
         <div className="footer__container_item">
           <p>{t('footer.powered_by')}:</p>
-          <Image width={100} height={30} src="/assets/logos/Choco4Peace.png" alt="Choco4Peace" />
-          <Image width={100} height={30} src="/assets/logos/GrassrootsEconimics.png" alt="Grassroots Economics" />
-          <Link target="_blank" href="https://astralitech.com"> <Image width={100} height={40} src="/assets/logos/Astrali.png" alt="Astrali" /></Link>
+          <Link target="_blank" href="https://www.choco4peace.com/"> <Image width={100} height={30} src="/assets/logos/Choco4Peace.png" alt="Choco4Peace" /></Link>
+          <Link target="_blank" href="https://www.grassrootseconomics.org"> <Image width={100} height={30} src="/assets/logos/GrassrootsEconimics.png" alt="Grassroots Economics" /></Link>
+          <Link target="_blank" href="https://astralitech.com"> <Image width={90} height={40} src="/assets/logos/Astrali.png" alt="Astrali" /></Link>
         </div>
       </div>
     </div>

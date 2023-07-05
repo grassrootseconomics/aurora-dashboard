@@ -3,4 +3,5 @@ export interface Department {
     name: string;
     description: string;
     nrOfAssociates: string; 
+    nextHarvest: string;
 }
