@@ -110,7 +110,8 @@
         "negotiation_date": "Negotiation date:",
         "no_associates": "No ASSOCIATES",
         "years_existence": "Years of existence",
-        "ask_sample": "Ask for your sample"
+        "ask_sample": "Ask for your sample",
+        "generate_nft": "Generate NFT"
     },
     "producers": {
         "title": "Producer",
@@ -189,7 +190,11 @@
         "delete": "Delete",
         "download_available_batches": "Download information of available batches",
         "download_sold_batches": "Download information of sold batches",
-        "download_producers": "Download information of producers"
+        "download_producers": "Download information of producers",
+        "set_next_harvesting": "Set Next Harvesting"
+    },
+    "error": {
+        "invalid_address": "Invalid Wallet Address"
     },
     "modals": {
         "report": {
@@ -239,6 +244,12 @@
         "delete": {
             "title": "Delete Confirmation",
             "message": "Are you sure you want to delete this item? This action cannot be undone."
+        },
+        "wallet": {
+            "title": "Insert Receiver Wallet (Buyer)"
+        },
+        "harvesting": {
+            "title": "Set Next Harvesting"
         }
     },
     "regions_colombia": "Regions in Colombia",
@@ -254,7 +265,8 @@
     },
     "footer": {
         "operated_by": "Operated by",
-        "funded_by": "Funded by"
+        "funded_by": "Funded by",
+        "powered_by": "Blockchain Powered by"
     },
     "nft": {
         "assoc_title": "Association Information",

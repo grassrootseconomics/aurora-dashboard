@@ -110,7 +110,8 @@
         "negotiation_date": "Fecha de negociación:",
         "no_associates": "No ASOCIADOS",
         "years_existence": "AÑOS DE EXISTENCIA",
-        "ask_sample": "Pide tu muestra"
+        "ask_sample": "Pide tu muestra",
+        "generate_nft": "Generar NFT"
     },
     "producers": {
         "title": "Productor",
@@ -189,7 +190,11 @@
         "delete": "Borrar",
         "download_available_batches": "Descargar Información de baches disponibles",
         "download_sold_batches": "Descargar Información de baches vendidos",
-        "download_producers": "Descargar Información de productores"
+        "download_producers": "Descargar Información de productores",
+        "set_next_harvesting": "Establecer Próxima cosecha"
+    },
+    "error": {
+        "invalid_address": "Invalid Wallet Address"
     },
     "modals": {
         "report": {
@@ -239,6 +244,12 @@
         "delete": {
             "title": "Confirmación de eliminación",
             "message": "Está seguro de que desea eliminar este elemento? Esta acción no se puede deshacer."
+        },
+        "wallet": {
+            "title": "Inserte la Carteras del Receptor (Comprador)"
+        },
+        "harvesting": {
+            "title": "Establecer Próxima cosecha"
         }
     },
     "regions_colombia": "Regiones en Colombia",
@@ -254,7 +265,8 @@
     },
     "footer": {
         "operated_by": "Operado por",
-        "funded_by": "Financiado por"
+        "funded_by": "Financiado por",
+        "powered_by": "Blockchain Energizado por"
     },
     "nft": {
         "assoc_title": "DATOS DE LA ASOCIACIÓN",

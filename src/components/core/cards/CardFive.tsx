@@ -31,7 +31,7 @@ const CardFive = (props: CardProps) => {
         />
       </div>
       <div className="card__row">
-        <div className="card__number">{props.loading ? <LoadingBox /> : props.number}</div>
+        <div className="card__number card__number--five">{props.loading ? <LoadingBox /> : props.number}</div>
       </div>
     </div>
   );
