@@ -33,7 +33,7 @@ import {
   useWaitForTransaction,
 } from 'wagmi';
 
-import CERT_ABI from '../../contracts/abi-certificate-nft.json';
+import CERT_ABI from '../../../contracts/abi-certificate-nft.json';
 
 const BatchDetailsPage = () => {
   const { t } = useTranslation('translation');

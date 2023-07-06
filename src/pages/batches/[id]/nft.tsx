@@ -30,6 +30,7 @@ const NFT = () => {
 
   useEffect(() => {
     if (id) {
+      console.log(id);
       getNFTMetadata();
     }
   }, [id]);
