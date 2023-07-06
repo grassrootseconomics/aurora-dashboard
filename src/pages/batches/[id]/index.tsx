@@ -81,8 +81,8 @@ const BatchDetailsPage = () => {
     });
 
   const certLink = useMemo(() => {
-    if (data && isMintSuccess) return `/batches/nft/${tokenId}`;
-  }, [data, isMintSuccess, tokenId]);
+    if (data && isMintSuccess) return `/batches/${id}/nft`;
+  }, [data, id, isMintSuccess]);
 
   const [isLoadingCert, setIsLoadingCert] = useState<boolean>(false);
 

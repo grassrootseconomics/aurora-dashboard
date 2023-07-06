@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Flag from 'react-world-flags';
 
 import CardFour from '@/components/core/cards/CardFour';
@@ -10,6 +10,8 @@ import CardOne from '@/components/core/cards/CardOne';
 import NftBarChart from '@/components/core/charts/NftBarChart';
 import DailyReportsTableNft from '@/components/core/nft/DailyReportsTableNft';
 import FlipsTableNft from '@/components/core/nft/FlipsTableNft';
+import { useUserAuthContext } from '@/providers/UserAuthProvider';
+import { getBatchOwnedNftMetadata } from '@/services/nft';
 import { associations } from '@/util/constants/associations';
 import { countryList } from '@/util/constants/countries';
 import { convertToSimpleDate } from '@/util/format/date';
@@ -22,18 +24,38 @@ const NFT = () => {
   const { t, i18n } = useTranslation('translation');
   const router = useRouter();
   const { id } = router.query;
+  const { isAuthenticated, connectedWallet } = useUserAuthContext();
   const [nftModel, setNftModel] = useState<BatchNft | null>(null);
 
-  const getNFTMetadata = async () => {
-    setNftModel(null);
-  };
+  const getNFTMetadata = useCallback(
+    async (code: string) => {
+      try {
+        const metadata = await getBatchOwnedNftMetadata(code);
+        if (metadata) setNftModel(metadata);
+        else {
+          router.push(`/batches/${code}/sample`);
+        }
+      } catch (err) {
+        router.push(`/batches/${code}/sample`);
+      }
+    },
+    [router]
+  );
 
   useEffect(() => {
     if (id) {
-      console.log(id);
-      getNFTMetadata();
+      if (!isAuthenticated || !connectedWallet) {
+        console.log('Unauthenticated!');
+        router.push(`/batches/${id}/sample`);
+      }
     }
-  }, [id]);
+  }, [connectedWallet, id, isAuthenticated, router]);
+
+  useEffect(() => {
+    if (id) {
+      getNFTMetadata(id.toString());
+    }
+  }, [getNFTMetadata, id]);
 
   return (
     <>
@@ -253,9 +275,7 @@ const NFT = () => {
                 </div>
                 <div className={styles.infoContainer}>
                   {t('nft.identified_varieties')}:{' '}
-                  {nftModel.traceDetails.producers.identifiedVarieties.join(
-                    ', '
-                  )}
+                  {nftModel.traceDetails.producers.identifiedVarieties}
                 </div>
               </div>
               <div>
