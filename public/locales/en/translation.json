@@ -190,7 +190,8 @@
         "delete": "Delete",
         "download_available_batches": "Download information of available batches",
         "download_sold_batches": "Download information of sold batches",
-        "download_producers": "Download information of producers"
+        "download_producers": "Download information of producers",
+        "set_next_harvesting": "Set Next Harvesting"
     },
     "error": {
         "invalid_address": "Invalid Wallet Address"
@@ -246,6 +247,9 @@
         },
         "wallet": {
             "title": "Insert Receiver Wallet (Buyer)"
+        },
+        "harvesting": {
+            "title": "Set Next Harvesting"
         }
     },
     "regions_colombia": "Regions in Colombia",
@@ -261,7 +265,8 @@
     },
     "footer": {
         "operated_by": "Operated by",
-        "funded_by": "Funded by"
+        "funded_by": "Funded by",
+        "powered_by": "Blockchain Powered by"
     },
     "nft": {
         "assoc_title": "Association Information",
