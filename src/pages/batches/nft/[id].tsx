@@ -10,8 +10,6 @@ import CardOne from '@/components/core/cards/CardOne';
 import NftBarChart from '@/components/core/charts/NftBarChart';
 import DailyReportsTableNft from '@/components/core/nft/DailyReportsTableNft';
 import FlipsTableNft from '@/components/core/nft/FlipsTableNft';
-import { fetchNFTModel } from '@/services/nft';
-import { fetchNFTMetadata } from '@/util/celo';
 import { associations } from '@/util/constants/associations';
 import { countryList } from '@/util/constants/countries';
 import { convertToSimpleDate } from '@/util/format/date';
@@ -27,10 +25,7 @@ const NFT = () => {
   const [nftModel, setNftModel] = useState<BatchNft | null>(null);
 
   const getNFTMetadata = async () => {
-    const metadata = await fetchNFTMetadata('0');
-    console.log(metadata);
-    const nftModel = await fetchNFTModel('metadata.ToString()');
-    setNftModel(nftModel);
+    setNftModel(null);
   };
 
   useEffect(() => {

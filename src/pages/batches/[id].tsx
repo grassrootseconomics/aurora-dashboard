@@ -17,12 +17,16 @@ import {
   generateBatchSnapshotHash,
   getBatchByCode,
   getBatchByCodeForBuyers,
-  updateBatchSnapshotHashWithSignerData,
+  saveCertificateMintOwner,
+  saveSnapshotCertification,
 } from '@/services/batch';
 import { UserRole } from '@/util/constants/users';
 import { BatchInfo } from '@/util/models/Batch/BatchInfo';
 import { BuyerBatchInfo } from '@/util/models/Batch/BuyerBatchInfo';
+import { createHash } from 'crypto';
+import { hexToBigInt } from 'viem';
 import {
+  useContractEvent,
   useContractWrite,
   usePrepareContractWrite,
   useSignMessage,
@@ -37,9 +41,18 @@ const BatchDetailsPage = () => {
   const { id } = router.query;
   const [buyerBatch, setBuyerBatch] = useState<BuyerBatchInfo>();
   const [batch, setBatch] = useState<BatchInfo>();
-  const { userRole } = useUserAuthContext();
+  const { userRole, connectedWallet } = useUserAuthContext();
   const { signMessageAsync } = useSignMessage();
   const [openWalletModal, setOpenWalletModal] = useState<boolean>(false);
+
+  useContractEvent({
+    address: `0x${WEB_3.NFT_CONTRACT.split('0x').pop()}`,
+    abi: CERT_ABI,
+    eventName: 'mintTo',
+    listener(log) {
+      console.log(log);
+    },
+  });
 
   // Parametes for the mint.
   const certName = useMemo(() => `Aurora Batch #${id} Certificate`, [id]);
@@ -47,6 +60,7 @@ const BatchDetailsPage = () => {
     () => `Certificate NFT Ownership of Aurora Batch #${id}`,
     [id]
   );
+  const [tokenId, setTokenId] = useState('');
   const [certKey, setCertKey] = useState('');
   const [certBuyer, setBuyer] = useState('');
 
@@ -55,7 +69,7 @@ const BatchDetailsPage = () => {
     address: `0x${WEB_3.NFT_CONTRACT.split('0x').pop()}`,
     abi: CERT_ABI,
     functionName: 'mintTo',
-    args: [certBuyer, certName, certDescription, [certKey]],
+    args: [certBuyer, tokenId, certName, certDescription, [certKey]],
   });
 
   // Get mint action.
@@ -66,9 +80,9 @@ const BatchDetailsPage = () => {
       hash: data?.hash,
     });
 
-  const mintTx = useMemo(() => {
-    if (data && isMintSuccess) return data.hash;
-  }, [isMintSuccess, data]);
+  const certLink = useMemo(() => {
+    if (data && isMintSuccess) return `/batches/nft/${tokenId}`;
+  }, [data, isMintSuccess, tokenId]);
 
   const [isLoadingCert, setIsLoadingCert] = useState<boolean>(false);
 
@@ -82,12 +96,24 @@ const BatchDetailsPage = () => {
 
   /**
    *
-   * @param wallet
+   * Handles the confirmation of the wallet:
+   * - generates new token id from wallet
+   * - sets wallet and token id
+   *
+   * @param wallet User Wallet
    */
-  const handleConfirmWalletModal = (wallet: string) => {
-    setBuyer(wallet);
-    // Will start the whole minting process.
-  };
+  const handleConfirmWalletModal = useCallback(
+    (wallet: string) => {
+      const hexHash = createHash('sha256')
+        .update(`${wallet}:${certKey}`)
+        .digest('hex');
+      setBuyer(wallet);
+      const tokenId = hexToBigInt(`0x${hexHash}`).toString();
+      setTokenId(tokenId);
+      // Will start the whole minting process.
+    },
+    [certKey]
+  );
 
   /**
    *
@@ -113,14 +139,11 @@ const BatchDetailsPage = () => {
         });
         const dateSigned = new Date();
         // Fetch the new certification of the batch fingerprint.
-        const keyResult = await updateBatchSnapshotHashWithSignerData(
-          id.toString(),
-          {
-            signedDataFingerprint: signedFingerprint,
-            dataFingerprint: response.fingerprint,
-            dateSigned,
-          }
-        );
+        const keyResult = await saveSnapshotCertification(id.toString(), {
+          signedDataFingerprint: signedFingerprint,
+          dataFingerprint: response.fingerprint,
+          dateSigned,
+        });
 
         setCertKey(keyResult.key);
         setIsLoadingCert(false);
@@ -131,12 +154,32 @@ const BatchDetailsPage = () => {
     }
   }, [id, signMessageAsync]);
 
+  const saveNewMintOwner = useCallback(async () => {
+    try {
+      setIsLoadingCert(true);
+      setIsLoadingCert(false);
+      if (id && connectedWallet) {
+        saveCertificateMintOwner(id.toString(), {
+          minterWallet: connectedWallet,
+          buyerWallet: certBuyer,
+          tokenId,
+          certificateKey: certKey,
+        });
+        console.log(
+          `${certBuyer} now owns token ${tokenId} with certificate ${certKey}`
+        );
+      }
+    } catch (err) {
+      setIsLoadingCert(false);
+      console.log(err);
+    }
+  }, [id, connectedWallet, certBuyer, tokenId, certKey]);
+
   const mintCertificateNFT = useCallback(async () => {
     if (writeAsync) {
       try {
         setIsLoadingCert(true);
         const result = await writeAsync();
-
         console.log(result);
         setIsLoadingCert(false);
       } catch (err) {
@@ -147,10 +190,24 @@ const BatchDetailsPage = () => {
   }, [writeAsync]);
 
   useEffect(() => {
-    if (certBuyer && certName && certDescription && certKey) {
+    if (isMintSuccess) {
+      saveNewMintOwner();
+    }
+  }, [isMintSuccess, saveNewMintOwner]);
+
+  useEffect(() => {
+    if (certBuyer && certName && certDescription && certKey && tokenId) {
       mintCertificateNFT();
     }
-  }, [certBuyer, certName, certDescription, certKey, mintCertificateNFT]);
+  }, [
+    certBuyer,
+    certName,
+    certDescription,
+    certKey,
+    mintCertificateNFT,
+    router.pathname,
+    tokenId,
+  ]);
 
   useEffect(() => {
     if (!id) return;
@@ -279,7 +336,7 @@ const BatchDetailsPage = () => {
                   onConfirm={handleConfirmWalletModal}
                   isLoading={isLoadingMint || isLoadingCert}
                   isComplete={isMintSuccess}
-                  mintTx={mintTx}
+                  certificateRoute={certLink}
                 />
               </>
             ) : (
@@ -354,7 +411,7 @@ const BatchDetailsPage = () => {
                   onConfirm={handleConfirmWalletModal}
                   isLoading={isLoadingMint || isLoadingCert}
                   isComplete={isMintSuccess}
-                  mintTx={mintTx}
+                  certificateRoute={certLink}
                 />
               </>
             ) : (
