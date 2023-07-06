@@ -36,6 +36,19 @@ export function convertToSimpleDate(isoDateString: string): string {
   return simpleDateString;
 }
 
+export function convertToMonthYearDate(isoDateString: string, language: string = "en"): string {
+  if (isoDateString == null || isoDateString == '') return '';
+  const date = new Date(isoDateString);
+
+  const options: Intl.DateTimeFormatOptions = {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC" // Specify the desired timezone here
+  };
+
+  return date.toLocaleString(language, options);
+}
+
 export function convertToIsoDate(simpleDate: string): Date {
   const date = new Date(
     simpleDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$2/$1/$3')

@@ -190,7 +190,8 @@
         "delete": "Borrar",
         "download_available_batches": "Descargar Información de baches disponibles",
         "download_sold_batches": "Descargar Información de baches vendidos",
-        "download_producers": "Descargar Información de productores"
+        "download_producers": "Descargar Información de productores",
+        "set_next_harvesting": "Establecer Próxima cosecha"
     },
     "error": {
         "invalid_address": "Invalid Wallet Address"
@@ -246,6 +247,9 @@
         },
         "wallet": {
             "title": "Inserte la Carteras del Receptor (Comprador)"
+        },
+        "harvesting": {
+            "title": "Establecer Próxima cosecha"
         }
     },
     "regions_colombia": "Regiones en Colombia",
@@ -261,7 +265,8 @@
     },
     "footer": {
         "operated_by": "Operado por",
-        "funded_by": "Financiado por"
+        "funded_by": "Financiado por",
+        "powered_by": "Blockchain Energizado por"
     },
     "nft": {
         "assoc_title": "DATOS DE LA ASOCIACIÓN",
