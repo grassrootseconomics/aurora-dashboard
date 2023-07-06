@@ -35,3 +35,11 @@ export type CertificationMintFields = {
   tokenId: string;
   certificateKey: string;
 };
+
+export type CertificateOwner = {
+  id: number;
+  certificationKey: string;
+  minterWallet: string;
+  buyerWallet: string;
+  tokenId: string;
+};

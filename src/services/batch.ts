@@ -8,7 +8,11 @@ import {
   BuyerBatchInfo,
   mapToBuyerBatchInfo,
 } from '@/util/models/Batch/BuyerBatchInfo';
-import { CertificationSignerFields } from '@/util/models/Batch/Certification';
+import {
+  CertificateOwner,
+  CertificationMintFields,
+  CertificationSignerFields,
+} from '@/util/models/Batch/Certification';
 import { DailyReport, Flip } from '@/util/models/Batch/Fermentation';
 import { EmailSample } from '@/util/models/EmailSample';
 import ResponseStructure from '@/util/models/ResponseStructure';
@@ -278,31 +282,29 @@ export const generateBatchSnapshotHash = async (
   code: string
 ): Promise<{ fingerprint: string }> => {
   const response: AxiosResponseData<{ fingerprint: string }> =
-    await authenticatedApi.post(`/v1/nft/${code}`);
+    await authenticatedApi.post(`/v1/nft/snapshot/${code}`);
 
   return response.data.data;
 };
 
-export const updateBatchSnapshotHashWithSignerData = async (
+export const saveSnapshotCertification = async (
   code: string,
   signData: CertificationSignerFields
 ): Promise<{ key: string }> => {
   const response: AxiosResponseData<{ key: string }> =
-    await authenticatedApi.patch(`/v1/nft/${code}`, {
+    await authenticatedApi.post(`/v1/nft/signing/${code}`, {
       fingerprints: { ...signData },
     });
 
   return response.data.data;
 };
 
-export const updateBatchSnapshotHashWithMintData = async (
+export const saveCertificateMintOwner = async (
   code: string,
-  mintDetails: CertificationSignerFields
-): Promise<ResponseStructure<undefined>> => {
-  const response: AxiosResponseData<undefined> = await authenticatedApi.patch(
-    `/v1/nft/${code}`,
-    { mintDetails }
-  );
+  mintDetails: CertificationMintFields
+): Promise<ResponseStructure<{ ownership: CertificateOwner }>> => {
+  const response: AxiosResponseData<{ ownership: CertificateOwner }> =
+    await authenticatedApi.post(`/v1/nft/mint/${code}`, { mintDetails });
 
   return response.data;
 };

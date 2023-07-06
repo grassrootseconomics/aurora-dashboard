@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 
 import React, { FC, useEffect, useState } from 'react';
@@ -13,7 +14,7 @@ interface WalletModalProps {
   open: boolean;
   isLoading: boolean;
   isComplete: boolean;
-  mintTx?: string;
+  certificateRoute?: string;
   loadingMessage?: string;
   onClose: () => void;
   // eslint-disable-next-line no-unused-vars
@@ -24,7 +25,7 @@ const WalletModal: FC<WalletModalProps> = ({
   open,
   isLoading = false,
   isComplete = false,
-  mintTx,
+  certificateRoute,
   loadingMessage,
   onClose,
   onConfirm,
@@ -93,9 +94,13 @@ const WalletModal: FC<WalletModalProps> = ({
             }}
           >
             Successfully minted & transfered Certificate NFT!
-            <a href={`https://alfajores.celoscan.io/tx/${mintTx}`}>
-              Check on Celoscan
-            </a>
+            {certificateRoute ? (
+              <Link target="_blank" href={certificateRoute}>
+                View Certificate
+              </Link>
+            ) : (
+              <></>
+            )}
           </Box>
         ) : isLoading ? (
           <LoadingBox color="#50000A" message={loadingMessage} />
