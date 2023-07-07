@@ -5,9 +5,18 @@ import React from 'react';
 
 import { CssBaseline, ThemeProvider } from '@mui/material';
 
+import { chains, wagmiConfig } from '@/config/web3';
 import createEmotionCache from '@/createEmotionCache';
-import '@/styles/globals.css';
+import DefaultLayout from '@/layouts/DefaultLayout';
+import '@/styles/globals.scss';
 import theme from '@/theme';
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import '@rainbow-me/rainbowkit/styles.css';
+import { WagmiConfig } from 'wagmi';
+
+import '../i18n';
+import '../util/chart';
+import UserAuthProvider from '@/providers/UserAuthProvider';
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -16,15 +25,25 @@ interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
 }
 
-export default function MyApp(props: MyAppProps) {
+const MyApp = (props: MyAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 
   return (
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Component {...pageProps} />
+        <WagmiConfig config={wagmiConfig}>
+          <RainbowKitProvider chains={chains}>
+            <UserAuthProvider>
+                <DefaultLayout>
+                  <CssBaseline />
+                  <Component {...pageProps} />
+                </DefaultLayout>
+            </UserAuthProvider>
+          </RainbowKitProvider>
+        </WagmiConfig>
       </ThemeProvider>
     </CacheProvider>
   );
-}
+};
+
+export default MyApp;

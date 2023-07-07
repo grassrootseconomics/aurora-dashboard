@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material';
+import { createTheme } from '@mui/material/styles';
 
 // Create a theme instance.
 const theme = createTheme({
@@ -28,6 +28,35 @@ const theme = createTheme({
     },
     background: {
       default: 'white',
+    },
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 960,
+      lg: 1280,
+      xl: 1920,
+    },
+  },
+  components: {
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#964514',
+          borderRadius: '15px',
+          marginRight: 10,
+          minWidth: 'auto',
+          color: 'white',
+          '&.Mui-selected': {
+            color: 'white',
+            boxShadow: '3px 5px #888888',
+          },
+          '&.MuiTabScrollButton-root': {
+            display: 'block!important',
+          },
+        },
+      },
     },
   },
 });
