@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import React, { useCallback, useEffect, useState } from 'react';
 import Flag from 'react-world-flags';
 
+import { BatchButton } from '@/components/core/buttons/BatchButton';
 import CardFour from '@/components/core/cards/CardFour';
 import CardOne from '@/components/core/cards/CardOne';
 import NftBarChart from '@/components/core/charts/NftBarChart';
@@ -17,6 +18,9 @@ import { countryList } from '@/util/constants/countries';
 import { convertToSimpleDate } from '@/util/format/date';
 import { Dataset } from '@/util/models/Dataset';
 import { BatchNft } from '@/util/models/nft';
+import { Grid } from '@material-ui/core';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 import styles from './../../../styles/Nft.module.scss';
 
@@ -41,6 +45,25 @@ const NFT = () => {
     },
     [router]
   );
+
+  const exportToPDF = useCallback(() => {
+    if (nftModel) {
+      const element = document.body;
+      html2canvas(element).then((canvas) => {
+        const imageData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        // Calculate the width and height of the PDF document based on the page size
+
+        pdf.internal.pageSize.height *= 2;
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+
+        // Add the image to the PDF document
+        pdf.addImage(imageData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save('output.pdf');
+      });
+    }
+  }, [nftModel]);
 
   useEffect(() => {
     if (id) {
@@ -78,7 +101,15 @@ const NFT = () => {
               />
             )}
           </div>
-
+          <Grid
+            container
+            justifyContent="center"
+            style={{ padding: '15px 0px' }}
+          >
+            <Grid item xs={2}>
+              <BatchButton action={exportToPDF} label={'Export to PDF'} />
+            </Grid>
+          </Grid>
           <div className={styles.title}>{t('nft.assoc_title')}</div>
 
           <div className={styles.table}>
