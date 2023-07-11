@@ -23,6 +23,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
 import styles from './../../../styles/Nft.module.scss';
+import { animals } from '@/util/constants/animals';
 
 const NFT = () => {
   const { t, i18n } = useTranslation('translation');
@@ -35,7 +36,9 @@ const NFT = () => {
     async (code: string) => {
       try {
         const metadata = await getBatchOwnedNftMetadata(code);
-        if (metadata) setNftModel(metadata);
+        if (metadata) {
+          setNftModel(metadata);
+        } 
         else {
           router.push(`/batches/${code}/sample`);
         }
@@ -306,7 +309,7 @@ const NFT = () => {
                 </div>
                 <div className={styles.infoContainer}>
                   {t('nft.identified_varieties')}:{' '}
-                  {nftModel.traceDetails.producers.identifiedVarieties}
+                  {nftModel.traceDetails.producers.identifiedVarieties.replaceAll("_", " ").replaceAll(" ", ", ")}
                 </div>
               </div>
               <div>
@@ -325,13 +328,27 @@ const NFT = () => {
               </div>
             </div>
             <div className={styles.wildlifeLabel}>{t('nft.wildlife')}: </div>
-            <Image
-              width={500}
-              height={50}
-              alt={t('nft.wildlife')}
-              className={styles.image}
-              src="/assets/nft/animals.png"
-            />
+            <Grid container spacing={1}>
+              {
+                nftModel.traceDetails.producers.identifiedVarieties?.split(" ").map((animal) => 
+                  { 
+                    const image = animals.find(a => a.name == animal.toLowerCase())?.image;
+
+                    if (image) {
+                      return <Grid item xs={3} key={animal}>
+                        <Image
+                          width={300}
+                          height={50}
+                          alt={t('nft.wildlife')}
+                          className={styles.image}
+                          src={`/assets/nft/animals/${image}.png`}/>
+                      </Grid>
+                    }
+                  }
+                )
+              }
+                
+            </Grid>
           </div>
 
           <div className={styles.processTitle}>
