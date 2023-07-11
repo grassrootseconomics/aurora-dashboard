@@ -10,7 +10,6 @@ import {
   getNonce,
 } from '@/services/auth';
 import {
-  clearSession,
   fetchAccessToken,
   setAccessToken,
   setRefreshToken,
@@ -23,7 +22,7 @@ type DefaultLayoutProps = {
 
 const DefaultLayout: FC<DefaultLayoutProps> = ({ children }) => {
   const { signMessageAsync } = useSignMessage();
-  const { setIsAuthenticated } = useUserAuthContext();
+  const { setIsAuthenticated, clearUserSession } = useUserAuthContext();
 
   const authenticateUser = async (connectedWallet: string | undefined) => {
     if (connectedWallet) {
@@ -58,14 +57,12 @@ const DefaultLayout: FC<DefaultLayoutProps> = ({ children }) => {
             setIsAuthenticated(true);
           });
         } catch (err) {
-          console.log(err);
+          clearUserSession();
         }
       }
     },
     onDisconnect() {
-      setIsAuthenticated(false);
       window.location.href = '/';
-      clearSession();
     },
   });
 

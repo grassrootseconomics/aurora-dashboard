@@ -149,6 +149,7 @@ const BatchDetailsPage = () => {
         setIsLoadingCert(false);
       }
     } catch (err) {
+      handleCloseWalletModal();
       setIsLoadingCert(false);
       console.log(err);
     }
