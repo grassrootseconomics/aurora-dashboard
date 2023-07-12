@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { Tab, Tabs } from '@mui/material';
 
@@ -75,6 +75,10 @@ const Home = () => {
   const handleCloseHarvestingModal = () => {
     setOpenHarvestingModal(false);
   };
+
+  const routeToAboutPage = useCallback(() => {
+    router.push('/about-aurora');
+  }, [router]);
 
   useEffect(() => {
     switch (userRole) {
@@ -158,8 +162,9 @@ const Home = () => {
             <Image
               width={200}
               height={0}
-              style={{ height: 'auto' }}
+              style={{ height: 'auto', cursor: 'pointer' }}
               className="dashboard__logo"
+              onClick={routeToAboutPage}
               src={`/assets/logos/${currentAssociation?.name.toLowerCase()}.png`}
               alt="Aurora"
             />
@@ -167,7 +172,9 @@ const Home = () => {
             <Image
               width={200}
               height={234}
+              style={{ cursor: 'pointer' }}
               className="dashboard__logo"
+              onClick={routeToAboutPage}
               src={'/assets/logos/Aurora.png'}
               alt="Aurora"
             />
