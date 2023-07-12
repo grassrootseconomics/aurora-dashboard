@@ -15,16 +15,28 @@ import {
 } from '@/util/models/Batch/Certification';
 import { DailyReport, Flip } from '@/util/models/Batch/Fermentation';
 import { EmailSample } from '@/util/models/EmailSample';
+import { PaginationOptions } from '@/util/models/Pagination';
 import ResponseStructure from '@/util/models/ResponseStructure';
 
 export const getBatchesWithoutAuth = async (
-  department?: string
+  department?: string,
+  pagination?: PaginationOptions
 ): Promise<any> => {
   const response: AxiosResponseData<any> = await api.get(`/v1/batch`, {
     params: {
       department: department != '' ? department : null,
+      index: pagination ? pagination.index : 0,
+      limit: pagination ? pagination.limit : 5,
     },
   });
+  return response.data.data;
+};
+
+export const getBatchesWithAuth = async (): Promise<any> => {
+  const response: AxiosResponseData<any> = await authenticatedApi.get(
+    `/v1/batch`,
+    {}
+  );
   return response.data.data;
 };
 
@@ -43,21 +55,19 @@ export const getBatchByCodeForBuyers = async (
   return mapToBuyerBatchInfo(batch);
 };
 
-export const getBatchesWithAuth = async (): Promise<any> => {
-  const response: AxiosResponseData<any> = await authenticatedApi.get(
-    `/v1/batch`
-  );
-  return response.data.data;
-};
-
 export const getAvailableBatches = async (
-  association?: string
+  search?: string,
+  association?: string,
+  pagination?: PaginationOptions
 ): Promise<any> => {
   const response: AxiosResponseData<any> = await authenticatedApi.get(
     `/v1/batch/available`,
     {
       params: {
+        search,
         association: association,
+        index: pagination ? pagination.index : 0,
+        limit: pagination ? pagination.limit : 5,
       },
     }
   );
@@ -78,19 +88,29 @@ export const getAvailableBatches = async (
   );
 
   return {
-    basicBatches: basicBatches,
+    searchBatchesResult: {
+      ...response.data.data.searchBatchesResult,
+      data: basicBatches,
+    },
     kgDryCocoaAvailable: response.data.data.statistics.kgDryCocoaAvailable,
     productionOfDryCocoa: response.data.data.report.productionOfDryCocoa,
     monthlyCocoaPulp: response.data.data.report.monthlyCocoaPulp,
   };
 };
 
-export const getSoldBatches = async (association?: string): Promise<any> => {
+export const getSoldBatches = async (
+  search?: string,
+  association?: string,
+  pagination?: PaginationOptions
+): Promise<any> => {
   const response: AxiosResponseData<any> = await authenticatedApi.get(
     `/v1/batch/sold`,
     {
       params: {
+        search,
         association: association,
+        index: pagination ? pagination.index : 0,
+        limit: pagination ? pagination.limit : 5,
       },
     }
   );
@@ -111,7 +131,10 @@ export const getSoldBatches = async (association?: string): Promise<any> => {
   );
 
   return {
-    basicBatches: basicBatches,
+    searchBatchesResult: {
+      ...response.data.data.searchBatchesResult,
+      data: basicBatches,
+    },
     kgDryCocoaSold: response.data.data.statistics.kgDryCocoaInternationallySold,
     salesInKg: response.data.data.report.salesInKg,
     monthlySalesInUSD: response.data.data.report.monthlySalesInUSD,

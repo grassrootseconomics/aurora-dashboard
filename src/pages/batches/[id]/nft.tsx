@@ -70,7 +70,6 @@ const NFT = () => {
   useEffect(() => {
     if (id) {
       if (!isAuthenticated || !connectedWallet) {
-        console.log('Unauthenticated!');
         router.push(`/batches/${id}/sample`);
       }
     }

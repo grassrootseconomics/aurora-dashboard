@@ -40,6 +40,7 @@ import { BasicAvailableBatch } from '@/util/models/Batch/BasicAvailableBatch';
 import { Batch } from '@/util/models/Batch/Batch';
 import { BatchStatistics } from '@/util/models/Batch/BatchStatistics';
 import { Dataset } from '@/util/models/Dataset';
+import { PaginationOptions } from '@/util/models/Pagination';
 import { ProducersStatistics } from '@/util/models/Producer/ProducersStatistics';
 
 const Home = () => {
@@ -59,6 +60,11 @@ const Home = () => {
   const [productionPerAssoc, setProductionPerAssoc] = useState<Dataset[]>([]);
   const [productionPerRegion, setProductionPerRegion] = useState<Dataset[]>([]);
   const [currentAssociation, setCurrentAssociation] = useState<Association>();
+  const [pagination, setPagination] = useState<PaginationOptions>({
+    index: 0,
+    limit: 5,
+  });
+  const [totalEntries, setTotalEntries] = useState(0);
   const [openHarvestingModal, setOpenHarvestingModal] =
     useState<boolean>(false);
   const [loading, setLoading] = useState(true);
@@ -80,9 +86,25 @@ const Home = () => {
     router.push('/about-aurora');
   }, [router]);
 
+  const updatePagination = useCallback(
+    (newOptions: PaginationOptions) => {
+      setPagination(newOptions);
+    },
+    [setPagination]
+  );
+
+  useEffect(() => {
+    if (userRole && userRole === UserRole.buyer) {
+      getDepartments().then((data) => {
+        setDepartments(data);
+      });
+    }
+  }, [userRole]);
+
   useEffect(() => {
     switch (userRole) {
       case UserRole.project: {
+        setLoading(true);
         getBatchesWithAuth().then((data: any) => {
           setProductionPerAssoc(getProductionPerAssociationsGraph(data));
           setProductionPerRegion(getProductionPerRegionsGraph(data));
@@ -96,10 +118,12 @@ const Home = () => {
         return;
       }
       case UserRole.buyer: {
+        setLoading(true);
         getBatchesWithoutAuth(
           selectedDepartment - 1 >= 0
             ? departments[selectedDepartment - 1].name
-            : ''
+            : '',
+          pagination
         ).then((data: any) => {
           setSalesInUsd(getTotalSalesForBuyerGraph(data));
           setProductionPerRegion(getProductionByOriginGraph(data));
@@ -118,15 +142,13 @@ const Home = () => {
             )
           );
           setBatchStatistics(data.statistics);
+          setTotalEntries(data.searchBatchesResult.totalEntries);
           setLoading(false);
-        });
-
-        getDepartments().then((data) => {
-          setDepartments(data);
         });
         return;
       }
       case UserRole.association: {
+        setLoading(true);
         getBatchesWithAuth().then((data: any) => {
           setProductionPerAssoc(getProductionPerAssociationsGraph(data));
           setSalesInKg(getTotalSalesKgGraph(data.report.salesInKg));
@@ -143,7 +165,7 @@ const Home = () => {
         return;
       }
     }
-  }, [userRole, selectedDepartment]);
+  }, [userRole, selectedDepartment, pagination]);
 
   return (
     <>
@@ -427,9 +449,21 @@ const Home = () => {
           <div className="dashboard__cards">
             <div className="dashboard__charts-production">
               {selectedDepartment >= 0 ? (
-                <AvailableBatchesTable batches={availableBatches} />
+                <AvailableBatchesTable
+                  batches={availableBatches}
+                  pagination={pagination}
+                  updatePagination={updatePagination}
+                  loading={loading}
+                  totalEntries={totalEntries}
+                />
               ) : (
-                <AvailableBatchesTable />
+                <AvailableBatchesTable
+                  batches={undefined}
+                  pagination={pagination}
+                  updatePagination={updatePagination}
+                  loading={loading}
+                  totalEntries={totalEntries}
+                />
               )}
             </div>
           </div>
