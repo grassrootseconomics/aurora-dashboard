@@ -50,7 +50,7 @@
         "total_sales_usd": "Ventas Totales en USD",
         "next_harvest": "Próxima cosecha",
         "next_harvest_in": "Próxima cosecha en",
-        "all": "Consolidated"
+        "all": "Todo"
     },
     "sales": {
         "total_sales_kg": "Ventas Totales en Kg"
@@ -122,7 +122,7 @@
         "phone_number": "Número de teléfono",
         "gender": "Género",
         "male": "Hombre",
-        "female": "Mujere",
+        "female": "Mujer",
         "other": "Otra",
         "year_birth": "Fecha de nacimiento",
         "department": "Departamento",

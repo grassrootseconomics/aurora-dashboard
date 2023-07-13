@@ -24,7 +24,7 @@ const Footer: FC = () => {
           <Image
             width={100}
             height={40}
-            src="/assets/logos/Insitu.png"
+            src="/assets/logos/insitu.png"
             alt="Insitu Logo"
           />
         </div>
@@ -34,7 +34,7 @@ const Footer: FC = () => {
             <Image
               width={100}
               height={30}
-              src="/assets/logos/Choco4Peace.png"
+              src="/assets/logos/choco4Peace.png"
               alt="Choco4Peace"
             />
           </Link>
@@ -42,7 +42,7 @@ const Footer: FC = () => {
             <Image
               width={100}
               height={30}
-              src="/assets/logos/GrassrootsEconimics.png"
+              src="/assets/logos/grassroots-economics.png"
               alt="Grassroots Economics"
             />
           </Link>
@@ -50,7 +50,7 @@ const Footer: FC = () => {
             <Image
               width={90}
               height={40}
-              src="/assets/logos/Astrali.png"
+              src="/assets/logos/astrali.png"
               alt="Astrali"
             />
           </Link>

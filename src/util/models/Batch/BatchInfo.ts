@@ -88,6 +88,10 @@ export function mapToBatchInfo(source: Batch): BatchInfo {
     'totalPulpKg'
   );
 
+  const sumedTotalPulpKgs = pulps.reduce((acc, current) => {
+    return acc + current.totalPulpKg;
+  }, 0);
+
   const BuyerBatchInfoDto: BatchInfo = {
     id: source.id,
     idAssociation: source.idAssociation,
@@ -147,7 +151,7 @@ export function mapToBatchInfo(source: Batch): BatchInfo {
       quality: largestPulp ? largestPulp.quality : '',
       status: largestPulp ? largestPulp.status : '',
       collectionGenetics: largestPulp ? largestPulp.genetics : '',
-      pulpKg: largestPulp ? largestPulp.totalPulpKg : 0,
+      pulpKg: sumedTotalPulpKgs,
       priceKg: largestPulp ? largestPulp.pricePerKg : 0,
     },
     producersPhase: {
