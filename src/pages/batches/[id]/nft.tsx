@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Flag from 'react-world-flags';
 
 import { BatchButton } from '@/components/core/buttons/BatchButton';
@@ -32,10 +32,17 @@ const NFT = () => {
   const { isAuthenticated, connectedWallet } = useUserAuthContext();
   const [nftModel, setNftModel] = useState<BatchNft | null>(null);
 
+  const currentLanguage = useMemo(() => {
+    return i18n.language === 'es' || i18n.language === 'en'
+      ? i18n.language
+      : 'en';
+  }, [i18n.language]);
+
   const getNFTMetadata = useCallback(
     async (code: string) => {
       try {
         const metadata = await getBatchOwnedNftMetadata(code);
+        console.log(metadata);
         if (metadata) {
           setNftModel(metadata);
         } else {
@@ -167,7 +174,10 @@ const NFT = () => {
                 {t('nft.achivements_text')}
               </div>
               <div className={styles.tableValue}>
-                {nftModel.assocDetails.story}
+                {typeof nftModel.assocDetails.story === 'string'
+                  ? nftModel.assocDetails.story
+                  : nftModel.assocDetails.story[currentLanguage]}
+                {/* {nftModel.assocDetails.story[currentLanguage]} */}
               </div>
             </div>
             <div className={styles.tableRow}>
@@ -195,7 +205,9 @@ const NFT = () => {
               alt="Colombia Map"
             />
             <div className={styles.tableValue}>
-              {nftModel.assocDetails.regionInformationL}
+              {typeof nftModel.assocDetails.regionInformation === 'string'
+                ? nftModel.assocDetails.regionInformation
+                : nftModel.assocDetails.regionInformation[currentLanguage]}
             </div>
           </div>
 
@@ -263,7 +275,10 @@ const NFT = () => {
               </div>
             </div>
             <div className={styles.batchDescription}>
-              {nftModel.batchDetails.sensoryProfile}
+              {/* {nftModel.batchDetails.sensoryProfile[currentLanguage] ? nftModel.batchDetails.sensoryProfile[currentLanguage] : ""} */}
+              {typeof nftModel.batchDetails.sensoryProfile === 'string'
+                ? nftModel.batchDetails.sensoryProfile
+                : nftModel.batchDetails.sensoryProfile[currentLanguage]}
             </div>
           </div>
 
