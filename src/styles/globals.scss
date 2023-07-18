@@ -807,7 +807,7 @@ button {
 }
 
 .footer {
-    background: #ffffff94;
+    background: white;
     width: 100%;
     margin-top: 20px;
 
@@ -1233,24 +1233,23 @@ button {
 
     &-tooltip {
         position: absolute;
-        top: 100px;
-        left: 100px;
+        top: 0px;
+        left: 30px;
         background: #fcf3dc;
         border: 2px solid #d0741a;
         border-radius: 15px;
         padding: 0 20px 10px;
-        max-width: 400px;
+        max-width: 480px;
         opacity: 0.3;
 
         @media (max-width: 1400px) {
-            left: 50px;
-            max-width: 350px;
+            max-width: 410px;
         }
 
         @media (max-width: 1279px) {
             position: relative;
             top: 10px;
-            left: 30px;
+            left: 20px;
             max-width: calc(100% - 60px);
             opacity: 1;
             margin: 30px 0;
@@ -1259,13 +1258,8 @@ button {
 
     &-tooltip--caqueta {
         @media (min-width: 1280px) {
-            top: 100px;
-            right: 100px;
+            right: 20px;
             left: auto;
-        }
-
-        @media (min-width: 1280px) {
-            right: 50px;
         }
     }
 }

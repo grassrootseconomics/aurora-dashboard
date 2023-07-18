@@ -85,7 +85,7 @@ export const getProducerByCode = async (code: string): Promise<Producer> => {
 };
 
 export const getProducerActivity = async (
-  code: number
+  code: string
 ): Promise<ProducerActivity> => {
   const response: AxiosResponseData<any> = await authenticatedApi.get(
     `/v1/producer/${code}/batches`
@@ -121,8 +121,10 @@ export const updateProducer = async (
 
 export const downloadProducersInExcel = async (): Promise<any> => {
   const response: AxiosResponseData<any> = await authenticatedApi.get(
-      `/v1/producer/download/all`, {
-        responseType: 'blob',
-      });
+    `/v1/producer/download/all`,
+    {
+      responseType: 'blob',
+    }
+  );
   return response;
 };

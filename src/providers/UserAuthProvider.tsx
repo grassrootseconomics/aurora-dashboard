@@ -19,13 +19,14 @@ import {
   fetchAccessToken,
 } from '@/util/tokenStorage';
 import jwtDecode from 'jwt-decode';
-import { useAccount, useDisconnect } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 interface UserAuthContextValue {
   connectedWallet: string | undefined;
   isAuthenticated: boolean;
   userRole: UserRole | null;
   setIsAuthenticated: Dispatch<SetStateAction<boolean>>;
+  clearUserSession: () => void;
 }
 
 const UserAuthContext = createContext<UserAuthContextValue | null | undefined>(
@@ -42,17 +43,16 @@ const UserAuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [userRole, setUserRole] = useState<UserRole | null>(null);
 
-  const { disconnect } = useDisconnect();
-
   const connectedWallet = useMemo(() => {
     return address?.toString();
   }, [address]);
 
   const clearUserSession = useCallback(() => {
-    setIsAuthenticated(false);
-    disconnect();
-    clearSession();
-  }, [disconnect]);
+    if (!address) {
+      setIsAuthenticated(false);
+      clearSession();
+    }
+  }, [address]);
 
   const isTokenValid = useCallback((token: string, address: string) => {
     const decoded: AccessTokenStructure = jwtDecode(token);
@@ -78,7 +78,7 @@ const UserAuthProvider: FC<PropsWithChildren> = ({ children }) => {
       }
     } else {
       setUserRole(UserRole.buyer);
-      setIsAuthenticated(false);
+      clearSession();
     }
   }, [address, clearUserSession, isTokenValid, setIsAuthenticated, setRole]);
 
@@ -88,8 +88,15 @@ const UserAuthProvider: FC<PropsWithChildren> = ({ children }) => {
       userRole,
       isAuthenticated,
       setIsAuthenticated,
+      clearUserSession,
     };
-  }, [connectedWallet, userRole, isAuthenticated, setIsAuthenticated]);
+  }, [
+    connectedWallet,
+    userRole,
+    isAuthenticated,
+    setIsAuthenticated,
+    clearUserSession,
+  ]);
 
   return (
     <UserAuthContext.Provider value={value}>

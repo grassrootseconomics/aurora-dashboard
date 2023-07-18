@@ -4,7 +4,7 @@ import LoadingBox from '../spinners/LoadingBox';
 
 interface CardProps {
   backgroundColor: string;
-  number: number | string | undefined;
+  number: number | undefined;
   loading: boolean;
   text: string;
   icon: any;
@@ -19,7 +19,13 @@ const CardTwo = (props: CardProps) => {
     >
       <div className="card__row">
         <div className="card__number">
-          {props.loading ? <LoadingBox /> : props.number}
+          {props.loading ? (
+            <LoadingBox />
+          ) : props.number ? (
+            (Math.round(props.number * 100) / 100).toString()
+          ) : (
+            <></>
+          )}
         </div>
         <Image
           width={128}

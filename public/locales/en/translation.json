@@ -4,7 +4,7 @@
     "number_women": "Number of women",
     "ha_forest_conservation": "Ha of forest conservation",
     "dry_cocoa_available": "of dry cocoa available",
-    "sold_international_market": "Sold to the internation market",
+    "sold_international_market": "Sold to the international market",
     "batch": "Batch",
     "buyer": "Buyer",
     "destination_country": "Destination Country",
@@ -45,6 +45,8 @@
         "production_of_dry_cocoa": "Production of Dry Cocoa",
         "cocoa_pulp_collected": "Cocoa pulp collected",
         "sales_kg": "Sales in Kg",
+        "international_sales_kg": "International Sales in Kg",
+        "international_sales_kg_in": "Ventas Internacionales en Kg in",
         "usd_price_organic_cocoa": "USD price of organic cocoa",
         "usd_price": "USD price",
         "total_sales_usd": "Total sales in USD",
@@ -55,9 +57,7 @@
     "sales": {
         "total_sales_kg": "Total sales in Kg"
     },
-    "available": {
-
-    },
+    "available": {},
     "single_batch": {
         "stages": {
             "sales": "Sales",
@@ -84,9 +84,9 @@
         "total_fermentation_days": "Total fermentation days:",
         "cocoa_quality": "Cocoa quality:",
         "cocoa_status": "Cocoa status:",
-        "no_producers_batch": "of producers in the batch",
-        "no_cocoa_hectares": "of cocoa hectares",
-        "conservation_hectares": "of conservation hectares",
+        "no_producers_batch": "Producers in the batch:",
+        "no_cocoa_hectares": "Cocoa hectares:",
+        "conservation_hectares": "Conservation hectares:",
         "day_went_storage": "Day it went to storage:",
         "batch_sensory_profile": "Batch sensory profile:",
         "batch_score": "Batch score:",
@@ -101,7 +101,7 @@
         "classification_genetics:": "Clasification genetics:",
         "buyer_name": "Buyer Name:",
         "lot_code": "Lot code:",
-        "negotiation": "International or national negotiation:",
+        "negotiation_type": "International or national negotiation:",
         "negotiation_terms": "Negotiation terms:",
         "destination": "Destination country:",
         "currency": "Currency:",
@@ -212,7 +212,7 @@
             "temp": "Temp T°:",
             "roomt_t": "Room T°:",
             "humidity": "Relative humidity:"
-        }, 
+        },
         "pulp": {
             "add_title": "Add Pulp",
             "edit_title": "Edit Pulp",
@@ -252,7 +252,19 @@
             "title": "Set Next Harvesting"
         }
     },
-    "regions_colombia": "Regions in Colombia",
+    "regions_colombia": {
+        "title": "Regions in Colombia",
+        "regions": {
+            "Caqueta": {
+                "header": "Caquetá",
+                "description": "Caquetá is a department located in the Amazon region, characterized by a tropical jungle ecosystem, high humidity, superior water supply, diversity of flora and fauna, soil fertility, especially those that descend from the eastern mountain range. In the last decade, the department had a productive transformation, where currently agricultural activity is prioritized, including cocoa. In 2022, Caquetá is in charge of 75% of cocoa production in the amazonian region of Colombia, around 500 families are involved, producing 768 tons annually. By being an Amazon origin fruit, Caquetá contributes its ancestral characteristics, highlighting the flavors of the region. Its production has replaced deforestation and crops for illicit use, which has promoted economic development with responsible and sustainable trade that contributes to reforestation, food security and the persistence of traditional flavors. Cocoa from this region typically has a lactic acid and fruity profile, complemented by berries, yellow pulp and caramel flavors."
+            },
+            "Huila": {
+                "header": "Huila",
+                "description": "Huila has a strategic location, between the central and eastern mountain ranges and including the Magdalena River valley, which contributes to the great biodiversity within it. The presence of different thermal floors and soil types lead to a considerable nutrient flow and diversity of ecosystems. This has generated great interest in the agricultural production of the department, since historically it has been an area characterized by food production and over time strategies have been developed to enhance crops. One of the outstanding products is Cocoa, which is part of the region from the pre-Columbian communities until today and is cultivated in 35 of the 37 municipalities of Huila by more than 3,300 families. This positions Huila in the top 4 departments with cocoa production, contributing an approximate of 7% to the country. In 2020 4,197 tons were registered, cultivated in 7000 ha of the department. Cocoa production has been an important economic alternative for people, who have replaced illicit crops with a product that has opened its doors to fairtrade and economic development in the department and with international buyers. Cocoa from this region is characterized by having a dominant flavor of cocoa and nut, with acetic acidity that is mixed with attributes of dried fruits."
+            }
+        }
+    },
     "about": {
         "title": "¿What is the Aurora project?",
         "subtitle_main": "Generational joint strategy to increase the sustainable cocoa market for five associations in the departments of",
@@ -265,8 +277,7 @@
     },
     "footer": {
         "operated_by": "Operated by",
-        "funded_by": "Funded by",
-        "powered_by": "Blockchain Powered by"
+        "funded_by": "Funded by"
     },
     "nft": {
         "assoc_title": "Association Information",

@@ -26,7 +26,6 @@ import { BuyerBatchInfo } from '@/util/models/Batch/BuyerBatchInfo';
 import { createHash } from 'crypto';
 import { hexToBigInt } from 'viem';
 import {
-  useContractEvent,
   useContractWrite,
   usePrepareContractWrite,
   useSignMessage,
@@ -44,15 +43,6 @@ const BatchDetailsPage = () => {
   const { userRole, connectedWallet } = useUserAuthContext();
   const { signMessageAsync } = useSignMessage();
   const [openWalletModal, setOpenWalletModal] = useState<boolean>(false);
-
-  useContractEvent({
-    address: `0x${WEB_3.NFT_CONTRACT.split('0x').pop()}`,
-    abi: CERT_ABI,
-    eventName: 'mintTo',
-    listener(log) {
-      console.log(log);
-    },
-  });
 
   // Parametes for the mint.
   const certName = useMemo(() => `Aurora Batch #${id} Certificate`, [id]);
@@ -149,6 +139,7 @@ const BatchDetailsPage = () => {
         setIsLoadingCert(false);
       }
     } catch (err) {
+      handleCloseWalletModal();
       setIsLoadingCert(false);
       console.log(err);
     }
@@ -179,8 +170,7 @@ const BatchDetailsPage = () => {
     if (writeAsync) {
       try {
         setIsLoadingCert(true);
-        const result = await writeAsync();
-        console.log(result);
+        await writeAsync();
         setIsLoadingCert(false);
       } catch (err) {
         setIsLoadingCert(false);

@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Flag from 'react-world-flags';
 
 import { BatchButton } from '@/components/core/buttons/BatchButton';
@@ -13,6 +13,7 @@ import DailyReportsTableNft from '@/components/core/nft/DailyReportsTableNft';
 import FlipsTableNft from '@/components/core/nft/FlipsTableNft';
 import { useUserAuthContext } from '@/providers/UserAuthProvider';
 import { getBatchOwnedNftMetadata } from '@/services/nft';
+import { animals } from '@/util/constants/animals';
 import { associations } from '@/util/constants/associations';
 import { countryList } from '@/util/constants/countries';
 import { convertToSimpleDate } from '@/util/format/date';
@@ -31,12 +32,19 @@ const NFT = () => {
   const { isAuthenticated, connectedWallet } = useUserAuthContext();
   const [nftModel, setNftModel] = useState<BatchNft | null>(null);
 
+  const currentLanguage = useMemo(() => {
+    return i18n.language === 'es' || i18n.language === 'en'
+      ? i18n.language
+      : 'en';
+  }, [i18n.language]);
+
   const getNFTMetadata = useCallback(
     async (code: string) => {
       try {
         const metadata = await getBatchOwnedNftMetadata(code);
-        if (metadata) setNftModel(metadata);
-        else {
+        if (metadata) {
+          setNftModel(metadata);
+        } else {
           router.push(`/batches/${code}/sample`);
         }
       } catch (err) {
@@ -68,7 +76,6 @@ const NFT = () => {
   useEffect(() => {
     if (id) {
       if (!isAuthenticated || !connectedWallet) {
-        console.log('Unauthenticated!');
         router.push(`/batches/${id}/sample`);
       }
     }
@@ -166,7 +173,10 @@ const NFT = () => {
                 {t('nft.achivements_text')}
               </div>
               <div className={styles.tableValue}>
-                {nftModel.assocDetails.story}
+                {typeof nftModel.assocDetails.story === 'string'
+                  ? nftModel.assocDetails.story
+                  : nftModel.assocDetails.story[currentLanguage]}
+                {/* {nftModel.assocDetails.story[currentLanguage]} */}
               </div>
             </div>
             <div className={styles.tableRow}>
@@ -194,7 +204,9 @@ const NFT = () => {
               alt="Colombia Map"
             />
             <div className={styles.tableValue}>
-              {nftModel.assocDetails.regionInformationL}
+              {typeof nftModel.assocDetails.regionInformation === 'string'
+                ? nftModel.assocDetails.regionInformation
+                : nftModel.assocDetails.regionInformation[currentLanguage]}
             </div>
           </div>
 
@@ -262,7 +274,10 @@ const NFT = () => {
               </div>
             </div>
             <div className={styles.batchDescription}>
-              {nftModel.batchDetails.sensoryProfile}
+              {/* {nftModel.batchDetails.sensoryProfile[currentLanguage] ? nftModel.batchDetails.sensoryProfile[currentLanguage] : ""} */}
+              {typeof nftModel.batchDetails.sensoryProfile === 'string'
+                ? nftModel.batchDetails.sensoryProfile
+                : nftModel.batchDetails.sensoryProfile[currentLanguage]}
             </div>
           </div>
 
@@ -306,7 +321,10 @@ const NFT = () => {
                 </div>
                 <div className={styles.infoContainer}>
                   {t('nft.identified_varieties')}:{' '}
-                  {nftModel.traceDetails.producers.identifiedVarieties}
+                  {nftModel.traceDetails.producers.identifiedVarieties.replaceAll(
+                    '_',
+                    ' '
+                  )}
                 </div>
               </div>
               <div>
@@ -325,13 +343,29 @@ const NFT = () => {
               </div>
             </div>
             <div className={styles.wildlifeLabel}>{t('nft.wildlife')}: </div>
-            <Image
-              width={500}
-              height={50}
-              alt={t('nft.wildlife')}
-              className={styles.image}
-              src="/assets/nft/animals.png"
-            />
+            <Grid container spacing={1}>
+              {nftModel.traceDetails.producers.identifiedVarieties
+                ?.split(', ')
+                .map((animal) => {
+                  const image = animals.find(
+                    (a) => a.name == animal.toLowerCase()
+                  )?.image;
+
+                  if (image) {
+                    return (
+                      <Grid item xs={3} key={animal}>
+                        <Image
+                          width={300}
+                          height={50}
+                          alt={t('nft.wildlife')}
+                          className={styles.image}
+                          src={`/assets/nft/animals/${image}.png`}
+                        />
+                      </Grid>
+                    );
+                  }
+                })}
+            </Grid>
           </div>
 
           <div className={styles.processTitle}>

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { Tab, Tabs } from '@mui/material';
 
@@ -27,7 +27,6 @@ import {
   getProductionPerAssociationsGraph,
   getProductionPerRegionsGraph,
   getTotalPulpGraph,
-  getTotalSalesForBuyerGraph,
   getTotalSalesGraph,
   getTotalSalesKgGraph,
 } from '@/services/graphics';
@@ -40,6 +39,7 @@ import { BasicAvailableBatch } from '@/util/models/Batch/BasicAvailableBatch';
 import { Batch } from '@/util/models/Batch/Batch';
 import { BatchStatistics } from '@/util/models/Batch/BatchStatistics';
 import { Dataset } from '@/util/models/Dataset';
+import { PaginationOptions } from '@/util/models/Pagination';
 import { ProducersStatistics } from '@/util/models/Producer/ProducersStatistics';
 
 const Home = () => {
@@ -50,8 +50,8 @@ const Home = () => {
   const [producersStats, setProducersStats] = useState<ProducersStatistics>();
   const [availableBatches, setAvailableBatches] = useState<any>(null);
   const [batchStatistics, setBatchStatistics] = useState<BatchStatistics>();
-  const [availableWeight, setAvailableWeight] = useState<any>();
-  const [soldBatches, setSoldBatches] = useState<any>(null);
+  const [availableWeight, setAvailableWeight] = useState<number | undefined>();
+  const [soldBatches, setSoldBatches] = useState<number | undefined>();
   const [salesInUsd, setSalesInUsd] = useState<Dataset[]>([]);
   const [salesInKg, setSalesInKg] = useState<Dataset[]>([]);
   const [priceCocoa, setPriceCocoa] = useState<Dataset[]>([]);
@@ -59,6 +59,11 @@ const Home = () => {
   const [productionPerAssoc, setProductionPerAssoc] = useState<Dataset[]>([]);
   const [productionPerRegion, setProductionPerRegion] = useState<Dataset[]>([]);
   const [currentAssociation, setCurrentAssociation] = useState<Association>();
+  const [pagination, setPagination] = useState<PaginationOptions>({
+    index: 0,
+    limit: 5,
+  });
+  const [totalEntries, setTotalEntries] = useState(0);
   const [openHarvestingModal, setOpenHarvestingModal] =
     useState<boolean>(false);
   const [loading, setLoading] = useState(true);
@@ -76,9 +81,29 @@ const Home = () => {
     setOpenHarvestingModal(false);
   };
 
+  const routeToAboutPage = useCallback(() => {
+    router.push('/about-aurora');
+  }, [router]);
+
+  const updatePagination = useCallback(
+    (newOptions: PaginationOptions) => {
+      setPagination(newOptions);
+    },
+    [setPagination]
+  );
+
+  useEffect(() => {
+    if (userRole && userRole === UserRole.buyer) {
+      getDepartments().then((data) => {
+        setDepartments(data);
+      });
+    }
+  }, [userRole]);
+
   useEffect(() => {
     switch (userRole) {
       case UserRole.project: {
+        setLoading(true);
         getBatchesWithAuth().then((data: any) => {
           setProductionPerAssoc(getProductionPerAssociationsGraph(data));
           setProductionPerRegion(getProductionPerRegionsGraph(data));
@@ -92,12 +117,16 @@ const Home = () => {
         return;
       }
       case UserRole.buyer: {
+        setLoading(true);
         getBatchesWithoutAuth(
           selectedDepartment - 1 >= 0
             ? departments[selectedDepartment - 1].name
-            : ''
+            : '',
+          pagination
         ).then((data: any) => {
-          setSalesInUsd(getTotalSalesForBuyerGraph(data));
+          setSalesInKg(
+            getTotalSalesKgGraph(data.report.internationalSalesInKg)
+          );
           setProductionPerRegion(getProductionByOriginGraph(data));
           setAvailableBatches(
             data.searchBatchesResult.data.map(
@@ -114,15 +143,13 @@ const Home = () => {
             )
           );
           setBatchStatistics(data.statistics);
+          setTotalEntries(data.searchBatchesResult.totalEntries);
           setLoading(false);
-        });
-
-        getDepartments().then((data) => {
-          setDepartments(data);
         });
         return;
       }
       case UserRole.association: {
+        setLoading(true);
         getBatchesWithAuth().then((data: any) => {
           setProductionPerAssoc(getProductionPerAssociationsGraph(data));
           setSalesInKg(getTotalSalesKgGraph(data.report.salesInKg));
@@ -139,7 +166,7 @@ const Home = () => {
         return;
       }
     }
-  }, [userRole, selectedDepartment]);
+  }, [userRole, selectedDepartment, pagination]);
 
   return (
     <>
@@ -158,8 +185,9 @@ const Home = () => {
             <Image
               width={200}
               height={0}
-              style={{ height: 'auto' }}
+              style={{ height: 'auto', cursor: 'pointer' }}
               className="dashboard__logo"
+              onClick={routeToAboutPage}
               src={`/assets/logos/${currentAssociation?.name.toLowerCase()}.png`}
               alt="Aurora"
             />
@@ -167,7 +195,9 @@ const Home = () => {
             <Image
               width={200}
               height={234}
+              style={{ cursor: 'pointer' }}
               className="dashboard__logo"
+              onClick={routeToAboutPage}
               src={'/assets/logos/Aurora.png'}
               alt="Aurora"
             />
@@ -327,9 +357,16 @@ const Home = () => {
                       </div>
                       <div className="dashboard__charts-sales">
                         <LineChart
-                          title={t('home.total_sales_usd')}
-                          datasets={salesInUsd}
-                          backgroundColor="#c9732190"
+                          title={
+                            !isNaN(selectedDepartment) &&
+                            selectedDepartment > 0 &&
+                            departments.length > selectedDepartment - 1
+                              ? t('home.international_sales_kg_in') +
+                                ` ${departments[selectedDepartment - 1].name}`
+                              : t('home.international_sales_kg')
+                          }
+                          datasets={salesInKg}
+                          backgroundColor="#96451495"
                         />
                       </div>
                     </>
@@ -420,9 +457,21 @@ const Home = () => {
           <div className="dashboard__cards">
             <div className="dashboard__charts-production">
               {selectedDepartment >= 0 ? (
-                <AvailableBatchesTable batches={availableBatches} />
+                <AvailableBatchesTable
+                  batches={availableBatches}
+                  pagination={pagination}
+                  updatePagination={updatePagination}
+                  loading={loading}
+                  totalEntries={totalEntries}
+                />
               ) : (
-                <AvailableBatchesTable />
+                <AvailableBatchesTable
+                  batches={undefined}
+                  pagination={pagination}
+                  updatePagination={updatePagination}
+                  loading={loading}
+                  totalEntries={totalEntries}
+                />
               )}
             </div>
           </div>
