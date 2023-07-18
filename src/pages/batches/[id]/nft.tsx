@@ -42,7 +42,6 @@ const NFT = () => {
     async (code: string) => {
       try {
         const metadata = await getBatchOwnedNftMetadata(code);
-        console.log(metadata);
         if (metadata) {
           setNftModel(metadata);
         } else {

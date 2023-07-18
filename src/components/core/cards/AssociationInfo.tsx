@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 
+import { useMemo } from 'react';
+
 import { Grid } from '@mui/material';
 
 import { calculateYearsUntilPresent } from '@/util/format/date';
@@ -14,7 +16,12 @@ interface AssocProps {
 }
 
 const AssociationInfo = (props: AssocProps) => {
-  const { t } = useTranslation('translation');
+  const { t, i18n } = useTranslation('translation');
+  const currentLanguage = useMemo(() => {
+    return i18n.language === 'es' || i18n.language === 'en'
+      ? i18n.language
+      : 'en';
+  }, [i18n.language]);
   const router = useRouter();
 
   return (
@@ -64,7 +71,7 @@ const AssociationInfo = (props: AssocProps) => {
             </div>
           </div>
           <div className="info__description">
-            <p>{props.association.description}</p>
+            <p>{props.association.description[currentLanguage]}</p>
           </div>
           <div className="info__footer">
             <button

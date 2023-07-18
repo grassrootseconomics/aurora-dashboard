@@ -29,7 +29,7 @@ export default function AvailableBatches() {
   const { t } = useTranslation('translation');
   const [associations, setAssociations] = useState<Association[]>();
   const [selectedAssociation, setSelectedAssociation] = useState<number>(0);
-  const [availableWeight, setAvailableWeight] = useState<any>();
+  const [availableWeight, setAvailableWeight] = useState<number | undefined>();
   const [availableBatches, setAvailableBatches] = useState<
     BasicAvailableBatch[]
   >([]);
@@ -77,7 +77,7 @@ export default function AvailableBatches() {
   );
 
   const submitSearchBatchesByCode = useCallback(() => {
-    let assoc = '';
+    let assoc = undefined;
 
     if (associations && associations.length > 0) {
       if (selectedAssociation >= 1) {
@@ -137,12 +137,16 @@ export default function AvailableBatches() {
               loading={loading}
               alt={'Kilogram'}
             />
-            <button
-              className={'dashboard__download-button'}
-              onClick={downloadAvailableBatches}
-            >
-              {t('buttons.download_available_batches')}
-            </button>
+            {userRole === UserRole.association ? (
+              <button
+                className={'dashboard__download-button'}
+                onClick={downloadAvailableBatches}
+              >
+                {t('buttons.download_available_batches')}
+              </button>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
         <div className="dashboard__container-info">

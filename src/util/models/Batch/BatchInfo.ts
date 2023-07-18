@@ -1,5 +1,4 @@
 import { filterByMaxPropValue } from '@/util/arrays';
-import { calculateAverage } from '@/util/format/array';
 import { convertToSimpleDate } from '@/util/format/date';
 
 import { Batch } from './Batch';
@@ -58,12 +57,12 @@ export interface FermentationPhase {
   batchWeight: number;
   humidity: number;
   hoursDrained: number;
+  initialTemp: number;
+  roomTemp: number;
   nrFlips: number;
   totalDays: number;
   dailyReports: DailyReport[];
   flips: Flip[];
-  initialT: number;
-  roomT: number | null;
 }
 
 export interface PulpPhase {
@@ -88,8 +87,18 @@ export function mapToBatchInfo(source: Batch): BatchInfo {
     'totalPulpKg'
   );
 
+  const nrCocoaHa: number = source.pulpsUsed.reduce(
+    (accumulator, item) =>
+      accumulator + parseFloat(item.pulp.producer.nrCocoaHa.toString()),
+    0
+  );
+  const nrConservationHa: number = source.pulpsUsed.reduce(
+    (accumulator, item) =>
+      accumulator + parseFloat(item.pulp.producer.nrForestHa.toString()),
+    0
+  );
   const sumedTotalPulpKgs = pulps.reduce((acc, current) => {
-    return acc + current.totalPulpKg;
+    return acc + parseFloat(current.totalPulpKg.toString());
   }, 0);
 
   const BuyerBatchInfoDto: BatchInfo = {
@@ -139,10 +148,8 @@ export function mapToBatchInfo(source: Batch): BatchInfo {
       totalDays: source.fermentationPhase.totalDays,
       dailyReports: source.fermentationPhase.dailyReports,
       flips: source.fermentationPhase.flips,
-      initialT: source.fermentationPhase.dailyReports[0]?.temperatureMass,
-      roomT: calculateAverage(
-        source.fermentationPhase.dailyReports.map((d) => d.temperatureMass)
-      ),
+      initialTemp: source.fermentationPhase.initialTemp,
+      roomTemp: source.fermentationPhase.roomTemp,
     },
     pulpsPhase: {
       harvestingDate: largestPulp
@@ -157,14 +164,8 @@ export function mapToBatchInfo(source: Batch): BatchInfo {
     producersPhase: {
       noProducers: new Set(source.pulpsUsed.map((p) => p.pulp.codeProducer))
         .size,
-      cocoaHa: +source.pulpsUsed.reduce(
-        (accumulator, item) => accumulator + item.pulp.producer.nrCocoaHa,
-        ''
-      ),
-      conservationHa: +source.pulpsUsed.reduce(
-        (accumulator, item) => accumulator + item.pulp.producer.nrForestHa,
-        ''
-      ),
+      cocoaHa: nrCocoaHa,
+      conservationHa: nrConservationHa,
     },
   };
 

@@ -27,7 +27,6 @@ import {
   getProductionPerAssociationsGraph,
   getProductionPerRegionsGraph,
   getTotalPulpGraph,
-  getTotalSalesForBuyerGraph,
   getTotalSalesGraph,
   getTotalSalesKgGraph,
 } from '@/services/graphics';
@@ -51,8 +50,8 @@ const Home = () => {
   const [producersStats, setProducersStats] = useState<ProducersStatistics>();
   const [availableBatches, setAvailableBatches] = useState<any>(null);
   const [batchStatistics, setBatchStatistics] = useState<BatchStatistics>();
-  const [availableWeight, setAvailableWeight] = useState<any>();
-  const [soldBatches, setSoldBatches] = useState<any>(null);
+  const [availableWeight, setAvailableWeight] = useState<number | undefined>();
+  const [soldBatches, setSoldBatches] = useState<number | undefined>();
   const [salesInUsd, setSalesInUsd] = useState<Dataset[]>([]);
   const [salesInKg, setSalesInKg] = useState<Dataset[]>([]);
   const [priceCocoa, setPriceCocoa] = useState<Dataset[]>([]);
@@ -125,7 +124,9 @@ const Home = () => {
             : '',
           pagination
         ).then((data: any) => {
-          setSalesInUsd(getTotalSalesForBuyerGraph(data));
+          setSalesInKg(
+            getTotalSalesKgGraph(data.report.internationalSalesInKg)
+          );
           setProductionPerRegion(getProductionByOriginGraph(data));
           setAvailableBatches(
             data.searchBatchesResult.data.map(
@@ -356,9 +357,16 @@ const Home = () => {
                       </div>
                       <div className="dashboard__charts-sales">
                         <LineChart
-                          title={t('home.total_sales_usd')}
-                          datasets={salesInUsd}
-                          backgroundColor="#c9732190"
+                          title={
+                            !isNaN(selectedDepartment) &&
+                            selectedDepartment > 0 &&
+                            departments.length > selectedDepartment - 1
+                              ? t('home.international_sales_kg_in') +
+                                ` ${departments[selectedDepartment - 1].name}`
+                              : t('home.international_sales_kg')
+                          }
+                          datasets={salesInKg}
+                          backgroundColor="#96451495"
                         />
                       </div>
                     </>

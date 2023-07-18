@@ -24,7 +24,13 @@ const CardThree = (props: CardProps) => {
             <p>{props.text}</p>
           </div>
           <div className="card__number">
-            {props.loading ? <LoadingBox /> : props.number}
+            {props.loading ? (
+              <LoadingBox />
+            ) : props.number ? (
+              (Math.round(props.number * 100) / 100).toString()
+            ) : (
+              <></>
+            )}
           </div>
         </div>
         <Image

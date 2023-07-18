@@ -28,12 +28,12 @@ const ProducerActivityPage: FC = () => {
     if (!id) return;
     switch (userRole) {
       case UserRole.project:
-        getProducerActivity(+(id as string)).then((activity) => {
+        getProducerActivity(id as string).then((activity) => {
           setProducerActivity(activity);
         });
         return;
       case UserRole.association:
-        getProducerActivity(+(id as string)).then((activity) => {
+        getProducerActivity(id as string).then((activity) => {
           setProducerActivity(activity);
         });
         return;

@@ -29,7 +29,7 @@ export default function SoldBatches() {
   const { t } = useTranslation('translation');
   const [associations, setAssociations] = useState<Association[]>();
   const [selectedAssociation, setSelectedAssociation] = useState<number>(0);
-  const [soldWeight, setSoldWeight] = useState<any>();
+  const [soldWeight, setSoldWeight] = useState<number | undefined>();
   const [soldBatches, setSoldBatches] = useState<BasicSoldBatch[]>([]);
   const [salesKg, setSalesKg] = useState<Dataset[]>([]);
   const [salesUsd, setSalesUsd] = useState<Dataset[]>([]);
@@ -130,12 +130,16 @@ export default function SoldBatches() {
               loading={loading}
               alt={'Kilogram'}
             />
-            <button
-              className={'dashboard__download-button'}
-              onClick={downloadSoldBatches}
-            >
-              {t('buttons.download_sold_batches')}
-            </button>
+            {userRole === UserRole.association ? (
+              <button
+                className={'dashboard__download-button'}
+                onClick={downloadSoldBatches}
+              >
+                {t('buttons.download_sold_batches')}
+              </button>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
         <div className="dashboard__container-info">

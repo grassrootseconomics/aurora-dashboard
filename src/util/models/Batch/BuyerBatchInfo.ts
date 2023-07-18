@@ -1,5 +1,4 @@
 import { filterByMaxPropValue } from '@/util/arrays';
-import { calculateAverage } from '@/util/format/array';
 
 import { Association } from '../BasicAssociation';
 import { Batch } from './Batch';
@@ -56,6 +55,17 @@ export function mapToBuyerBatchInfo(source: Batch): BuyerBatchInfo {
     pulps,
     'totalPulpKg'
   );
+
+  const nrCocoaHa: number = source.pulpsUsed.reduce(
+    (accumulator, item) =>
+      accumulator + parseFloat(item.pulp.producer.nrCocoaHa.toString()),
+    0
+  );
+  const nrConservationHa: number = source.pulpsUsed.reduce(
+    (accumulator, item) =>
+      accumulator + parseFloat(item.pulp.producer.nrForestHa.toString()),
+    0
+  );
   const BuyerBatchInfoDto: BuyerBatchInfo = {
     id: source.id,
     code: source.code,
@@ -72,12 +82,8 @@ export function mapToBuyerBatchInfo(source: Batch): BuyerBatchInfo {
     fermentationPhase: {
       genetics: source.fermentationPhase.genetics,
       brixDegrees: source.fermentationPhase.brixDegrees,
-      initialT: source.fermentationPhase.dailyReports
-        ? source.fermentationPhase.dailyReports[0]?.temperatureMass ?? 0
-        : 0,
-      roomT: calculateAverage(
-        source.fermentationPhase.dailyReports.map((r) => +r.temperatureMass)
-      ),
+      initialT: source.fermentationPhase.initialTemp,
+      roomT: source.fermentationPhase.roomTemp,
       humidity: source.fermentationPhase.humidity,
       hoursDrained: source.fermentationPhase.hoursDrained,
       nrFlips: source.fermentationPhase.nrFlips,
@@ -90,14 +96,8 @@ export function mapToBuyerBatchInfo(source: Batch): BuyerBatchInfo {
     producersPhase: {
       noProducers: new Set(source.pulpsUsed.map((p) => p.pulp.codeProducer))
         .size,
-      cocoaHa: +source.pulpsUsed.reduce(
-        (accumulator, item) => accumulator + item.pulp.producer.nrCocoaHa,
-        ''
-      ),
-      conservationHa: +source.pulpsUsed.reduce(
-        (accumulator, item) => accumulator + item.pulp.producer.nrForestHa,
-        ''
-      ),
+      cocoaHa: nrCocoaHa,
+      conservationHa: nrConservationHa,
     },
     association: source.pulpsUsed
       ? source.pulpsUsed[0].pulp.producer.association

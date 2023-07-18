@@ -45,6 +45,8 @@
         "production_of_dry_cocoa": "Production of Dry Cocoa",
         "cocoa_pulp_collected": "Cocoa pulp collected",
         "sales_kg": "Sales in Kg",
+        "international_sales_kg": "International Sales in Kg",
+        "international_sales_kg_in": "Ventas Internacionales en Kg in",
         "usd_price_organic_cocoa": "USD price of organic cocoa",
         "usd_price": "USD price",
         "total_sales_usd": "Total sales in USD",

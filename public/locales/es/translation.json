@@ -45,6 +45,8 @@
         "production_of_dry_cocoa": "Producción de Cacao Seco",
         "cocoa_pulp_collected": "Cocoa en Baba Recolectado",
         "sales_kg": "Ventas en Kg",
+        "international_sales_kg": "Ventas Internacionales en Kg",
+        "international_sales_kg_in": "Ventas Internacionales en Kg en",
         "usd_price_organic_cocoa": "Precio en USD de cacao orgánico",
         "usd_price": "Precio en USD",
         "total_sales_usd": "Ventas Totales en USD",
