@@ -37,12 +37,12 @@ const ColombiaMap: React.FC = () => {
       if (window.innerWidth < 1280) {
         setProjection({
           scale: 2060,
-          rotate: [72.5, -3.4, -20],
+          rotate: [73, -4.1, 0],
         });
       } else {
         setProjection({
           scale: 1760,
-          rotate: [73.5, -4.5, -20],
+          rotate: [73, -5.4, 0],
         });
       }
     };
@@ -99,7 +99,6 @@ const ColombiaMap: React.FC = () => {
         className={`map-tooltip map-tooltip--caqueta ${
           hasCaquetaClass ? 'opacity' : ''
         }`}
-        style={{ right: '100px' }}
       >
         <h2>{t('regions_colombia.regions.Caqueta.header')}</h2>
         <p>{t('regions_colombia.regions.Caqueta.description')}</p>
