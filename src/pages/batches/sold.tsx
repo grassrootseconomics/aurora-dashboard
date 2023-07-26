@@ -2,8 +2,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 
-import React, { useEffect, useState } from 'react';
-import { saveAs } from 'file-saver';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { Tab, Tabs } from '@mui/material';
 
@@ -23,18 +22,24 @@ import { UserRole } from '@/util/constants/users';
 import { Association } from '@/util/models/BasicAssociation';
 import { BasicSoldBatch } from '@/util/models/Batch/BasicSoldBatch';
 import { Dataset } from '@/util/models/Dataset';
+import { PaginationOptions } from '@/util/models/Pagination';
+import { saveAs } from 'file-saver';
 
 export default function SoldBatches() {
   const { t } = useTranslation('translation');
   const [associations, setAssociations] = useState<Association[]>();
   const [selectedAssociation, setSelectedAssociation] = useState<number>(0);
-  const [soldWeight, setSoldWeight] = useState<any>();
+  const [soldWeight, setSoldWeight] = useState<number | undefined>();
   const [soldBatches, setSoldBatches] = useState<BasicSoldBatch[]>([]);
-  const [initialSoldBatches, setInitialSoldBatches] = useState<BasicSoldBatch[]>([]);
   const [salesKg, setSalesKg] = useState<Dataset[]>([]);
   const [salesUsd, setSalesUsd] = useState<Dataset[]>([]);
+  const [pagination, setPagination] = useState<PaginationOptions>({
+    index: 0,
+    limit: 10,
+  });
+  const [totalEntries, setTotalEntries] = useState(0);
   const { userRole } = useUserAuthContext();
-  const [batchCodeSearch, setBatchCodeSearch] = useState<string>("");
+  const [batchCodeSearch, setBatchCodeSearch] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -43,20 +48,52 @@ export default function SoldBatches() {
   };
 
   const setSearchValue = (event: any) => {
-    setBatchCodeSearch(event.target.value)
-  }
+    setBatchCodeSearch(event.target.value);
+  };
 
   const downloadSoldBatches = async () => {
     try {
       const response = await downloadBatchesInExcel(true);
 
       // Save the Blob response as a file using FileSaver.js
-      saveAs(response.data, "Available Batches");
+      saveAs(response.data, 'Available Batches');
     } catch (err) {
       console.error(err);
     }
   };
-  
+
+  const updatePagination = useCallback(
+    (newOptions: PaginationOptions) => {
+      setPagination(newOptions);
+    },
+    [setPagination]
+  );
+
+  const submitSearchBatchesByCode = useCallback(() => {
+    let assoc = '';
+
+    if (associations && associations.length > 0) {
+      if (selectedAssociation >= 1) {
+        assoc = associations[selectedAssociation - 1].name;
+      }
+    }
+    setLoading(true);
+    getSoldBatches(batchCodeSearch, assoc, pagination).then((data) => {
+      setSoldBatches(data.searchBatchesResult.data);
+      setSoldWeight(data.kgDryCocoaSold);
+      setSalesUsd(getTotalSalesGeneralGraph(data.monthlySalesInUSD));
+      setSalesKg(getTotalSalesKgGraph(data.salesInKg));
+      setTotalEntries(data.searchBatchesResult.totalEntries);
+      setLoading(false);
+    });
+  }, [
+    associations,
+    batchCodeSearch,
+    selectedAssociation,
+    setLoading,
+    pagination,
+  ]);
+
   useEffect(() => {
     if (userRole && userRole === 'buyer') {
       router.push('/');
@@ -64,46 +101,14 @@ export default function SoldBatches() {
   }, [userRole, router]);
 
   useEffect(() => {
-    if (userRole)
-      switch (userRole) {
-        case UserRole.project:
-          getAssociations().then((assocs) => setAssociations(assocs));
-          if (associations && selectedAssociation >= 1) {
-            getSoldBatches(associations[selectedAssociation - 1].name).then(
-              (data) => {
-                setSoldBatches(data.basicBatches);
-                setSoldWeight(data.kgDryCocoaSold);
-                setSalesUsd(getTotalSalesGeneralGraph(data.monthlySalesInUSD));
-                setSalesKg(getTotalSalesKgGraph(data.salesInKg));
-                setLoading(false);
-              }
-            );
-          } else if (associations && selectedAssociation == 0) {
-            getSoldBatches().then((data) => {
-              setSoldBatches(data.basicBatches);
-              setSoldWeight(data.kgDryCocoaSold);
-              setSalesUsd(getTotalSalesGeneralGraph(data.monthlySalesInUSD));
-              setSalesKg(getTotalSalesKgGraph(data.salesInKg));
-              setLoading(false);
-            });
-          }
-          return;
-        case UserRole.association:
-          getSoldBatches().then((data) => {
-            setSoldBatches(data.basicBatches.filter((b : BasicSoldBatch) => b.batch.includes(batchCodeSearch)));
-            setInitialSoldBatches(data.basicBatches);
-            setSoldWeight(data.kgDryCocoaSold);
-            setSalesUsd(getTotalSalesGeneralGraph(data.monthlySalesInUSD));
-            setSalesKg(getTotalSalesKgGraph(data.salesInKg));
-            setLoading(false);
-          });
-          return;
-      }
-  }, [userRole, associations, selectedAssociation]);
+    if (userRole && userRole === UserRole.project) {
+      getAssociations().then((assocs) => setAssociations(assocs));
+    }
+  }, [userRole]);
 
   useEffect(() => {
-    setSoldBatches(initialSoldBatches.filter(b => b.batch.includes(batchCodeSearch)))
-  }, [batchCodeSearch])
+    if (userRole && userRole !== UserRole.buyer) submitSearchBatchesByCode();
+  }, [selectedAssociation, userRole, pagination]);
 
   return (
     <>
@@ -125,13 +130,37 @@ export default function SoldBatches() {
               loading={loading}
               alt={'Kilogram'}
             />
-            <button className={"dashboard__download-button"} onClick={downloadSoldBatches}>{t("buttons.download_sold_batches")}</button>
+            {userRole === UserRole.association ? (
+              <button
+                className={'dashboard__download-button'}
+                onClick={downloadSoldBatches}
+              >
+                {t('buttons.download_sold_batches')}
+              </button>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
         <div className="dashboard__container-info">
-          <div style={{display: "flex", justifyContent: "flex-end"}}>
-            <input className="dashboard__search" type="text" placeholder={t("search") ?? ""} onChange={setSearchValue}/>
-          </div>
+          {userRole === UserRole.association ? (
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <input
+                className="dashboard__search"
+                type="text"
+                placeholder={t('search') ?? ''}
+                onChange={setSearchValue}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' && !loading) {
+                    submitSearchBatchesByCode();
+                  }
+                }}
+              />
+            </div>
+          ) : (
+            ''
+          )}
+
           {associations && userRole == UserRole.project ? (
             <Tabs
               value={selectedAssociation}
@@ -146,7 +175,11 @@ export default function SoldBatches() {
               scrollButtons="auto"
               aria-label="scrollable auto tabs example"
             >
-              <Tab key={-1} label={t("home.all")} style={{ marginBottom: 10 }} />
+              <Tab
+                key={-1}
+                label={t('home.all')}
+                style={{ marginBottom: 10 }}
+              />
               {associations.map((item, index) => (
                 <Tab
                   key={index}
@@ -160,7 +193,13 @@ export default function SoldBatches() {
           )}
           <div className="dashboard__cards">
             <div className="dashboard__charts-production">
-              <SoldBatchesTable batches={soldBatches} />
+              <SoldBatchesTable
+                batches={soldBatches}
+                updatePagination={updatePagination}
+                pagination={pagination}
+                loading={loading}
+                totalEntries={totalEntries}
+              />
             </div>
           </div>
           <div className="dashboard__charts">

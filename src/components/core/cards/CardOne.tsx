@@ -27,7 +27,13 @@ const CardOne = (props: CardProps) => {
           alt={props.alt}
         />
         <div className="card__number">
-          {props.loading ? <LoadingBox /> : props.number}
+          {props.loading ? (
+            <LoadingBox />
+          ) : props.number ? (
+            (Math.round(props.number * 100) / 100).toString()
+          ) : (
+            <></>
+          )}
         </div>
       </div>
       <div className="card__description">

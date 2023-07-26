@@ -4,7 +4,7 @@
     "number_women": "Número de mujeres",
     "ha_forest_conservation": "Hectáreas de conservación de bosque",
     "dry_cocoa_available": "Kilos de cacao seco disponibles",
-    "sold_international_market": "Vendidos al Mercado Europeo",
+    "sold_international_market": "Vendidos al Mercado Internacional",
     "batch": "Bache",
     "buyer": "Comprador",
     "destination_country": "País de Destino",
@@ -17,7 +17,7 @@
     "humidity": "% de Humedad",
     "grain_index": "Índice del grano",
     "general_sensory_profile": "Caracterización Sensorial General",
-    "cocoa_pulp_collected": "Cocoa em Baba Recolectado",
+    "cocoa_pulp_collected": "Cocoa en Baba Recolectado",
     "dry_cocoa_production": "Producción de Cacao Seco",
     "search": "Buscar",
     "months": {
@@ -43,8 +43,10 @@
         "production_by_association": "Producción por Asociaciones",
         "production_by_region": "Producción por Regiones",
         "production_of_dry_cocoa": "Producción de Cacao Seco",
-        "cocoa_pulp_collected": "Cocoa em Baba Recolectado",
+        "cocoa_pulp_collected": "Cocoa en Baba Recolectado",
         "sales_kg": "Ventas en Kg",
+        "international_sales_kg": "Ventas Internacionales en Kg",
+        "international_sales_kg_in": "Ventas Internacionales en Kg en",
         "usd_price_organic_cocoa": "Precio en USD de cacao orgánico",
         "usd_price": "Precio en USD",
         "total_sales_usd": "Ventas Totales en USD",
@@ -55,9 +57,7 @@
     "sales": {
         "total_sales_kg": "Ventas Totales en Kg"
     },
-    "available": {
-
-    },
+    "available": {},
     "single_batch": {
         "stages": {
             "sales": "Venta",
@@ -84,9 +84,9 @@
         "total_fermentation_days": "Días totales de fermentación:",
         "cocoa_quality": "Calidad del cacao:",
         "cocoa_status": "Estado del cacao:",
-        "no_producers_batch": "de productores que conforman el bache",
-        "no_cocoa_hectares": "de hectáreas de cacao",
-        "conservation_hectares": "de hectáreas de conservación",
+        "no_producers_batch": "Productores que conforman el bache:",
+        "no_cocoa_hectares": "Hectáreas de cacao:",
+        "conservation_hectares": "Hectáreas de conservación:",
         "day_went_storage": "Día que ingresó a almacenamiento:",
         "batch_sensory_profile": "Perfil sensorial del bache:",
         "batch_score": "Puntaje del bache:",
@@ -124,7 +124,7 @@
         "phone_number": "Número de teléfono",
         "gender": "Género",
         "male": "Hombre",
-        "female": "Mujere",
+        "female": "Mujer",
         "other": "Otra",
         "year_birth": "Fecha de nacimiento",
         "department": "Departamento",
@@ -186,7 +186,7 @@
         "save": "Guardar",
         "cancel_edit": "Cancelar Editar",
         "start_edit": "Empezar Editar",
-        "close": "Cerca",
+        "close": "Cerrar",
         "delete": "Borrar",
         "download_available_batches": "Descargar Información de baches disponibles",
         "download_sold_batches": "Descargar Información de baches vendidos",
@@ -212,7 +212,7 @@
             "temp": "T° temp:",
             "roomt_t": "T° ambiente:",
             "humidity": "Humedad relativa:"
-        }, 
+        },
         "pulp": {
             "add_title": "Agregar Pulpa",
             "edit_title": "Editar Pulpa",
@@ -252,7 +252,19 @@
             "title": "Establecer Próxima cosecha"
         }
     },
-    "regions_colombia": "Regiones en Colombia",
+    "regions_colombia": {
+        "title": "Regiones en Colombia",
+        "regions": {
+            "Caqueta": {
+                "header": "Caquetá",
+                "description": "Caquetá es un departamento ubicado en la región amazónica, se caracteriza por un ecosistema de selva tropical, alta humedad, oferta hídrica abundante, diversidad de flora y fauna, fertilidad del suelo, especialmente aquellos que descienden de la cordillera oriental. En la última década, el departamento ha tenido una transformación productiva, en donde en la actualidad se prioriza la actividad agrícola, incluyendo en esta variedad, al cacao. Para el 2022, Caquetá se posiciona como un departamento encargado del 75% de la producción de cacao del piedemonte amazónico, alrededor de 500 familias están involucradas, produciendo 768 toneladas anuales. Al ser un fruto de origen amazónico, Caquetá aporta en sus características ancestrales, resaltando los sabores de la región. Su producción ha reemplazado la deforestación y los cultivos de uso ilícito, lo cual ha promovido el desarrollo económico con comercio responsable y sostenible que contribuye a la reforestación, seguridad alimentaria y persistencia de sabores tradicionales. El cacao de esta región suele tener un perfil con acidez láctica y frutal, complementado con sabores a bayas, pulpa amarilla y caramelo."
+            },
+            "Huila": {
+                "header": "Huila",
+                "description": "El departamento del Huila tiene una ubicación estratégica, entre la cordillera central y oriental e incluyendo el valle del río magdalena, lo cual contribuye a la gran biodiversidad dentro del mismo. La presencia de diferentes pisos térmicos y tipos de suelos, conllevan a un considerable flujo de nutrientes y dan paso a la diversidad de ecosistemas. Esto ha generado gran interés en la producción agrícola del departamento, ya que históricamente ha sido una zona que se caracteriza por la producción de diversos alimentos y con el tiempo se han desarrollado estrategias para potenciar los cultivos. Uno de los productos destacados es el cacao, el cual hace parte de la región desde las comunidades precolombinas hasta hoy, y es cultivado en 35 de los 37 municipios de Huila por más de 3,300 familias. Esto lleva a que Huila esté dentro de los 4 departamentos con mayor producción de cacao, aportando un aproximado de 7% anual del país. En el 2020 se registraron 4,197 toneladas de cacao cultivadas en 7000 ha. La producción de cacao ha sido una alternativa económica importante para los campesinos, quienes han reemplazado los cultivos de uso ilícito por un producto que ha abierto sus puertas ante un comercio responsable y desarrollo económico en el departamento y con compradores internacionales. El cacao de esta región se caracteriza por tener un sabor dominante de cacao y nuez, con acidez acética que se mezcla con atributos de frutos secos."
+            }
+        }
+    },
     "about": {
         "title": "¿Qué es el proyecto Aurora?",
         "subtitle_main": "Estrategia de empalme generacional para el incremento del mercado de cacao sostenible para cinco asociaciones en los departamentos de",
@@ -261,12 +273,11 @@
         "objective_title": "Objetivos específicos",
         "sentence_1": "Mejorar la infraestructura comunitaria en aseguramiento de calidad y adaptación a impactos ambientales.",
         "sentence_2": "Vincular a jóvenes y mujeres en procesos de capacitación continua, cooperación horizontal entre organizaciones y construcción de nuevos conocimientos.",
-        "sentence_3": "Implementar una estrategia para la ampliación de canales de comercio diferencia de cacao."
+        "sentence_3": "Implementar una estrategia para la ampliación de canales de comercio diferencial de cacao."
     },
     "footer": {
         "operated_by": "Operado por",
-        "funded_by": "Financiado por",
-        "powered_by": "Blockchain Energizado por"
+        "funded_by": "Financiado por"
     },
     "nft": {
         "assoc_title": "DATOS DE LA ASOCIACIÓN",

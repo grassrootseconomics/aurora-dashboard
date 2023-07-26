@@ -1,9 +1,9 @@
 export interface Association {
-    id: number;
-    name: string;
-    creationDate: string;
-    description: string;
-    nrOfAssociates: number;
-    fbSocialLink: string;
-    instSocialLink: string;
+  id: number;
+  name: string;
+  creationDate: string;
+  description: { en: string; es: string };
+  nrOfAssociates: number;
+  fbSocialLink: string;
+  instSocialLink: string;
 }

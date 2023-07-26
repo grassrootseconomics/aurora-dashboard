@@ -2,8 +2,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 
-import React, { useEffect, useState } from 'react';
-import { saveAs } from 'file-saver';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { Tab, Tabs } from '@mui/material';
 
@@ -23,21 +22,29 @@ import { UserRole } from '@/util/constants/users';
 import { Association } from '@/util/models/BasicAssociation';
 import { BasicAvailableBatch } from '@/util/models/Batch/BasicAvailableBatch';
 import { Dataset } from '@/util/models/Dataset';
+import { PaginationOptions } from '@/util/models/Pagination';
+import { saveAs } from 'file-saver';
 
 export default function AvailableBatches() {
   const { t } = useTranslation('translation');
   const [associations, setAssociations] = useState<Association[]>();
   const [selectedAssociation, setSelectedAssociation] = useState<number>(0);
-  const [availableWeight, setAvailableWeight] = useState<any>();
+  const [availableWeight, setAvailableWeight] = useState<number | undefined>();
   const [availableBatches, setAvailableBatches] = useState<
     BasicAvailableBatch[]
   >([]);
-  const [initialAvailableBatches, setInitialAvailableBatches] = useState<
-    BasicAvailableBatch[]
-  >([]);
+  const [pagination, setPagination] = useState<PaginationOptions>({
+    index: 0,
+    limit: 5,
+  });
+  const [totalEntries, setTotalEntries] = useState(0);
+
+  // const [initialAvailableBatches, setInitialAvailableBatches] = useState<
+  //   BasicAvailableBatch[]
+  // >([]);
   const [totalPulpCollected, setTotalPulpCollected] = useState<Dataset[]>([]);
   const [dryCocoaProduction, setDryCocoaProduction] = useState<Dataset[]>();
-  const [batchCodeSearch, setBatchCodeSearch] = useState<string>("");
+  const [batchCodeSearch, setBatchCodeSearch] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const { userRole } = useUserAuthContext();
 
@@ -48,19 +55,51 @@ export default function AvailableBatches() {
   };
 
   const setSearchValue = (event: any) => {
-    setBatchCodeSearch(event.target.value)
-  }
+    setBatchCodeSearch(event.target.value);
+  };
 
   const downloadAvailableBatches = async () => {
     try {
       const response = await downloadBatchesInExcel(false);
 
       // Save the Blob response as a file using FileSaver.js
-      saveAs(response.data, "Available Batches");
+      saveAs(response.data, 'Available Batches');
     } catch (err) {
       console.error(err);
     }
   };
+
+  const updatePagination = useCallback(
+    (newOptions: PaginationOptions) => {
+      setPagination(newOptions);
+    },
+    [setPagination]
+  );
+
+  const submitSearchBatchesByCode = useCallback(() => {
+    let assoc = undefined;
+
+    if (associations && associations.length > 0) {
+      if (selectedAssociation >= 1) {
+        assoc = associations[selectedAssociation - 1].name;
+      }
+    }
+    setLoading(true);
+    getAvailableBatches(batchCodeSearch, assoc, pagination).then((data) => {
+      setAvailableBatches(data.searchBatchesResult.data);
+      setAvailableWeight(data.kgDryCocoaAvailable);
+      setDryCocoaProduction(getProductionOfDryCocoa(data.productionOfDryCocoa));
+      setTotalPulpCollected(getTotalPulpGraph(data.monthlyCocoaPulp));
+      setTotalEntries(data.searchBatchesResult.totalEntries);
+      setLoading(false);
+    });
+  }, [
+    associations,
+    batchCodeSearch,
+    selectedAssociation,
+    setLoading,
+    pagination,
+  ]);
 
   useEffect(() => {
     if (userRole && userRole === 'buyer') {
@@ -69,53 +108,14 @@ export default function AvailableBatches() {
   }, [userRole, router]);
 
   useEffect(() => {
-    if (userRole)
-      switch (userRole) {
-        case UserRole.project:
-          getAssociations().then((assocs) => setAssociations(assocs));
-          if (associations && selectedAssociation >= 1) {
-            getAvailableBatches(
-              associations[selectedAssociation - 1].name
-            ).then((data) => {
-              setAvailableBatches(data.basicBatches);
-              setAvailableWeight(data.kgDryCocoaAvailable);
-              setDryCocoaProduction(
-                getProductionOfDryCocoa(data.productionOfDryCocoa)
-              );
-              setTotalPulpCollected(getTotalPulpGraph(data.monthlyCocoaPulp));
-              setLoading(false);
-            });
-          } else if (associations && selectedAssociation == 0) {
-            getAvailableBatches().then((data) => {
-              setAvailableBatches(data.basicBatches);
-              setAvailableWeight(data.kgDryCocoaAvailable);
-              setDryCocoaProduction(
-                getProductionOfDryCocoa(data.productionOfDryCocoa)
-              );
-              setTotalPulpCollected(getTotalPulpGraph(data.monthlyCocoaPulp));
-              setLoading(false);
-            });
-          }
-          return;
-        case UserRole.association:
-          getAvailableBatches().then((data) => {
-            setAvailableBatches(data.basicBatches);
-            setInitialAvailableBatches(data.basicBatches);
-            setAvailableWeight(data.kgDryCocoaAvailable);
-            setDryCocoaProduction(
-              getProductionOfDryCocoa(data.productionOfDryCocoa)
-            );
-            setTotalPulpCollected(getTotalPulpGraph(data.monthlyCocoaPulp));
-            setLoading(false);
-          });
-          return;
-      }
-  }, [userRole, associations, selectedAssociation]);
-
+    if (userRole && userRole === UserRole.project) {
+      getAssociations().then((assocs) => setAssociations(assocs));
+    }
+  }, [userRole]);
 
   useEffect(() => {
-    setAvailableBatches(initialAvailableBatches.filter(b => b.batch.includes(batchCodeSearch)))
-  }, [batchCodeSearch])
+    if (userRole && userRole !== UserRole.buyer) submitSearchBatchesByCode();
+  }, [selectedAssociation, userRole, pagination]);
 
   return (
     <>
@@ -137,13 +137,36 @@ export default function AvailableBatches() {
               loading={loading}
               alt={'Kilogram'}
             />
-            <button className={"dashboard__download-button"} onClick={downloadAvailableBatches}>{t("buttons.download_available_batches")}</button>
+            {userRole === UserRole.association ? (
+              <button
+                className={'dashboard__download-button'}
+                onClick={downloadAvailableBatches}
+              >
+                {t('buttons.download_available_batches')}
+              </button>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
         <div className="dashboard__container-info">
-          <div style={{display: "flex", justifyContent: "flex-end"}}>
-            <input className="dashboard__search" type="text" placeholder={t("search") ?? ""} onChange={setSearchValue}/>
-          </div>
+          {userRole === UserRole.association ? (
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <input
+                className="dashboard__search"
+                type="text"
+                placeholder={t('search') ?? ''}
+                onChange={setSearchValue}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' && !loading) {
+                    submitSearchBatchesByCode();
+                  }
+                }}
+              />
+            </div>
+          ) : (
+            ''
+          )}
           {associations && userRole == UserRole.project ? (
             <Tabs
               value={selectedAssociation}
@@ -158,7 +181,11 @@ export default function AvailableBatches() {
               scrollButtons="auto"
               aria-label="scrollable auto tabs example"
             >
-              <Tab key={-1} label={t("home.all")} style={{ marginBottom: 10 }} />
+              <Tab
+                key={-1}
+                label={t('home.all')}
+                style={{ marginBottom: 10 }}
+              />
               {associations.map((item, index) => (
                 <Tab
                   key={index}
@@ -173,7 +200,13 @@ export default function AvailableBatches() {
           <div className="dashboard__cards">
             <div className="dashboard__charts-production">
               {availableBatches ? (
-                <AvailableBatchesTable batches={availableBatches} />
+                <AvailableBatchesTable
+                  batches={availableBatches}
+                  updatePagination={updatePagination}
+                  pagination={pagination}
+                  loading={loading}
+                  totalEntries={totalEntries}
+                />
               ) : (
                 ''
               )}

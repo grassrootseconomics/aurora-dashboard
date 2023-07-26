@@ -13,8 +13,18 @@ interface Association {
   nrOfAssociates: number;
   nrOfWomen: number;
   nrOfYoungPeople: number;
-  regionInformationL: string;
-  story: string;
+  regionInformation:
+    | {
+        en: string;
+        es: string;
+      }
+    | string;
+  story:
+    | {
+        en: string;
+        es: string;
+      }
+    | string;
   town: string;
   yearsOfExistence: number;
 }
@@ -28,7 +38,12 @@ interface Batch {
   grainIndex: number;
   humidityPercentage: number;
   processingDate: string;
-  sensoryProfile: string;
+  sensoryProfile:
+    | {
+        en: string;
+        es: string;
+      }
+    | string;
   totalNetWeight: number;
   score: number;
 }
