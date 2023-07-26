@@ -48,7 +48,6 @@ const HarvestingModal: FC<HarvestingModalProps> = ({ open, onClose }) => {
   }, []);
 
   const handleIdDepartmentChange = (selectedOption: any) => {
-    console.log(selectedOption);
     // Perform any necessary logic here based on the selectedOption
 
     // Update the value of nextHarvest field
