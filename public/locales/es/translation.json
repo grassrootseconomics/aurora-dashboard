@@ -59,6 +59,27 @@
     },
     "available": {},
     "single_batch": {
+        "cacao_genetic": {
+            "hybrid": "híbrido",
+            "aromatic": "aromático",
+            "CCN_TSH": "CCN_TSH",
+            "mixed": "mezcla"
+        },
+        "cacao_quality": {
+            "healthy": "sano",
+            "partialy-germinated": "parcialmente germinado",
+            "partialy-deceased": "parcialmente enfermo"
+        },
+        "cacao_status": {
+            "Organic": "Orgánico",
+            "Transitional": "Transicional",
+            "Conventional": "Convencional"
+        },
+        "cacao_type": {
+            "Organic": "Orgánico",
+            "Special": "Especial",
+            "Customized": "Personalizado"
+        },
         "stages": {
             "sales": "Venta",
             "storage": "Almacenamiento",
@@ -276,7 +297,7 @@
         "sentence_3": "Implementar una estrategia para la ampliación de canales de comercio diferencial de cacao."
     },
     "footer": {
-        "operated_by": "Operado por",
+        "operated_by": "Diseñado por",
         "funded_by": "Financiado por"
     },
     "nft": {

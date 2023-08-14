@@ -814,7 +814,7 @@ button {
     &__container {
         display: flex;
         justify-content: flex-end;
-        max-width: 1600px;
+        max-width: 1640px;
         margin: 0 auto;
 
         &_item {
@@ -996,10 +996,9 @@ button {
             &_item {
                 margin-right: 0;
                 font-size: 18px;
-                margin-top: 15px;
 
                 img {
-                    max-height: 45px;
+                    max-height: 50px;
                     width: auto;
                 }
             }

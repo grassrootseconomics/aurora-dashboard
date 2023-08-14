@@ -59,6 +59,27 @@
     },
     "available": {},
     "single_batch": {
+        "cacao_genetic": {
+            "hybrid": "hybrid",
+            "aromatic": "aromatic",
+            "CCN_TSH": "CCN_TSH",
+            "mixed": "mixed"
+        },
+        "cacao_quality": {
+            "healthy": "healthy",
+            "partialy-germinated": "partialy-germinated",
+            "partialy-deceased": "partialy-deceased"
+        },
+        "cacao_status": {
+            "Organic": "Organic",
+            "Transitional": "Transitional",
+            "Conventional": "Conventional"
+        },
+        "cacao_type": {
+            "Organic": "Organic",
+            "Special": "Special",
+            "Customized": "Customized"
+        },
         "stages": {
             "sales": "Sales",
             "storage": "Storage",
@@ -276,7 +297,7 @@
         "sentence_3": "Implement a strategy to expand cocoa differential trade channels."
     },
     "footer": {
-        "operated_by": "Operated by",
+        "operated_by": "Designed by",
         "funded_by": "Funded by"
     },
     "nft": {

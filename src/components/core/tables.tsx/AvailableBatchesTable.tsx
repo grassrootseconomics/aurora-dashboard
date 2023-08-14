@@ -201,7 +201,11 @@ const AvailableBatchesTable = () => {
                 </TableCell>
                 <TableCell align="center">{row.batch}</TableCell>
                 <TableCell align="center">{row.totalWeight}</TableCell>
-                <TableCell align="center">{row.cocoaType}</TableCell>
+                <TableCell align="center">
+                  {t(`single_batch.cacao_type.${row.cocoaType}`)
+                    .split('.')
+                    .pop()}
+                </TableCell>
                 <TableCell align="center">
                   {row.processingDate.toLocaleDateString()}
                 </TableCell>

@@ -148,7 +148,11 @@ const AvailableBatchesTable: FC<Props> = ({
                     </div>
                   </TableCell>
                   <TableCell align="center">
-                    <div className="table__cell-container">{row.cocoaType}</div>
+                    <div className="table__cell-container">
+                      {t(`single_batch.cacao_type.${row.cocoaType}`)
+                        .split('.')
+                        .pop()}
+                    </div>
                   </TableCell>
                   <TableCell align="center">
                     <div className="table__cell-container">

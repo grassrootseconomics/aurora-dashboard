@@ -15,7 +15,7 @@ const Footer: FC = () => {
           <Image
             width={270}
             height={60}
-            src="/assets/logos/GIZ.png"
+            src="/assets/logos/GIZ2.png"
             alt="GIZ Logo"
           />
         </div>
@@ -23,7 +23,7 @@ const Footer: FC = () => {
           <p>{t('footer.operated_by')}:</p>
           <Image
             width={100}
-            height={40}
+            height={50}
             src="/assets/logos/insitu.png"
             alt="Insitu Logo"
           />

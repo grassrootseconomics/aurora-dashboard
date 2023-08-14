@@ -205,7 +205,11 @@ const SoldBatchesTable = () => {
                 <TableCell align="center">{row.pricePerKg}</TableCell>
                 <TableCell align="center">{row.totalPrice}</TableCell>
                 <TableCell align="center">{row.negociationTerms}</TableCell>
-                <TableCell align="center">{row.cocoaType}</TableCell>
+                <TableCell align="center">
+                  {t(`single_batch.cacao_type.${row.cocoaType}`)
+                    .split('.')
+                    .pop()}
+                </TableCell>
               </TableRow>
             ))
           ) : (

@@ -21,7 +21,7 @@ const CardTwo = (props: CardProps) => {
         <div className="card__number">
           {props.loading ? (
             <LoadingBox />
-          ) : props.number ? (
+          ) : props.number !== undefined ? (
             (Math.round(props.number * 100) / 100).toString()
           ) : (
             <></>
