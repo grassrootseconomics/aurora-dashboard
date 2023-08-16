@@ -1,8 +1,6 @@
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 
-import { useEffect } from 'react';
-
 interface StageProps {
   stats: number[];
   editMode: boolean;
@@ -14,8 +12,6 @@ interface StageProps {
 const FermentationStage = (props: StageProps) => {
   const { t } = useTranslation('translation');
   const router = useRouter();
-
-  useEffect(() => {}, props.stats);
 
   function updateFields(event: any, index: number) {
     props.stats[index] = event.target.value;

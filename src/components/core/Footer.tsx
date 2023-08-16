@@ -14,9 +14,10 @@ const Footer: FC = () => {
           <p>{t('footer.funded_by')}:</p>
           <Image
             width={270}
-            height={60}
-            src="/assets/logos/GIZ2.png"
+            height={80}
+            src="/assets/logos/GIZ.jpg"
             alt="GIZ Logo"
+            className="footer__container_item_logo footer__container_item_GIZ_logo"
           />
         </div>
         <div className="footer__container_item">
@@ -26,6 +27,7 @@ const Footer: FC = () => {
             height={50}
             src="/assets/logos/insitu.png"
             alt="Insitu Logo"
+            className="footer__container_item_logo"
           />
         </div>
         <div className="footer__container_item">
@@ -36,6 +38,7 @@ const Footer: FC = () => {
               height={30}
               src="/assets/logos/choco4Peace.png"
               alt="Choco4Peace"
+              className="footer__container_item_logo"
             />
           </Link>
           <Link target="_blank" href="https://www.grassrootseconomics.org">
@@ -44,6 +47,7 @@ const Footer: FC = () => {
               height={30}
               src="/assets/logos/grassroots-economics.png"
               alt="Grassroots Economics"
+              className="footer__container_item_logo"
             />
           </Link>
           <Link target="_blank" href="https://astralitech.com">
@@ -52,6 +56,7 @@ const Footer: FC = () => {
               height={40}
               src="/assets/logos/astrali.png"
               alt="Astrali"
+              className="footer__container_item_logo"
             />
           </Link>
         </div>

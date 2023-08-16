@@ -60,15 +60,15 @@
     "available": {},
     "single_batch": {
         "cacao_genetic": {
-            "hybrid": "hybrid",
-            "aromatic": "aromatic",
+            "hybrid": "Hybrid",
+            "aromatic": "Aromatic",
             "CCN_TSH": "CCN_TSH",
-            "mixed": "mixed"
+            "mixed": "Mixed"
         },
         "cacao_quality": {
-            "healthy": "healthy",
-            "partialy-germinated": "partialy-germinated",
-            "partialy-deceased": "partialy-deceased"
+            "healthy": "Healthy",
+            "partialy-germinated": "Partialy-germinated",
+            "partialy-deceased": "Partialy-deceased"
         },
         "cacao_status": {
             "Organic": "Organic",
@@ -79,6 +79,10 @@
             "Organic": "Organic",
             "Special": "Special",
             "Customized": "Customized"
+        },
+        "cacao_nego_type": {
+            "national": "national",
+            "international": "international"
         },
         "stages": {
             "sales": "Sales",

@@ -27,7 +27,7 @@ export interface SalesPhase {
   currency: string;
   priceKg: number;
   totalValue: number;
-  negatiationDate: string;
+  negotiationDate: string;
 }
 
 export interface StoragePhase {
@@ -115,7 +115,7 @@ export function mapToBatchInfo(source: Batch): BatchInfo {
       currency: source.sale?.currency,
       priceKg: source.sale?.pricePerKg,
       totalValue: source.sale?.totalValue,
-      negatiationDate: convertToSimpleDate(source.sale?.negotiationDate),
+      negotiationDate: convertToSimpleDate(source.sale?.negotiationDate),
     },
     storagePhase: {
       id: source.storage.id,

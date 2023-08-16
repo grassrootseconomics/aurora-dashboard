@@ -823,7 +823,11 @@ button {
             font-size: 18px;
             margin-right: 30px;
 
-            & img {
+            &_GIZ_logo {
+                max-height:80px;
+            }
+
+            &_logo {
                 max-height: 70px;
                 margin-left: 10px;
                 width: auto;
@@ -997,9 +1001,15 @@ button {
                 margin-right: 0;
                 font-size: 18px;
 
-                img {
-                    max-height: 50px;
+                &_GIZ_logo {
+                    max-height:80px;
+                }
+    
+                &_logo {
+                    max-height: 70px;
+                    margin-left: 10px;
                     width: auto;
+                    margin-right: 15px;
                 }
             }
         }
