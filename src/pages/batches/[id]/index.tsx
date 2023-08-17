@@ -59,7 +59,7 @@ const BatchDetailsPage = () => {
     address: `0x${WEB_3.NFT_CONTRACT.split('0x').pop()}`,
     abi: CERT_ABI,
     functionName: 'mintTo',
-    args: [certBuyer, tokenId, certName, certDescription, [certKey]],
+    args: [certBuyer, tokenId, certName, certDescription, certKey],
   });
 
   // Get mint action.
