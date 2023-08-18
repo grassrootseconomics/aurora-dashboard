@@ -360,6 +360,10 @@
         "price_kg": "Valor por Kg",
         "lot": "Lote",
         "country": "País",
-        "day_negotiation": "Día de negociación"
+        "day_negotiation": "Día de negociación",
+        "transaction_fail": {
+            "token_id_taken": "Esta cartera ya posee esta certificación!",
+            "generic": "La transacción no se pudo completar!"
+        }
     }
 }

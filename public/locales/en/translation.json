@@ -360,6 +360,10 @@
         "price_kg": "Price per Kg",
         "lot": "Lot",
         "country": "Country",
-        "day_negotiation": "Day of negotiation"
+        "day_negotiation": "Day of negotiation",
+        "transaction_fail": {
+            "token_id_taken": "This Wallet already owns this Certification!",
+            "generic": "The transaction could not be completed!"
+        }
     }
 }

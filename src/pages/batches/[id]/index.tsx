@@ -20,6 +20,7 @@ import {
   saveCertificateMintOwner,
   saveSnapshotCertification,
 } from '@/services/batch';
+import { checkTokenIdTaken } from '@/services/nft';
 import { UserRole } from '@/util/constants/users';
 import { BatchInfo } from '@/util/models/Batch/BatchInfo';
 import { BuyerBatchInfo } from '@/util/models/Batch/BuyerBatchInfo';
@@ -59,16 +60,21 @@ const BatchDetailsPage = () => {
     address: `0x${WEB_3.NFT_CONTRACT.split('0x').pop()}`,
     abi: CERT_ABI,
     functionName: 'mintTo',
-    args: [certBuyer, tokenId, certName, certDescription, certKey],
+    args: [certBuyer, tokenId, certName, certDescription, [certKey]],
   });
 
   // Get mint action.
   const { writeAsync, data } = useContractWrite(config);
 
-  const { isLoading: isLoadingMint, isSuccess: isMintSuccess } =
-    useWaitForTransaction({
-      hash: data?.hash,
-    });
+  const {
+    isLoading: isLoadingMint,
+    isSuccess: isMintSuccess,
+    error: transactionError,
+  } = useWaitForTransaction({
+    hash: data?.hash,
+  });
+
+  const [failMessage, setFailMessage] = useState<string | undefined>();
 
   const certLink = useMemo(() => {
     if (data && isMintSuccess) return `/batches/${id}/nft`;
@@ -81,7 +87,12 @@ const BatchDetailsPage = () => {
   };
 
   const handleCloseWalletModal = () => {
+    setFailMessage('');
+    setIsLoadingCert(false);
     setOpenWalletModal(false);
+    setTokenId('');
+    setCertKey('');
+    setBuyer('');
   };
 
   /**
@@ -93,16 +104,27 @@ const BatchDetailsPage = () => {
    * @param wallet User Wallet
    */
   const handleConfirmWalletModal = useCallback(
-    (wallet: string) => {
-      const hexHash = createHash('sha256')
-        .update(`${wallet}:${certKey}`)
-        .digest('hex');
-      setBuyer(wallet);
-      const tokenId = hexToBigInt(`0x${hexHash}`).toString();
-      setTokenId(tokenId);
+    async (wallet: string) => {
+      // Check token id not taken!
+      try {
+        const hexHash = createHash('sha256')
+          .update(`${wallet}:${certKey}`)
+          .digest('hex');
+        const tokenId = hexToBigInt(`0x${hexHash}`).toString();
+        const isTokenIdTaken = await checkTokenIdTaken(tokenId, wallet);
+        if (isTokenIdTaken) {
+          setFailMessage(t('nft.transaction_fail.token_id_taken').toString());
+        } else {
+          setBuyer(wallet);
+          setTokenId(tokenId);
+        }
+      } catch (error) {
+        handleCloseWalletModal();
+        setIsLoadingCert(false);
+      }
       // Will start the whole minting process.
     },
-    [certKey]
+    [certKey, t]
   );
 
   /**
@@ -134,21 +156,18 @@ const BatchDetailsPage = () => {
           dataFingerprint: response.fingerprint,
           dateSigned,
         });
-
         setCertKey(keyResult.key);
         setIsLoadingCert(false);
       }
     } catch (err) {
       handleCloseWalletModal();
       setIsLoadingCert(false);
-      console.log(err);
     }
   }, [id, signMessageAsync]);
 
   const saveNewMintOwner = useCallback(async () => {
     try {
       setIsLoadingCert(true);
-      setIsLoadingCert(false);
       if (id && connectedWallet) {
         saveCertificateMintOwner(id.toString(), {
           minterWallet: connectedWallet,
@@ -159,10 +178,10 @@ const BatchDetailsPage = () => {
         console.log(
           `${certBuyer} now owns token ${tokenId} with certificate ${certKey}`
         );
+        setIsLoadingCert(false);
       }
     } catch (err) {
       setIsLoadingCert(false);
-      console.log(err);
     }
   }, [id, connectedWallet, certBuyer, tokenId, certKey]);
 
@@ -171,13 +190,18 @@ const BatchDetailsPage = () => {
       try {
         setIsLoadingCert(true);
         await writeAsync();
-        setIsLoadingCert(false);
       } catch (err) {
         setIsLoadingCert(false);
-        console.log(err);
       }
     }
   }, [writeAsync]);
+
+  useEffect(() => {
+    if (transactionError) {
+      setIsLoadingCert(false);
+      setFailMessage(t('nft.transaction_fail.generic').toString());
+    }
+  }, [t, transactionError]);
 
   useEffect(() => {
     if (isMintSuccess) {
@@ -186,7 +210,13 @@ const BatchDetailsPage = () => {
   }, [isMintSuccess, saveNewMintOwner]);
 
   useEffect(() => {
-    if (certBuyer && certName && certDescription && certKey && tokenId) {
+    if (
+      certBuyer !== '' &&
+      certName !== '' &&
+      certDescription !== '' &&
+      certKey !== '' &&
+      tokenId !== ''
+    ) {
       mintCertificateNFT();
     }
   }, [
@@ -326,6 +356,7 @@ const BatchDetailsPage = () => {
                   onConfirm={handleConfirmWalletModal}
                   isLoading={isLoadingMint || isLoadingCert}
                   isComplete={isMintSuccess}
+                  failMessage={failMessage}
                   certificateRoute={certLink}
                 />
               </>
@@ -401,6 +432,7 @@ const BatchDetailsPage = () => {
                   onConfirm={handleConfirmWalletModal}
                   isLoading={isLoadingMint || isLoadingCert}
                   isComplete={isMintSuccess}
+                  failMessage={failMessage}
                   certificateRoute={certLink}
                 />
               </>

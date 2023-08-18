@@ -14,17 +14,19 @@ interface WalletModalProps {
   open: boolean;
   isLoading: boolean;
   isComplete: boolean;
+  failMessage?: string;
   certificateRoute?: string;
   loadingMessage?: string;
   onClose: () => void;
   // eslint-disable-next-line no-unused-vars
-  onConfirm: (wallet: string) => void;
+  onConfirm: (wallet: string) => Promise<void>;
 }
 
 const WalletModal: FC<WalletModalProps> = ({
   open,
   isLoading = false,
   isComplete = false,
+  failMessage,
   certificateRoute,
   loadingMessage,
   onClose,
@@ -48,9 +50,9 @@ const WalletModal: FC<WalletModalProps> = ({
     if (!isLoading) onClose();
   };
 
-  const handleConfirm = (data: any) => {
+  const handleConfirm = async (data: any) => {
     if (verifyWalletAddress(data.wallet)) {
-      onConfirm(data.wallet);
+      await onConfirm(data.wallet);
       setValue('wallet', '');
       handleErrorMessage();
       // handleClose();
@@ -83,7 +85,20 @@ const WalletModal: FC<WalletModalProps> = ({
         }}
         className="modal__content"
       >
-        {isComplete ? (
+        {failMessage ? (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              rowGap: '10px',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Typography>Transaction Failed!</Typography>
+            <Typography>{failMessage}</Typography>
+          </Box>
+        ) : isComplete ? (
           <Box
             sx={{
               display: 'flex',

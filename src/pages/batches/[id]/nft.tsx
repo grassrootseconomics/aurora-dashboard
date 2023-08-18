@@ -96,7 +96,7 @@ const NFT = () => {
               <Image
                 width={200}
                 height={150}
-                src={`/assets/logos/${nftModel.assocDetails.name}.png`}
+                src={`/assets/logos/${nftModel.assocDetails.name.toLowerCase()}.png`}
                 alt="Association"
               />
             ) : (
