@@ -168,7 +168,7 @@ const BatchDetailsPage = () => {
   const saveNewMintOwner = useCallback(async () => {
     try {
       setIsLoadingCert(true);
-      if (id && connectedWallet) {
+      if (id && connectedWallet && certBuyer && tokenId && certKey) {
         saveCertificateMintOwner(id.toString(), {
           minterWallet: connectedWallet,
           buyerWallet: certBuyer,

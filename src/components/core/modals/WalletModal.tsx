@@ -110,9 +110,7 @@ const WalletModal: FC<WalletModalProps> = ({
           >
             Successfully minted & transfered Certificate NFT!
             {certificateRoute ? (
-              <Link target="_blank" href={certificateRoute}>
-                View Certificate
-              </Link>
+              <Link href={certificateRoute}>View Certificate</Link>
             ) : (
               <></>
             )}
