@@ -208,6 +208,7 @@
         "sold": "Sold"
     },
     "buttons": {
+        "confirm": "Confirm",
         "save": "Save",
         "cancel_edit": "Cancel Edit",
         "start_edit": "Start Edit",
@@ -271,7 +272,8 @@
             "message": "Are you sure you want to delete this item? This action cannot be undone."
         },
         "wallet": {
-            "title": "Insert Receiver Wallet (Buyer)"
+            "title": "Insert Receiver Wallet (Buyer)",
+            "wallet_valid": "Mint & Transfer Certificate NFT!"
         },
         "harvesting": {
             "title": "Set Next Harvesting"

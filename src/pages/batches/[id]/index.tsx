@@ -25,6 +25,7 @@ import { UserRole } from '@/util/constants/users';
 import { BatchInfo } from '@/util/models/Batch/BatchInfo';
 import { BuyerBatchInfo } from '@/util/models/Batch/BuyerBatchInfo';
 import { createHash } from 'crypto';
+import { useDebounce } from 'use-debounce';
 import { hexToBigInt } from 'viem';
 import {
   useContractWrite,
@@ -54,17 +55,34 @@ const BatchDetailsPage = () => {
   const [tokenId, setTokenId] = useState('');
   const [certKey, setCertKey] = useState('');
   const [certBuyer, setBuyer] = useState('');
+  const [debounceTokenId] = useDebounce(tokenId, 500);
+  const [debounceCertKey] = useDebounce(certKey, 500);
+  const [debounceCertBuyer] = useDebounce(certBuyer, 500);
+  const [debounceCertName] = useDebounce(certName, 500);
+  const [debounceCertDescription] = useDebounce(certDescription, 500);
 
   // Initialize contract config with ABI.
   const { config } = usePrepareContractWrite({
     address: `0x${WEB_3.NFT_CONTRACT.split('0x').pop()}`,
     abi: CERT_ABI,
     functionName: 'mintTo',
-    args: [certBuyer, tokenId, certName, certDescription, [certKey]],
+    args: [
+      debounceCertBuyer,
+      debounceTokenId,
+      debounceCertName,
+      debounceCertDescription,
+      [debounceCertKey],
+    ],
+    enabled:
+      Boolean('debounceCertBuyer') &&
+      Boolean('debounceTokenId') &&
+      Boolean('debounceCertName') &&
+      Boolean('debounceCertDescription') &&
+      Boolean('debounceCertKey'),
   });
 
   // Get mint action.
-  const { writeAsync, data } = useContractWrite(config);
+  const { write, data } = useContractWrite(config);
 
   const {
     isLoading: isLoadingMint,
@@ -81,6 +99,8 @@ const BatchDetailsPage = () => {
   }, [data, id, isMintSuccess]);
 
   const [isLoadingCert, setIsLoadingCert] = useState<boolean>(false);
+  const [transactionParamsPrepared, setTransactionParamsPrepared] =
+    useState(false);
 
   const handleOpenWalletModal = () => {
     setOpenWalletModal(true);
@@ -90,6 +110,7 @@ const BatchDetailsPage = () => {
     setFailMessage('');
     setIsLoadingCert(false);
     setOpenWalletModal(false);
+    setTransactionParamsPrepared(false);
     setTokenId('');
     setCertKey('');
     setBuyer('');
@@ -185,16 +206,16 @@ const BatchDetailsPage = () => {
     }
   }, [id, connectedWallet, certBuyer, tokenId, certKey]);
 
-  const mintCertificateNFT = useCallback(async () => {
-    if (writeAsync) {
+  const mintCertificateNFT = useCallback(() => {
+    if (write) {
       try {
         setIsLoadingCert(true);
-        await writeAsync();
+        write();
       } catch (err) {
         setIsLoadingCert(false);
       }
     }
-  }, [writeAsync]);
+  }, [write]);
 
   useEffect(() => {
     if (transactionError) {
@@ -211,22 +232,22 @@ const BatchDetailsPage = () => {
 
   useEffect(() => {
     if (
-      certBuyer !== '' &&
-      certName !== '' &&
-      certDescription !== '' &&
-      certKey !== '' &&
-      tokenId !== ''
+      debounceCertBuyer !== '' &&
+      debounceCertName !== '' &&
+      debounceCertDescription !== '' &&
+      debounceCertKey !== '' &&
+      debounceTokenId !== ''
     ) {
-      mintCertificateNFT();
+      // Signal that this method can be called
+      setTransactionParamsPrepared(true);
     }
   }, [
-    certBuyer,
-    certName,
-    certDescription,
-    certKey,
-    mintCertificateNFT,
-    router.pathname,
-    tokenId,
+    // mintCertificateNFT,
+    debounceCertBuyer,
+    debounceCertName,
+    debounceCertDescription,
+    debounceCertKey,
+    debounceTokenId,
   ]);
 
   useEffect(() => {
@@ -352,6 +373,10 @@ const BatchDetailsPage = () => {
                 />
                 <WalletModal
                   open={openWalletModal}
+                  canMint={transactionParamsPrepared && write !== undefined}
+                  mintAction={() => {
+                    mintCertificateNFT();
+                  }}
                   onClose={handleCloseWalletModal}
                   onConfirm={handleConfirmWalletModal}
                   isLoading={isLoadingMint || isLoadingCert}
@@ -428,6 +453,10 @@ const BatchDetailsPage = () => {
                 />
                 <WalletModal
                   open={openWalletModal}
+                  canMint={transactionParamsPrepared && write !== undefined}
+                  mintAction={() => {
+                    mintCertificateNFT();
+                  }}
                   onClose={handleCloseWalletModal}
                   onConfirm={handleConfirmWalletModal}
                   isLoading={isLoadingMint || isLoadingCert}

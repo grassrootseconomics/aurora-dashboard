@@ -208,6 +208,7 @@
         "sold": "Vendido"
     },
     "buttons": {
+        "confirm": "Confirmar",
         "save": "Guardar",
         "cancel_edit": "Cancelar Editar",
         "start_edit": "Empezar Editar",
@@ -271,7 +272,8 @@
             "message": "Está seguro de que desea eliminar este elemento? Esta acción no se puede deshacer."
         },
         "wallet": {
-            "title": "Inserte la Carteras del Receptor (Comprador)"
+            "title": "Inserte la Carteras del Receptor (Comprador)",
+            "wallet_valid": "Crear y Transferir el Certificado del Token."
         },
         "harvesting": {
             "title": "Establecer Próxima cosecha"

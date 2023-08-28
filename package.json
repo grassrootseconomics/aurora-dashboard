@@ -51,6 +51,7 @@
     "react-world-flags": "^1.5.1",
     "sass": "^1.62.1",
     "typescript": "5.0.4",
+    "use-debounce": "^9.0.4",
     "viem": "^0.3.27",
     "wagmi": "^1.0.5",
     "web3": "^4.0.1"

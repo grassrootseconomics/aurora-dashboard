@@ -13,6 +13,7 @@ import LoadingBox from '../spinners/LoadingBox';
 interface WalletModalProps {
   open: boolean;
   isLoading: boolean;
+  canMint: boolean;
   isComplete: boolean;
   failMessage?: string;
   certificateRoute?: string;
@@ -20,17 +21,20 @@ interface WalletModalProps {
   onClose: () => void;
   // eslint-disable-next-line no-unused-vars
   onConfirm: (wallet: string) => Promise<void>;
+  mintAction: () => void;
 }
 
 const WalletModal: FC<WalletModalProps> = ({
   open,
   isLoading = false,
   isComplete = false,
+  canMint = false,
   failMessage,
   certificateRoute,
   loadingMessage,
   onClose,
   onConfirm,
+  mintAction,
 }) => {
   const { t } = useTranslation('translation');
   const { handleSubmit, control, setValue } = useForm<any>();
@@ -85,7 +89,34 @@ const WalletModal: FC<WalletModalProps> = ({
         }}
         className="modal__content"
       >
-        {failMessage ? (
+        {canMint ? (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              rowGap: '10px',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Typography>{t('modals.wallet.wallet_valid')}</Typography>
+            <div>
+              <Button
+                onClick={handleClose}
+                className="modal__button modal__button--close"
+              >
+                {t('buttons.close')}
+              </Button>
+              <Button
+                type="submit"
+                className="modal__button modal__button--save"
+                onClick={() => mintAction()}
+              >
+                {t('buttons.confirm')}
+              </Button>
+            </div>
+          </Box>
+        ) : failMessage ? (
           <Box
             sx={{
               display: 'flex',
