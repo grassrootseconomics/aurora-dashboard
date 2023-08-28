@@ -89,7 +89,20 @@ const WalletModal: FC<WalletModalProps> = ({
         }}
         className="modal__content"
       >
-        {canMint ? (
+        {failMessage ? (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              rowGap: '10px',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Typography>Transaction Failed!</Typography>
+            <Typography>{failMessage}</Typography>
+          </Box>
+        ) : canMint ? (
           <Box
             sx={{
               display: 'flex',
@@ -115,19 +128,6 @@ const WalletModal: FC<WalletModalProps> = ({
                 {t('buttons.confirm')}
               </Button>
             </div>
-          </Box>
-        ) : failMessage ? (
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              rowGap: '10px',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Typography>Transaction Failed!</Typography>
-            <Typography>{failMessage}</Typography>
           </Box>
         ) : isComplete ? (
           <Box

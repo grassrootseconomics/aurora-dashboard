@@ -211,6 +211,7 @@ const BatchDetailsPage = () => {
       try {
         setIsLoadingCert(true);
         write();
+        setTransactionParamsPrepared(false);
       } catch (err) {
         setIsLoadingCert(false);
       }
