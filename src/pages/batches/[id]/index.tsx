@@ -136,6 +136,7 @@ const BatchDetailsPage = () => {
         if (isTokenIdTaken) {
           setFailMessage(t('nft.transaction_fail.token_id_taken').toString());
         } else {
+          console.log('Token Id not Taken!');
           setBuyer(wallet);
           setTokenId(tokenId);
         }
@@ -232,6 +233,8 @@ const BatchDetailsPage = () => {
   }, [isMintSuccess, saveNewMintOwner]);
 
   useEffect(() => {
+    if (debounceTokenId) console.log(`Prepared Id ${debounceTokenId}`);
+
     if (
       debounceCertBuyer !== '' &&
       debounceCertName !== '' &&
@@ -239,6 +242,7 @@ const BatchDetailsPage = () => {
       debounceCertKey !== '' &&
       debounceTokenId !== ''
     ) {
+      console.log('Commencing Transaction Confirmation Step!');
       // Signal that this method can be called
       setTransactionParamsPrepared(true);
     }
