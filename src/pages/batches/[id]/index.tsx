@@ -210,6 +210,10 @@ const BatchDetailsPage = () => {
   }, [write]);
 
   useEffect(() => {
+    console.log(`NFT Contract Used:`, WEB_3.NFT_CONTRACT);
+  }, []);
+
+  useEffect(() => {
     if (contractWriteError) console.log(contractWriteError);
     else console.log('No issue with the contract write solution!');
   }, [contractWriteError]);
