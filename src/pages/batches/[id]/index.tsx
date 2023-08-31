@@ -72,7 +72,7 @@ const BatchDetailsPage = () => {
   });
 
   // Get mint action.
-  const { write, data } = useContractWrite(config);
+  const { write, data, error: contractWriteError } = useContractWrite(config);
 
   const {
     isLoading: isLoadingMint,
@@ -209,9 +209,15 @@ const BatchDetailsPage = () => {
     }
   }, [write]);
 
+  useEffect(() => {
+    if (contractWriteError) console.log(contractWriteError);
+    else console.log('No issue with the contract write solution!');
+  }, [contractWriteError]);
+
   // Config setup use effect
   useEffect(() => {
     if (error) console.log(error);
+    else console.log('No issue with the transaction config!');
   }, [error]);
 
   useEffect(() => {
