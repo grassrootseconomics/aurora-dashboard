@@ -56,29 +56,19 @@ const BatchDetailsPage = () => {
   const [certKey, setCertKey] = useState('');
   const [certBuyer, setBuyer] = useState('');
   const [debounceTokenId] = useDebounce(tokenId, 500);
-  const [debounceCertKey] = useDebounce(certKey, 500);
-  const [debounceCertBuyer] = useDebounce(certBuyer, 500);
-  const [debounceCertName] = useDebounce(certName, 500);
-  const [debounceCertDescription] = useDebounce(certDescription, 500);
 
   // Initialize contract config with ABI.
-  const { config } = usePrepareContractWrite({
+  const { config, error } = usePrepareContractWrite({
     address: `0x${WEB_3.NFT_CONTRACT.split('0x').pop()}`,
     abi: CERT_ABI,
     functionName: 'mintTo',
-    args: [
-      debounceCertBuyer,
-      debounceTokenId,
-      debounceCertName,
-      debounceCertDescription,
-      [debounceCertKey],
-    ],
+    args: [certBuyer, debounceTokenId, certName, certDescription, [certKey]],
     enabled:
-      Boolean('debounceCertBuyer') &&
-      Boolean('debounceTokenId') &&
-      Boolean('debounceCertName') &&
-      Boolean('debounceCertDescription') &&
-      Boolean('debounceCertKey'),
+      Boolean(certBuyer) &&
+      Boolean(debounceTokenId) &&
+      Boolean(certName) &&
+      Boolean(certDescription) &&
+      Boolean(certKey),
   });
 
   // Get mint action.
@@ -219,6 +209,11 @@ const BatchDetailsPage = () => {
     }
   }, [write]);
 
+  // Config setup use effect
+  useEffect(() => {
+    if (error) console.log(error);
+  }, [error]);
+
   useEffect(() => {
     if (transactionError) {
       setIsLoadingCert(false);
@@ -236,24 +231,17 @@ const BatchDetailsPage = () => {
     if (debounceTokenId) console.log(`Prepared Id ${debounceTokenId}`);
 
     if (
-      debounceCertBuyer !== '' &&
-      debounceCertName !== '' &&
-      debounceCertDescription !== '' &&
-      debounceCertKey !== '' &&
+      certBuyer !== '' &&
+      certName !== '' &&
+      certDescription !== '' &&
+      certKey !== '' &&
       debounceTokenId !== ''
     ) {
       console.log('Commencing Transaction Confirmation Step!');
       // Signal that this method can be called
       setTransactionParamsPrepared(true);
     }
-  }, [
-    // mintCertificateNFT,
-    debounceCertBuyer,
-    debounceCertName,
-    debounceCertDescription,
-    debounceCertKey,
-    debounceTokenId,
-  ]);
+  }, [debounceTokenId, certBuyer, certName, certDescription, certKey]);
 
   useEffect(() => {
     if (!id) return;
