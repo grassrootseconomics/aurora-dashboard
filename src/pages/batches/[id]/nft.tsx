@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Flag from 'react-world-flags';
 
+import { Grid } from '@mui/material';
+
 import { BatchButton } from '@/components/core/buttons/BatchButton';
 import CardFour from '@/components/core/cards/CardFour';
 import CardOne from '@/components/core/cards/CardOne';
@@ -19,7 +21,6 @@ import { countryList } from '@/util/constants/countries';
 import { convertToSimpleDate } from '@/util/format/date';
 import { Dataset } from '@/util/models/Dataset';
 import { BatchNft } from '@/util/models/nft';
-import { Grid } from '@material-ui/core';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
@@ -176,7 +177,6 @@ const NFT = () => {
                 {typeof nftModel.assocDetails.story === 'string'
                   ? nftModel.assocDetails.story
                   : nftModel.assocDetails.story[currentLanguage]}
-                {/* {nftModel.assocDetails.story[currentLanguage]} */}
               </div>
             </div>
             <div className={styles.tableRow}>
@@ -218,7 +218,15 @@ const NFT = () => {
             </div>
             <div className={styles.infoContainersRow}>
               <div className={styles.infoContainer}>
-                {t('nft.type_cocoa')}: {nftModel.batchDetails.cocoaType}
+                {t('nft.type_cocoa')}:{' '}
+                {t(
+                  `single_batch.cacao_type.${nftModel.batchDetails.cocoaType}`
+                ) !==
+                `single_batch.cacao_type.${nftModel.batchDetails.cocoaType}`
+                  ? t(
+                      `single_batch.cacao_type.${nftModel.batchDetails.cocoaType}`
+                    )
+                  : nftModel.batchDetails.cocoaType}
               </div>
               <div className={styles.infoContainer}>
                 {t('nft.total_net_weight')}:{' '}
@@ -274,7 +282,6 @@ const NFT = () => {
               </div>
             </div>
             <div className={styles.batchDescription}>
-              {/* {nftModel.batchDetails.sensoryProfile[currentLanguage] ? nftModel.batchDetails.sensoryProfile[currentLanguage] : ""} */}
               {typeof nftModel.batchDetails.sensoryProfile === 'string'
                 ? nftModel.batchDetails.sensoryProfile
                 : nftModel.batchDetails.sensoryProfile[currentLanguage]}
@@ -350,12 +357,11 @@ const NFT = () => {
                   const image = animals.find(
                     (a) => a.name == animal.toLowerCase()
                   )?.image;
-
                   if (image) {
                     return (
                       <Grid item xs={3} key={animal}>
                         <Image
-                          width={300}
+                          width={100}
                           height={50}
                           alt={t('nft.wildlife')}
                           className={styles.image}
@@ -401,7 +407,14 @@ const NFT = () => {
               </div>
               <div className={styles.infoContainer}>
                 {t('nft.batch_genetics')}:{' '}
-                {nftModel.traceDetails.fermentation.genetics}
+                {t(
+                  `single_batch.cacao_genetic.${nftModel.traceDetails.fermentation.genetics}`
+                ) !==
+                `single_batch.cacao_genetic.${nftModel.traceDetails.fermentation.genetics}`
+                  ? t(
+                      `single_batch.cacao_genetic.${nftModel.traceDetails.fermentation.genetics}`
+                    )
+                  : nftModel.traceDetails.fermentation.genetics}
               </div>
               <div className={styles.infoContainer}>
                 {t('nft.batch_net_weight')}:{' '}
@@ -468,7 +481,7 @@ const NFT = () => {
               </div>
               <div className={styles.infoContainer}>
                 {t('nft.batch_net_weight')}:{' '}
-                {nftModel.traceDetails.storage.batchNetWeight}
+                {`${nftModel.traceDetails.storage.batchNetWeight} kg`}
               </div>
             </div>
             <div className={styles.rowOf3}>
@@ -511,7 +524,10 @@ const NFT = () => {
                   {t('nft.price_kg')}: {nftModel.traceDetails.sales.pricePerKg}
                 </div>
                 <div className={styles.infoContainer}>
-                  {t('nft.lot')}: {nftModel.traceDetails.sales.lot}
+                  {t('nft.lot')}:{' '}
+                  {nftModel.traceDetails.sales.lot
+                    ? nftModel.traceDetails.sales.lot
+                    : t('nft.none_lot')}
                 </div>
               </div>
               <div className={styles.column}>

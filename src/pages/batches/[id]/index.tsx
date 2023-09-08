@@ -58,7 +58,7 @@ const BatchDetailsPage = () => {
   const [debounceTokenId] = useDebounce(tokenId, 500);
 
   // Initialize contract config with ABI.
-  const { config, error } = usePrepareContractWrite({
+  const { config } = usePrepareContractWrite({
     address: `0x${WEB_3.NFT_CONTRACT.split('0x').pop()}`,
     abi: CERT_ABI,
     functionName: 'mintTo',
@@ -72,7 +72,7 @@ const BatchDetailsPage = () => {
   });
 
   // Get mint action.
-  const { write, data, error: contractWriteError } = useContractWrite(config);
+  const { write, data } = useContractWrite(config);
 
   const {
     isLoading: isLoadingMint,
@@ -210,21 +210,6 @@ const BatchDetailsPage = () => {
   }, [write]);
 
   useEffect(() => {
-    console.log(`NFT Contract Used:`, WEB_3.NFT_CONTRACT);
-  }, []);
-
-  useEffect(() => {
-    if (contractWriteError) console.log(contractWriteError);
-    else console.log('No issue with the contract write solution!');
-  }, [contractWriteError]);
-
-  // Config setup use effect
-  useEffect(() => {
-    if (error) console.log(error);
-    else console.log('No issue with the transaction config!');
-  }, [error]);
-
-  useEffect(() => {
     if (transactionError) {
       setIsLoadingCert(false);
       setFailMessage(t('nft.transaction_fail.generic').toString());
@@ -238,8 +223,6 @@ const BatchDetailsPage = () => {
   }, [isMintSuccess, saveNewMintOwner]);
 
   useEffect(() => {
-    if (debounceTokenId) console.log(`Prepared Id ${debounceTokenId}`);
-
     if (
       certBuyer !== '' &&
       certName !== '' &&
@@ -247,7 +230,6 @@ const BatchDetailsPage = () => {
       certKey !== '' &&
       debounceTokenId !== ''
     ) {
-      console.log('Commencing Transaction Confirmation Step!');
       // Signal that this method can be called
       setTransactionParamsPrepared(true);
     }

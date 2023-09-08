@@ -361,6 +361,7 @@
         "negotiation_term": "Término de negociación",
         "price_kg": "Valor por Kg",
         "lot": "Lote",
+        "none_lot": "Nada",
         "country": "País",
         "day_negotiation": "Día de negociación",
         "transaction_fail": {
