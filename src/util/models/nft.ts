@@ -7,7 +7,12 @@ export interface BatchNft {
 }
 
 interface Association {
-  certifications: number;
+  certifications:
+    | {
+        en: string;
+        es: string;
+      }
+    | string;
   department: string;
   name: string;
   nrOfAssociates: number;
@@ -26,7 +31,12 @@ interface Association {
       }
     | string;
   town: string;
-  yearsOfExistence: number;
+  yearsOfExistence:
+    | number
+    | {
+        en: string;
+        es: string;
+      };
 }
 
 interface Batch {

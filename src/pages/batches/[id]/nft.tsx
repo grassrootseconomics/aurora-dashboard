@@ -182,13 +182,17 @@ const NFT = () => {
             <div className={styles.tableRow}>
               <div className={styles.tableProp}>{t('nft.years_existence')}</div>
               <div className={styles.tableValue}>
-                {nftModel.assocDetails.yearsOfExistence}
+                {typeof nftModel.assocDetails.yearsOfExistence === 'number'
+                  ? nftModel.assocDetails.yearsOfExistence
+                  : nftModel.assocDetails.yearsOfExistence[currentLanguage]}
               </div>
             </div>
             <div className={styles.tableRow}>
               <div className={styles.tableProp}>{t('nft.certifications')}</div>
               <div className={styles.tableValue}>
-                {nftModel.assocDetails.certifications}
+                {typeof nftModel.assocDetails.certifications === 'string'
+                  ? nftModel.assocDetails.certifications
+                  : nftModel.assocDetails.certifications[currentLanguage]}
               </div>
             </div>
           </div>
