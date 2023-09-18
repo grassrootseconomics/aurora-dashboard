@@ -12,9 +12,10 @@ const Footer: FC = () => {
       <div className="footer__container">
         <div className="footer__container_item">
           <p>{t('footer.funded_by')}:</p>
-          <Image
-            width={270}
-            height={80}
+          <img
+            style={{
+              maxWidth: '80%',
+            }}
             src="/assets/logos/GIZ.jpg"
             alt="GIZ Logo"
             className="footer__container_item_logo footer__container_item_GIZ_logo"
