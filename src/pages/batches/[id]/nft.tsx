@@ -256,10 +256,10 @@ const NFT = () => {
                 {t('nft.fermentation_days')}:{' '}
                 {nftModel.batchDetails.fermentationDays}
               </div>
-              <div className={styles.infoContainer}>
+              {/* <div className={styles.infoContainer}>
                 {t('nft.fermentation_model')}:{' '}
                 {nftModel.batchDetails.fermentationModeL}
-              </div>
+              </div> */}
               <div className={styles.infoContainer}>
                 {t('nft.conversion_factor')}:{' '}
                 {nftModel.batchDetails.conversionFactor}
