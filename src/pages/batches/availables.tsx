@@ -39,11 +39,8 @@ export default function AvailableBatches() {
   });
   const [totalEntries, setTotalEntries] = useState(0);
 
-  // const [initialAvailableBatches, setInitialAvailableBatches] = useState<
-  //   BasicAvailableBatch[]
-  // >([]);
   const [totalPulpCollected, setTotalPulpCollected] = useState<Dataset[]>([]);
-  const [dryCocoaProduction, setDryCocoaProduction] = useState<Dataset[]>();
+  const [dryCocoaProduction, setDryCocoaProduction] = useState<Dataset[]>([]);
   const [batchCodeSearch, setBatchCodeSearch] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const { userRole } = useUserAuthContext();
