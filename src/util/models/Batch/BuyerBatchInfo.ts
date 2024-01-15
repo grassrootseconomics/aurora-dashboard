@@ -99,9 +99,10 @@ export function mapToBuyerBatchInfo(source: Batch): BuyerBatchInfo {
       cocoaHa: nrCocoaHa,
       conservationHa: nrConservationHa,
     },
-    association: source.pulpsUsed
-      ? source.pulpsUsed[0].pulp.producer.association
-      : null,
+    association:
+      source.pulpsUsed && source.pulpsUsed.length > 0
+        ? source.pulpsUsed[0].pulp.producer.association
+        : null,
   };
 
   return BuyerBatchInfoDto;
