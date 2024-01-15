@@ -20,13 +20,15 @@ import ResponseStructure from '@/util/models/ResponseStructure';
 
 export const getBatchesWithoutAuth = async (
   department?: string,
-  pagination?: PaginationOptions
+  pagination?: PaginationOptions,
+  year?: number
 ): Promise<any> => {
   const response: AxiosResponseData<any> = await api.get(`/v1/batch`, {
     params: {
       department: department != '' ? department : null,
       index: pagination ? pagination.index : 0,
       limit: pagination ? pagination.limit : 5,
+      year,
     },
   });
   return response.data.data;
@@ -58,7 +60,8 @@ export const getBatchByCodeForBuyers = async (
 export const getAvailableBatches = async (
   search?: string,
   association?: string,
-  pagination?: PaginationOptions
+  pagination?: PaginationOptions,
+  year?: number
 ): Promise<any> => {
   const response: AxiosResponseData<any> = await authenticatedApi.get(
     `/v1/batch/available`,
@@ -68,6 +71,7 @@ export const getAvailableBatches = async (
         association: association,
         index: pagination ? pagination.index : 0,
         limit: pagination ? pagination.limit : 5,
+        year,
       },
     }
   );
@@ -101,7 +105,8 @@ export const getAvailableBatches = async (
 export const getSoldBatches = async (
   search?: string,
   association?: string,
-  pagination?: PaginationOptions
+  pagination?: PaginationOptions,
+  year?: number
 ): Promise<any> => {
   const response: AxiosResponseData<any> = await authenticatedApi.get(
     `/v1/batch/sold`,
@@ -111,6 +116,7 @@ export const getSoldBatches = async (
         association: association,
         index: pagination ? pagination.index : 0,
         limit: pagination ? pagination.limit : 5,
+        year,
       },
     }
   );
