@@ -13,6 +13,7 @@ import CardOne from '@/components/core/cards/CardOne';
 import NftBarChart from '@/components/core/charts/NftBarChart';
 import DailyReportsTableNft from '@/components/core/nft/DailyReportsTableNft';
 import FlipsTableNft from '@/components/core/nft/FlipsTableNft';
+import SingleFlipTableNft from '@/components/core/nft/SingleFlipTableNft';
 import { useUserAuthContext } from '@/providers/UserAuthProvider';
 import { getBatchOwnedNftMetadata } from '@/services/nft';
 import { animals } from '@/util/constants/animals';
@@ -445,12 +446,20 @@ const NFT = () => {
                 {nftModel.traceDetails.fermentation.days}
               </div>
             </div>
-            <DailyReportsTableNft
-              fermentationPhase={nftModel.traceDetails.fermentation}
-            />
-            <FlipsTableNft
-              fermentationPhase={nftModel.traceDetails.fermentation}
-            />
+            {nftModel.traceDetails.fermentation.dailyReports && (
+              <DailyReportsTableNft
+                fermentationPhase={nftModel.traceDetails.fermentation}
+              />
+            )}
+            {nftModel.traceDetails.fermentation.flips.length ? (
+              <FlipsTableNft
+                fermentationPhase={nftModel.traceDetails.fermentation}
+              />
+            ) : (
+              <SingleFlipTableNft
+                flip={nftModel.traceDetails.fermentation.flips as any}
+              />
+            )}
           </div>
 
           <div className={styles.processTitle}>

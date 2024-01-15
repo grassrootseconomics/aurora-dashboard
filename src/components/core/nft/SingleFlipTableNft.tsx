@@ -11,13 +11,11 @@ import {
   TableRow,
 } from '@mui/material';
 
-import { Fermentation } from '@/util/models/nft';
-
 interface FlipsProps {
-  fermentationPhase: Fermentation;
+  flip: any;
 }
 
-const FlipsTableNft = (props: FlipsProps) => {
+const FlipsTableNft = ({ flip }: FlipsProps) => {
   const { t } = useTranslation('translation');
 
   return (
@@ -29,15 +27,11 @@ const FlipsTableNft = (props: FlipsProps) => {
               <TableCell align="center">
                 <div className="table__cell-container"></div>
               </TableCell>
-              {props.fermentationPhase?.flips?.map((_, index) => {
-                return (
-                  <TableCell key={index} align="center">
-                    <div className="table__cell-container">
-                      {t('fermentation_model.flip')} {index + 1}
-                    </div>
-                  </TableCell>
-                );
-              })}
+              <TableCell align="center">
+                <div className="table__cell-container">
+                  {t('fermentation_model.flip')} 1
+                </div>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -48,13 +42,9 @@ const FlipsTableNft = (props: FlipsProps) => {
                   {t('fermentation_model.hours')}{' '}
                 </div>
               </TableCell>
-              {props.fermentationPhase?.flips?.map((row, index) => {
-                return (
-                  <TableCell key={index} align="center">
-                    <div className="table__cell-container">{row.time}</div>
-                  </TableCell>
-                );
-              })}
+              <TableCell align="center">
+                <div className="table__cell-container">{flip.time}</div>
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell align="center">
@@ -63,13 +53,9 @@ const FlipsTableNft = (props: FlipsProps) => {
                   {t('fermentation_model.temp')}{' '}
                 </div>
               </TableCell>
-              {props.fermentationPhase?.flips?.map((row, index) => {
-                return (
-                  <TableCell key={index} align="center">
-                    <div className="table__cell-container">{row.temp}</div>
-                  </TableCell>
-                );
-              })}
+              <TableCell align="center">
+                <div className="table__cell-container">{flip.temp}</div>
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell align="center">
@@ -78,13 +64,9 @@ const FlipsTableNft = (props: FlipsProps) => {
                   {t('fermentation_model.room_temp')}{' '}
                 </div>
               </TableCell>
-              {props.fermentationPhase?.flips?.map((row, index) => {
-                return (
-                  <TableCell key={index} align="center">
-                    <div className="table__cell-container">{row.ambient}</div>
-                  </TableCell>
-                );
-              })}
+              <TableCell align="center">
+                <div className="table__cell-container">{flip.ambient}</div>
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell align="center">
@@ -93,13 +75,9 @@ const FlipsTableNft = (props: FlipsProps) => {
                   {t('fermentation_model.relative_humidity')}{' '}
                 </div>
               </TableCell>
-              {props.fermentationPhase?.flips?.map((row, index) => {
-                return (
-                  <TableCell key={index} align="center">
-                    <div className="table__cell-container">{row.humidity}</div>
-                  </TableCell>
-                );
-              })}
+              <TableCell align="center">
+                <div className="table__cell-container">{flip.humidity}</div>
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
