@@ -11,7 +11,9 @@ import CardTwo from '@/components/core/cards/CardTwo';
 import BarChart from '@/components/core/charts/BarChart';
 import LineChart from '@/components/core/charts/LineChart';
 import SoldBatchesTable from '@/components/core/tables/SoldBatchesTable';
+import { useLoadingStateContext } from '@/providers/LoadingStateContext';
 import { useUserAuthContext } from '@/providers/UserAuthProvider';
+import { useYearFilterContext } from '@/providers/YearFilterProvider';
 import { getAssociations } from '@/services/association';
 import { downloadBatchesInExcel, getSoldBatches } from '@/services/batch';
 import {
@@ -37,10 +39,16 @@ export default function SoldBatches() {
     index: 0,
     limit: 10,
   });
+
+  const { selectedYear } = useYearFilterContext();
+
+  // Loading Context
+  const { isLoading, setLoading } = useLoadingStateContext();
+
   const [totalEntries, setTotalEntries] = useState(0);
   const { userRole } = useUserAuthContext();
   const [batchCodeSearch, setBatchCodeSearch] = useState<string>('');
-  const [loading, setLoading] = useState(true);
+
   const router = useRouter();
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
@@ -78,20 +86,23 @@ export default function SoldBatches() {
       }
     }
     setLoading(true);
-    getSoldBatches(batchCodeSearch, assoc, pagination).then((data) => {
-      setSoldBatches(data.searchBatchesResult.data);
-      setSoldWeight(data.kgDryCocoaSold);
-      setSalesUsd(getTotalSalesGeneralGraph(data.monthlySalesInUSD));
-      setSalesKg(getTotalSalesKgGraph(data.salesInKg));
-      setTotalEntries(data.searchBatchesResult.totalEntries);
-      setLoading(false);
-    });
+    getSoldBatches(batchCodeSearch, assoc, pagination, selectedYear).then(
+      (data) => {
+        setSoldBatches(data.searchBatchesResult.data);
+        setSoldWeight(data.kgDryCocoaSold);
+        setSalesUsd(getTotalSalesGeneralGraph(data.monthlySalesInUSD));
+        setSalesKg(getTotalSalesKgGraph(data.salesInKg));
+        setTotalEntries(data.searchBatchesResult.totalEntries);
+        setLoading(false);
+      }
+    );
   }, [
     associations,
     batchCodeSearch,
     selectedAssociation,
     setLoading,
     pagination,
+    selectedYear,
   ]);
 
   useEffect(() => {
@@ -110,6 +121,13 @@ export default function SoldBatches() {
     if (userRole && userRole !== UserRole.buyer) submitSearchBatchesByCode();
   }, [selectedAssociation, userRole, pagination]);
 
+  useEffect(() => {
+    setPagination({
+      index: 0,
+      limit: 5,
+    });
+  }, [selectedYear]);
+
   return (
     <>
       <Head>
@@ -127,7 +145,7 @@ export default function SoldBatches() {
               number={soldWeight}
               text={t('sold_international_market')}
               icon={'/assets/kilogram.png'}
-              loading={loading}
+              loading={isLoading}
               alt={'Kilogram'}
             />
             {userRole === UserRole.association ? (
@@ -151,7 +169,7 @@ export default function SoldBatches() {
                 placeholder={t('search') ?? ''}
                 onChange={setSearchValue}
                 onKeyDown={(event) => {
-                  if (event.key === 'Enter' && !loading) {
+                  if (event.key === 'Enter' && !isLoading) {
                     submitSearchBatchesByCode();
                   }
                 }}
@@ -197,7 +215,7 @@ export default function SoldBatches() {
                 batches={soldBatches}
                 updatePagination={updatePagination}
                 pagination={pagination}
-                loading={loading}
+                loading={isLoading}
                 totalEntries={totalEntries}
               />
             </div>

@@ -17,7 +17,9 @@ import BarChart from '@/components/core/charts/BarChart';
 import LineChart from '@/components/core/charts/LineChart';
 import HarvestingModal from '@/components/core/modals/HarvestingModal';
 import AvailableBatchesTable from '@/components/core/tables/AvailableBatchesTable';
+import { useLoadingStateContext } from '@/providers/LoadingStateContext';
 import { useUserAuthContext } from '@/providers/UserAuthProvider';
+import { useYearFilterContext } from '@/providers/YearFilterProvider';
 import { getUserAssociation } from '@/services/auth';
 import { getBatchesWithAuth, getBatchesWithoutAuth } from '@/services/batch';
 import { getDepartments } from '@/services/department';
@@ -45,6 +47,13 @@ import { ProducersStatistics } from '@/util/models/Producer/ProducersStatistics'
 const Home = () => {
   const { i18n } = useTranslation('translation');
   const [selectedDepartment, setSelectedDepartment] = useState(0);
+
+  // Default to current year.
+  const { selectedYear } = useYearFilterContext();
+
+  // Loading Context
+  const { isLoading, setLoading } = useLoadingStateContext();
+
   const [departments, setDepartments] = useState<Department[]>([]);
   const { userRole } = useUserAuthContext();
   const [producersStats, setProducersStats] = useState<ProducersStatistics>();
@@ -66,7 +75,6 @@ const Home = () => {
   const [totalEntries, setTotalEntries] = useState(0);
   const [openHarvestingModal, setOpenHarvestingModal] =
     useState<boolean>(false);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -122,7 +130,8 @@ const Home = () => {
           selectedDepartment - 1 >= 0
             ? departments[selectedDepartment - 1].name
             : '',
-          pagination
+          pagination,
+          selectedYear
         ).then((data: any) => {
           setSalesInKg(
             getTotalSalesKgGraph(data.report.internationalSalesInKg)
@@ -168,6 +177,13 @@ const Home = () => {
     }
   }, [userRole, selectedDepartment, pagination]);
 
+  useEffect(() => {
+    setPagination({
+      index: 0,
+      limit: 5,
+    });
+  }, [selectedYear]);
+
   return (
     <>
       <Head>
@@ -210,7 +226,7 @@ const Home = () => {
                   number={availableWeight}
                   text={t('dry_cocoa_available')}
                   icon={'/assets/kilogram.png'}
-                  loading={loading}
+                  loading={isLoading}
                   alt={''}
                 />
               </button>
@@ -220,7 +236,7 @@ const Home = () => {
                   number={soldBatches}
                   text={t('sold_international_market')}
                   icon={'/assets/kilogram.png'}
-                  loading={loading}
+                  loading={isLoading}
                   alt={''}
                 />
               </button>
@@ -253,7 +269,7 @@ const Home = () => {
                 number={batchStatistics?.nrCocoaProducers}
                 text={t('number_producers')}
                 icon={'/assets/farmer.png'}
-                loading={loading}
+                loading={isLoading}
                 alt={'Producers'}
               />
               <CardTwo
@@ -261,7 +277,7 @@ const Home = () => {
                 number={batchStatistics?.kgDryCocoaAvailable}
                 text={t('dry_cocoa_available')}
                 icon={'/assets/kilogram.png'}
-                loading={loading}
+                loading={isLoading}
                 alt={''}
               />
               <CardFour
@@ -269,7 +285,7 @@ const Home = () => {
                 number={batchStatistics?.haForestConservation}
                 text={t('ha_forest_conservation')}
                 icon={'/assets/forest.png'}
-                loading={loading}
+                loading={isLoading}
                 alt={'Forest'}
               />
               <CardFive
@@ -299,7 +315,7 @@ const Home = () => {
                     : t('home.next_harvest')
                 }
                 icon={'/assets/cocoa.png'}
-                loading={loading}
+                loading={isLoading}
                 alt={''}
               />
             </div>
@@ -311,7 +327,7 @@ const Home = () => {
                   number={producersStats?.nrCocoaProducers}
                   text={t('number_producers')}
                   icon={'/assets/farmer.png'}
-                  loading={loading}
+                  loading={isLoading}
                   alt={'Producers'}
                 />
               </button>
@@ -320,7 +336,7 @@ const Home = () => {
                 number={producersStats?.nrYoungMen}
                 text={t('number_men_under_30')}
                 icon={'/assets/man.png'}
-                loading={loading}
+                loading={isLoading}
                 alt={'Men'}
               />
               <CardThree
@@ -328,7 +344,7 @@ const Home = () => {
                 number={producersStats?.nrWomen}
                 text={t('number_women')}
                 icon={'/assets/woman.png'}
-                loading={loading}
+                loading={isLoading}
                 alt={'Women'}
                 maxIconWidth="145px"
               />
@@ -337,7 +353,7 @@ const Home = () => {
                 number={producersStats?.haForestConservation}
                 text={t('ha_forest_conservation')}
                 icon={'/assets/cocoa.png'}
-                loading={loading}
+                loading={isLoading}
                 alt={'Forest'}
               />
             </div>
@@ -461,7 +477,7 @@ const Home = () => {
                   batches={availableBatches}
                   pagination={pagination}
                   updatePagination={updatePagination}
-                  loading={loading}
+                  loading={isLoading}
                   totalEntries={totalEntries}
                 />
               ) : (
@@ -469,7 +485,7 @@ const Home = () => {
                   batches={undefined}
                   pagination={pagination}
                   updatePagination={updatePagination}
-                  loading={loading}
+                  loading={isLoading}
                   totalEntries={totalEntries}
                 />
               )}

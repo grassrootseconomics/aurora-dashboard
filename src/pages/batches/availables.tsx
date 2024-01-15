@@ -11,7 +11,9 @@ import CardTwo from '@/components/core/cards/CardTwo';
 import BarChart from '@/components/core/charts/BarChart';
 import LineChart from '@/components/core/charts/LineChart';
 import AvailableBatchesTable from '@/components/core/tables/AvailableBatchesTable';
+import { useLoadingStateContext } from '@/providers/LoadingStateContext';
 import { useUserAuthContext } from '@/providers/UserAuthProvider';
+import { useYearFilterContext } from '@/providers/YearFilterProvider';
 import { getAssociations } from '@/services/association';
 import { downloadBatchesInExcel, getAvailableBatches } from '@/services/batch';
 import {
@@ -29,6 +31,12 @@ export default function AvailableBatches() {
   const { t } = useTranslation('translation');
   const [associations, setAssociations] = useState<Association[]>();
   const [selectedAssociation, setSelectedAssociation] = useState<number>(0);
+
+  const { selectedYear } = useYearFilterContext();
+
+  // Loading Context
+  const { isLoading, setLoading } = useLoadingStateContext();
+
   const [availableWeight, setAvailableWeight] = useState<number | undefined>();
   const [availableBatches, setAvailableBatches] = useState<
     BasicAvailableBatch[]
@@ -42,7 +50,6 @@ export default function AvailableBatches() {
   const [totalPulpCollected, setTotalPulpCollected] = useState<Dataset[]>([]);
   const [dryCocoaProduction, setDryCocoaProduction] = useState<Dataset[]>([]);
   const [batchCodeSearch, setBatchCodeSearch] = useState<string>('');
-  const [loading, setLoading] = useState(true);
   const { userRole } = useUserAuthContext();
 
   const router = useRouter();
@@ -82,20 +89,25 @@ export default function AvailableBatches() {
       }
     }
     setLoading(true);
-    getAvailableBatches(batchCodeSearch, assoc, pagination).then((data) => {
-      setAvailableBatches(data.searchBatchesResult.data);
-      setAvailableWeight(data.kgDryCocoaAvailable);
-      setDryCocoaProduction(getProductionOfDryCocoa(data.productionOfDryCocoa));
-      setTotalPulpCollected(getTotalPulpGraph(data.monthlyCocoaPulp));
-      setTotalEntries(data.searchBatchesResult.totalEntries);
-      setLoading(false);
-    });
+    getAvailableBatches(batchCodeSearch, assoc, pagination, selectedYear).then(
+      (data) => {
+        setAvailableBatches(data.searchBatchesResult.data);
+        setAvailableWeight(data.kgDryCocoaAvailable);
+        setDryCocoaProduction(
+          getProductionOfDryCocoa(data.productionOfDryCocoa)
+        );
+        setTotalPulpCollected(getTotalPulpGraph(data.monthlyCocoaPulp));
+        setTotalEntries(data.searchBatchesResult.totalEntries);
+        setLoading(false);
+      }
+    );
   }, [
     associations,
     batchCodeSearch,
     selectedAssociation,
     setLoading,
     pagination,
+    selectedYear,
   ]);
 
   useEffect(() => {
@@ -114,6 +126,13 @@ export default function AvailableBatches() {
     if (userRole && userRole !== UserRole.buyer) submitSearchBatchesByCode();
   }, [selectedAssociation, userRole, pagination]);
 
+  useEffect(() => {
+    setPagination({
+      index: 0,
+      limit: 5,
+    });
+  }, [selectedYear]);
+
   return (
     <>
       <Head>
@@ -131,7 +150,7 @@ export default function AvailableBatches() {
               number={availableWeight}
               text={t('dry_cocoa_available')}
               icon={'/assets/kilogram.png'}
-              loading={loading}
+              loading={isLoading}
               alt={'Kilogram'}
             />
             {userRole === UserRole.association ? (
@@ -155,7 +174,7 @@ export default function AvailableBatches() {
                 placeholder={t('search') ?? ''}
                 onChange={setSearchValue}
                 onKeyDown={(event) => {
-                  if (event.key === 'Enter' && !loading) {
+                  if (event.key === 'Enter' && !isLoading) {
                     submitSearchBatchesByCode();
                   }
                 }}
@@ -201,7 +220,7 @@ export default function AvailableBatches() {
                   batches={availableBatches}
                   updatePagination={updatePagination}
                   pagination={pagination}
-                  loading={loading}
+                  loading={isLoading}
                   totalEntries={totalEntries}
                 />
               ) : (

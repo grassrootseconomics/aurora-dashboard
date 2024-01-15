@@ -1408,6 +1408,15 @@ button {
             margin-right: 5px;
         }
     }
+
+    // Style for app bar year filter dropdown
+    div {
+        padding-left:0px;
+        margin-left: 20px;
+        @media (max-width: 800px) {
+            margin-left: 5px;
+        }
+    }
 }
 
 .hamburger-menu {
